@@ -1,23 +1,24 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { resolve } from 'url';
+import PublicReminder from './PublicReminder.interface';
+import PublicReminderListItem from './PublicReminderListItem';
 
-const DATA = [
+const DATA: Array<PublicReminder> = [
     {
         id: 1,
-        date:"12/07/1989",
-        name:"Birthday Bash"
+        category: 'Birthday',
+        date: new Date(),
     }
 ]
 
 async function fetchReminders() {
-    let data = new Promise<Array<any>>((resolve, reject) => resolve(DATA))
+    let data = new Promise<Array<PublicReminder>>((resolve, reject) => resolve(DATA))
     return await data.then(r => r);
     // return await fetch('test').then(r => r.json);
 }
 
 
-function ReminderList () {
-    const [reminders, setReminders] = useState<Array<any>>([]);
+function PublicReminderList () {
+    const [reminders, setReminders] = useState<Array<PublicReminder>>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(
@@ -40,9 +41,7 @@ function ReminderList () {
             ) : (
             <ul>
                 {reminders.map(item => (
-                    <li key={item.id}>
-                        Hello
-                    </li>
+                    <PublicReminderListItem key={item.id} value={item} />
                 ))}
             </ul>
             )}
@@ -52,4 +51,4 @@ function ReminderList () {
 
 }
 
-export default ReminderList;
+export default PublicReminderList;

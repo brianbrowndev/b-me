@@ -3,7 +3,7 @@ import './App.scss';
 
 import Header from './core/Header';
 
-import ReminderList from './reminders/ReminderList';
+import PublicReminderList from './reminders/PublicReminderList';
 
 
 class App extends Component {
@@ -12,7 +12,7 @@ class App extends Component {
       <div className="App">
         <Header />
         <main>
-          <ReminderList />
+          <PublicReminderList />
 
         </main>
         <footer></footer>
