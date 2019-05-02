@@ -1,9 +1,9 @@
 
-interface PublicReminder {
+interface Reminder {
     id: number,
     category: string,
     date: Date,
 };
 
 
-export default PublicReminder;
+export default Reminder;

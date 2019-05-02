@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import './App.scss';
 
 import Header from './core/Header';
-import Login from './core/Login';
+import {Login, PrivateRoute} from './core/Auth';
+import About from './core/About';
 
-import PublicReminderList from './reminders/PublicReminderList';
+import ReminderList from './reminders/ReminderList';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
@@ -14,7 +15,8 @@ class App extends Component {
           <div className="App">
             <Header />
             <main>
-              <Route exact path="/" component={PublicReminderList} />
+              <Route exact path="/" component={About} />
+              <PrivateRoute exact path="/reminders" component={ReminderList} />
               <Route exact path="/login" component={Login} />
             </main>
             <footer></footer>
