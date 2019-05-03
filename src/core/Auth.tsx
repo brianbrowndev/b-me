@@ -1,11 +1,16 @@
 import React, { Component, useState, Fragment } from 'react';
 import auth0, { AuthOptions } from 'auth0-js';
 
+
+import './Auth.scss';
+
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  RouteProps
+  RouteProps,
+  Link,
+  withRouter
 } from "react-router-dom";
 import { RouteChildrenProps } from 'react-router';
 
@@ -26,13 +31,15 @@ const Auth = {
         cb();
     }
 }
+Auth.authenticate(() => {}); // TODO - Doesn't seem like a good practice
 
 
 export function Login(props: RouteChildrenProps) {
-    const [redirectToReferrer, setRedirectToReferrer] = useState(false);
+    const [redirectToReferrer, setRedirectToReferrer] = useState(Auth.isAuthenticated);
     const [username, setUsername] = useState("");
     const [pw, setPw] = useState("");
-    let { from } = props.location.state || { from: { pathname: "/" } };
+    const [error, setError] = useState(false);
+    let { from } = props.location.state || { from: { pathname: "/reminders" } };
 
     const realm:string = "Test";
     const audience:string = 'localhost:5000/api';
@@ -55,7 +62,7 @@ export function Login(props: RouteChildrenProps) {
             audience: audience
         }, (err, authResult) => {
             if (err) {
-                setRedirectToReferrer(true);
+                setError(true);
             }
             else if (authResult && authResult.accessToken && authResult.idToken) {
                 setUser(authResult);
@@ -77,6 +84,7 @@ export function Login(props: RouteChildrenProps) {
                 <Redirect to={from} />
             ) : (
             <Fragment>
+                { error && <div>Login failed. <br/></div> }
                 <div>
                     <strong>Login</strong>
                 </div>
@@ -111,27 +119,6 @@ export function Login(props: RouteChildrenProps) {
    );
 }
 
-
-
-
-// const AuthButton = withRouter(
-//   ({ history }) =>
-//     Auth.isAuthenticated ? (
-//       <p>
-//         Welcome!{" "}
-//         <button
-//           onClick={() => {
-//             Auth.logout(() => history.push("/"));
-//           }}
-//         >
-//           Sign out
-//         </button>
-//       </p>
-//     ) : (
-//       <p>You are not logged in.</p>
-//     )
-// );
-
 interface PrivateRouteProps extends RouteProps {
     component: React.ComponentType<any> 
 }
@@ -156,3 +143,24 @@ export function PrivateRoute( props: PrivateRouteProps ) {
         />
     );
 }
+
+export const AuthButton = withRouter(
+  ({ history }) =>
+    Auth.isAuthenticated ? (
+      <div>
+        {"brian"}
+        &nbsp;
+        |
+        &nbsp;
+        <button className="Logout-button"
+          onClick={() => {
+            Auth.logout(() => history.push("/"));
+          }}
+        >
+          logout
+        </button>
+      </div>
+    ) : (
+    <Link to="/login">login</Link>
+    )
+);
