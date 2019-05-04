@@ -1,25 +1,22 @@
 import React, { Component, Fragment, useState } from 'react';
 
-import './Login.scss';
+import './SubmitReminder.scss';
 
-function Login() {
-    const [username, setUsername] = useState("");
-    const [pw, setPw] = useState("");
+function SubmitReminder() {
+    // const [username, setUsername] = useState("");
+    // const [pw, setPw] = useState("");
 
-    function login(event: React.FormEvent) {
-        event.preventDefault();
-        console.log(username)
-        console.log(pw)
+    function submit(event: React.FormEvent) {
     }
 
     return (
         <Fragment>
 
             <div>
-                <strong>Login</strong>
+                <strong>New Reminder</strong>
             </div>
-            <form onSubmit={login}>
-                <div className="Login-input">
+            <form onSubmit={submit}>
+                {/* <div className="Login-input">
                     <label>
                         username: 
                         <input 
@@ -40,7 +37,7 @@ function Login() {
                             name="pw">
                         </input>
                     </label>
-                </div>
+                </div> */}
                 <input type="submit" value="Submit" />
 
             </form>
@@ -48,4 +45,4 @@ function Login() {
    );
 }
 
-export default Login;
+export default SubmitReminder;
