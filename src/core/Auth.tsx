@@ -8,13 +8,11 @@ import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  RouteProps,
-  Link,
-  withRouter
+  RouteProps
 } from "react-router-dom";
 import { RouteChildrenProps } from 'react-router';
 
-const Auth = {
+export const Auth = {
     isAuthenticated: false,
     authenticate(cb:Function): void {
         // Check whether the id_token is expired or not
@@ -39,15 +37,12 @@ export function Login(props: RouteChildrenProps) {
     const [username, setUsername] = useState("");
     const [pw, setPw] = useState("");
     const [error, setError] = useState(false);
-    let { from } = props.location.state || { from: { pathname: "/reminders" } };
+    let { from } = props.location.state || { from: { pathname: "/upcoming" } };
 
-    const realm:string = "Test";
-    const audience:string = 'localhost:5000/api';
     const auth = new auth0.WebAuth({
-        audience: audience,
-        domain: 'bgeo.auth0.com',
-        clientID: 'LvwH7Wr1Iir3prvhmbvn4Qx6xDxz47JB',
-        // specify your desired callback URL
+        audience: process.env.REACT_APP_AUTH_AUDIENCE,
+        domain: process.env.REACT_APP_AUTH_DOMAIN,
+        clientID: process.env.REACT_APP_AUTH_CLIENT_ID,
         callbackURL: 'http://localhost:3000',
         responseType: 'token id_token',
         scope: 'openid'
@@ -56,10 +51,10 @@ export function Login(props: RouteChildrenProps) {
     function login(event: React.FormEvent): void {
         event.preventDefault();
         auth.client.login({
-            realm: realm,
+            realm: process.env.REACT_APP_AUTH_REALM as string,
             username: username,
             password: pw,
-            audience: audience
+            audience: process.env.REACT_APP_AUTH_AUDIENCE as string
         }, (err, authResult) => {
             if (err) {
                 setError(true);
@@ -144,23 +139,3 @@ export function PrivateRoute( props: PrivateRouteProps ) {
     );
 }
 
-export const AuthButton = withRouter(
-  ({ history }) =>
-    Auth.isAuthenticated ? (
-      <div>
-        {"brian"}
-        &nbsp;
-        |
-        &nbsp;
-        <button className="Logout-button"
-          onClick={() => {
-            Auth.logout(() => history.push("/"));
-          }}
-        >
-          logout
-        </button>
-      </div>
-    ) : (
-    <Link to="/login">login</Link>
-    )
-);

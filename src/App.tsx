@@ -6,7 +6,8 @@ import {Login, PrivateRoute} from './core/Auth';
 import About from './core/About';
 
 import ReminderList from './reminders/ReminderList';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import SubmitReminder from './reminders/SubmitReminder'
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends Component {
   render() {
@@ -16,7 +17,8 @@ class App extends Component {
             <Header />
             <main>
               <Route exact path="/" component={About} />
-              <PrivateRoute exact path="/reminders" component={ReminderList} />
+              <PrivateRoute exact path="/upcoming" component={ReminderList} />
+              <PrivateRoute exact path="/submit" component={SubmitReminder} />
               <Route exact path="/login" component={Login} />
             </main>
             <footer></footer>

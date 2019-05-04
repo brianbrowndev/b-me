@@ -19,15 +19,24 @@
   padding:5px;
 }
 
+.App-header-left {
+  display:flex;
+  flex-direction:row;
+  align-items: center;
+}
+
+// .App-header-nav{
+// }
+
 
 .App-title {
   font-size: 20px;
+  margin-right:10px;
+}
+a.App-header-nav--active {
+  &:link, &:visited{
+  color:white;
+
+  }
 }
 
-.App-login {
-  // flex-grow: 1;
-}
-
-.App-toolbar {
-  justify-content:space-between;
-}
