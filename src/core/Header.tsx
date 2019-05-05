@@ -16,7 +16,7 @@ const Header = withRouter(
     ({ history}) =>
         <header className="App-header">
             <div className="App-header-left">
-                <Link to="/"><strong className="App-title">Reminders</strong></Link>
+                <Link to="/"><strong className="App-title">Events</strong></Link>
                 { Auth.isAuthenticated && 
                     <div className="App-header-nav">
                         <NavLink exact to="/upcoming" activeClassName="App-header-nav--active">upcoming</NavLink>

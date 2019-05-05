@@ -1,9 +1,9 @@
 import React, { Component, Fragment, useState } from 'react';
 import moment from 'moment';
 
-import './SubmitReminder.scss';
+import './SubmitEvent.scss';
 
-function SubmitReminder() {
+function SubmitEvent() {
     const [name, setName] = useState("");
     const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
     const [time, setTime] = useState(moment().format('h:mm'));
@@ -19,7 +19,7 @@ function SubmitReminder() {
         <Fragment>
 
             <div>
-                <strong>New Reminder</strong>
+                <strong>New Event</strong>
             </div>
             <form onSubmit={submit}>
                 <div className="Name-input">
@@ -103,4 +103,4 @@ function SubmitReminder() {
    );
 }
 
-export default SubmitReminder;
+export default SubmitEvent;

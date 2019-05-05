@@ -1,15 +1,15 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import Reminder from './Reminder.interface';
-import ReminderListItem from './ReminderListItem';
+import Event from './Event.interface';
+import EventListItem from './EventListItem';
 import { Api } from '../core/Api';
 
-async function fetchReminders(): Promise<Reminder[]> {
-    return await Api.get<Reminder[]>('reminders');
+async function fetchEvents(): Promise<Event[]> {
+    return await Api.get<Event[]>('events');
 }
 
 
-function ReminderList () {
-    const [reminders, setReminders] = useState<Array<Reminder>>([]);
+function EventList () {
+    const [events, setEvents] = useState<Array<Event>>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(
@@ -17,7 +17,7 @@ function ReminderList () {
             // iife the async call
             (async () => {
                 setIsLoading(true);
-                setReminders(await fetchReminders())
+                setEvents(await fetchEvents())
                 setIsLoading(false);
             })()
         }), 
@@ -31,8 +31,8 @@ function ReminderList () {
                 <div>Loading ...</div>
             ) : (
             <ul>
-                {reminders.map(item => (
-                    <ReminderListItem key={item.id} value={item} />
+                {events.map(item => (
+                    <EventListItem key={item.id} value={item} />
                 ))}
             </ul>
             )}
@@ -42,4 +42,4 @@ function ReminderList () {
 
 }
 
-export default ReminderList;
+export default EventList;
