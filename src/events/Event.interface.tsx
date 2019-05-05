@@ -1,5 +1,5 @@
 
-interface Reminder {
+interface Event {
     id: number,
     name: string,
     date: Date,
@@ -11,4 +11,4 @@ interface Reminder {
 };
 
 
-export default Reminder;
+export default Event;

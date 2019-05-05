@@ -5,8 +5,8 @@ import Header from './core/Header';
 import {Login, PrivateRoute} from './core/Auth';
 import About from './core/About';
 
-import ReminderList from './reminders/ReminderList';
-import SubmitReminder from './reminders/SubmitReminder'
+import EventList from './events/EventList';
+import SubmitEvent from './events/SubmitEvent'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends Component {
@@ -17,8 +17,8 @@ class App extends Component {
             <Header />
             <main>
               <Route exact path="/" component={About} />
-              <PrivateRoute exact path="/upcoming" component={ReminderList} />
-              <PrivateRoute exact path="/submit" component={SubmitReminder} />
+              <PrivateRoute exact path="/upcoming" component={EventList} />
+              <PrivateRoute exact path="/submit" component={SubmitEvent} />
               <Route exact path="/login" component={Login} />
             </main>
             <footer></footer>
