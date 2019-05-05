@@ -1,8 +1,13 @@
 
 interface Reminder {
     id: number,
-    category: string,
+    name: string,
     date: Date,
+    important: string,
+    reoccuring: string,
+    location: string,
+    url: string,
+    user: string,
 };
 
 

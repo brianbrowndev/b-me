@@ -1,19 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import Reminder from './Reminder.interface';
 import ReminderListItem from './ReminderListItem';
+import { Api } from '../core/Api';
 
-const DATA: Array<Reminder> = [
-    {
-        id: 1,
-        category: 'Birthday',
-        date: new Date(),
-    }
-]
-
-async function fetchReminders() {
-    let data = new Promise<Array<Reminder>>((resolve, reject) => resolve(DATA))
-    return await data.then(r => r);
-    // return await fetch('test').then(r => r.json);
+async function fetchReminders(): Promise<Reminder[]> {
+    return await Api.get<Reminder[]>('reminders');
 }
 
 

@@ -89,7 +89,7 @@ export function Login(props: RouteChildrenProps) {
                             username: 
                             <input 
                                 type="text" 
-                                onChange={e => setUsername(e.target.value)}
+                                onChange={e => setUsername(e.target.value.trim())}
                                 required
                                 name="username">
                             </input>
@@ -100,7 +100,7 @@ export function Login(props: RouteChildrenProps) {
                             password: 
                             <input 
                                 type="password" 
-                                onChange={e => setPw(e.target.value)}
+                                onChange={e => setPw(e.target.value.trim())}
                                 required
                                 name="pw">
                             </input>
