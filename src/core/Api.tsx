@@ -4,7 +4,7 @@ export const Api = {
     get<T>(endpoint:string) {
         let config = {headers:{}}
 
-        if(Auth.isAuthenticated) {
+        if(Auth.isAuthenticated()) {
             let token = localStorage.getItem('access_token') || null
             config.headers = { 'Authorization': `Bearer ${token}` }
         }
