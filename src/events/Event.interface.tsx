@@ -3,11 +3,11 @@ interface Event {
     id: number,
     name: string,
     date: Date,
-    important: string,
-    reoccuring: string,
+    important: boolean,
+    reoccuringType: string,
     location: string,
     url: string,
-    user: string,
+    userId: number
 };
 
 
