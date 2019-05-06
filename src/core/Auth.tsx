@@ -12,24 +12,37 @@ import {
 } from "react-router-dom";
 import { RouteChildrenProps } from 'react-router';
 
-export const Auth = {
-    isAuthenticated: false,
-    authenticate(cb:Function): void {
-        // Check whether the id_token is expired or not
+const AuthUtil = {
+    expired(): boolean {
         let expires= localStorage.getItem('expires_at');
         const expiresAt = expires != null ? JSON.parse(expires) : expires;
-        this.isAuthenticated = new Date().getTime() < expiresAt;
+        return new Date().getTime() > expiresAt;
+    },
+    authenticated(): boolean {
+        let hasToken  = localStorage.getItem('id_token') ? true: false;
+        let expired = this.expired();
+        return hasToken && !expired;
+    }
+}
+
+export const Auth = {
+    isAuthenticated:AuthUtil.authenticated(),
+    login(authResult:any, cb:Function): void {
+        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+        localStorage.setItem('access_token', authResult.accessToken);
+        localStorage.setItem('id_token', authResult.idToken);
+        localStorage.setItem('expires_at', expiresAt);
+        this.isAuthenticated = AuthUtil.authenticated();
         cb();
     },
     logout(cb:Function): void {
-        this.isAuthenticated = false;
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
+        this.isAuthenticated = AuthUtil.authenticated();
         cb();
     }
 }
-Auth.authenticate(() => {}); // TODO - Doesn't seem like a good practice
 
 
 export function Login(props: RouteChildrenProps) {
@@ -60,17 +73,9 @@ export function Login(props: RouteChildrenProps) {
                 setError(true);
             }
             else if (authResult && authResult.accessToken && authResult.idToken) {
-                setUser(authResult);
-                Auth.authenticate(() => setRedirectToReferrer(true));
+                Auth.login(authResult, () => setRedirectToReferrer(true));
             }
         });
-    }
-
-    function setUser(authResult:any): void {
-        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        localStorage.setItem('access_token', authResult.accessToken);
-        localStorage.setItem('id_token', authResult.idToken);
-        localStorage.setItem('expires_at', expiresAt);
     }
 
     return (
