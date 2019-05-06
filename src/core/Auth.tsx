@@ -26,44 +26,48 @@ const AuthUtil = {
 }
 
 export const Auth = {
-    isAuthenticated:AuthUtil.authenticated(),
-    login(authResult:any, cb:Function): void {
-        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        localStorage.setItem('access_token', authResult.accessToken);
-        localStorage.setItem('id_token', authResult.idToken);
-        localStorage.setItem('expires_at', expiresAt);
-        this.isAuthenticated = AuthUtil.authenticated();
-        cb();
-    },
-    logout(cb:Function): void {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('id_token');
-        localStorage.removeItem('expires_at');
-        this.isAuthenticated = AuthUtil.authenticated();
-        cb();
-    }
-}
-
-
-export function Login(props: RouteChildrenProps) {
-    const [redirectToReferrer, setRedirectToReferrer] = useState(Auth.isAuthenticated);
-    const [username, setUsername] = useState("");
-    const [pw, setPw] = useState("");
-    const [error, setError] = useState(false);
-    let { from } = props.location.state || { from: { pathname: "/upcoming" } };
-
-    const auth = new auth0.WebAuth({
+    auth0: new auth0.WebAuth({
         audience: process.env.REACT_APP_AUTH_AUDIENCE,
         domain: process.env.REACT_APP_AUTH_DOMAIN,
         clientID: process.env.REACT_APP_AUTH_CLIENT_ID,
         callbackURL: 'http://localhost:3000',
         responseType: 'token id_token',
         scope: 'openid'
-    } as AuthOptions);
- 
-    function login(event: React.FormEvent): void {
+    } as AuthOptions),
+    isAuthenticated() {
+        return AuthUtil.authenticated()
+    },
+    username:localStorage.getItem('username'), 
+    login(authResult:any, cb:Function): void {
+        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+        localStorage.setItem('access_token', authResult.accessToken);
+        localStorage.setItem('id_token', authResult.idToken);
+        localStorage.setItem('expires_at', expiresAt);
+        this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
+            if (profile != null) {
+                localStorage.setItem('username', profile.nickname);
+                this.username = profile.nickname;
+            }
+            cb();
+        });
+    },
+    logout(cb:Function): void {
+        localStorage.clear();
+        cb();
+    }
+}
+
+
+export function Login(props: RouteChildrenProps) {
+    const [redirectToReferrer, setRedirectToReferrer] = useState(Auth.isAuthenticated());
+    const [username, setUsername] = useState("");
+    const [pw, setPw] = useState("");
+    const [error, setError] = useState(false);
+    let { from } = props.location.state || { from: { pathname: "/upcoming" } };
+
+     function login(event: React.FormEvent): void {
         event.preventDefault();
-        auth.client.login({
+        Auth.auth0.client.login({
             realm: process.env.REACT_APP_AUTH_REALM as string,
             username: username,
             password: pw,
@@ -129,7 +133,7 @@ export function PrivateRoute( props: PrivateRouteProps ) {
         <Route
         {...rest}
         render={props =>
-            Auth.isAuthenticated ? (
+            Auth.isAuthenticated() ? (
             <Component {...props} />
             ) : (
             <Redirect

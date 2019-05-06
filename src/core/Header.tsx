@@ -17,7 +17,7 @@ const Header = withRouter(
         <header className="App-header">
             <div className="App-header-left">
                 <Link to="/"><strong className="App-title">Events</strong></Link>
-                { Auth.isAuthenticated && 
+                { Auth.isAuthenticated() && 
                     <div className="App-header-nav">
                         <NavLink exact to="/upcoming" activeClassName="App-header-nav--active">upcoming</NavLink>
                         &nbsp;|&nbsp;
@@ -25,10 +25,9 @@ const Header = withRouter(
                     </div>
                 }
             </div>
-            { Auth.isAuthenticated ? (
+            { Auth.isAuthenticated() ? (
                 <div>
-                    {/* TODO - get current user logged in */}
-                    {"brian"}&nbsp;|&nbsp;
+                    {Auth.username}&nbsp;|&nbsp;
                     <button className="Logout-button"
                     onClick={() => {
                         Auth.logout(() => history.push("/"));
