@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 
 
-import {Auth } from './Auth'
+import {AuthConsumer } from './Auth'
 
 import {
   BrowserRouter as Router,
@@ -15,29 +15,37 @@ import './Header.scss';
 const Header = withRouter(
     ({ history}) =>
         <header className="App-header">
-            <div className="App-header-left">
-                <Link to="/"><strong className="App-title">Events</strong></Link>
-                { Auth.isAuthenticated() && 
-                    <div className="App-header-nav">
-                        <NavLink exact to="/upcoming" activeClassName="App-header-nav--active">upcoming</NavLink>
-                        &nbsp;|&nbsp;
-                        <NavLink exact to="/submit" activeClassName="App-header-nav--active">submit</NavLink>
-                    </div>
-                }
-            </div>
-            { Auth.isAuthenticated() ? (
-                <div>
-                    {Auth.username}&nbsp;|&nbsp;
-                    <button className="Logout-button"
-                    onClick={() => {
-                        Auth.logout(() => history.push("/"));
-                    }}>
-                    logout
-                    </button>
-                </div>
-            ) : (
-                <Link to="/login">login</Link>
-            )}
+            <AuthConsumer>
+                {({ authenticated, username, logout}) => (
+                    <Fragment>
+                        <div className="App-header-logo">
+                            <Link to="/"><strong className="App-title">Events</strong></Link>
+                        </div>
+                        { authenticated ? (
+                            <div className="App-header-nav">
+                                <div>
+                                    <NavLink exact to="/upcoming" activeClassName="App-header-nav--active">upcoming</NavLink>
+                                    &nbsp;|&nbsp;
+                                    <NavLink exact to="/submit" activeClassName="App-header-nav--active">submit</NavLink>
+                                </div>
+                                <div>
+                                    {username}&nbsp;|&nbsp;
+                                    <button className="Logout-button"
+                                    onClick={() => {
+                                        logout(() => history.push("/"));
+                                    }}>
+                                    logout
+                                    </button>
+                                </div>
+                            </div>
+                       ) : (
+                           <div className="App-header-login">
+                            <Link to="/login">login</Link>
+                           </div>
+                        )}
+                    </Fragment>
+                )}
+           </AuthConsumer>
         </header>
 );
 
