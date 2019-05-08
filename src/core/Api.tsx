@@ -1,14 +1,11 @@
-import { Auth } from "./Auth";
+// import { Auth } from "./Auth";
 
 export const Api = {
     get<T>(endpoint:string) {
         let config = {headers:{}}
 
-        if(Auth.isAuthenticated()) {
-            let token = localStorage.getItem('access_token') || null
-            config.headers = { 'Authorization': `Bearer ${token}` }
-        }
-
+        let token = localStorage.getItem('access_token') || null
+        config.headers = { 'Authorization': `Bearer ${token}` }
 
         return fetch(`${process.env.REACT_APP_API}/${endpoint}`, config)
             .then(r => {
@@ -20,10 +17,8 @@ export const Api = {
     post<T>(endpoint:string, data:any) {
         let config = {headers:{}, method: 'POST', body: JSON.stringify(data)}
 
-        if(Auth.isAuthenticated()) {
-            let token = localStorage.getItem('access_token') || null
-            config.headers = { 'Authorization': `Bearer ${token}`, "Content-Type": "application/json" }
-        }
+        let token = localStorage.getItem('access_token') || null
+        config.headers = { 'Authorization': `Bearer ${token}`, "Content-Type": "application/json" }
 
         return fetch(`${process.env.REACT_APP_API}/${endpoint}`, config)
             .then(r => {

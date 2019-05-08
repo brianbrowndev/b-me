@@ -1,7 +1,7 @@
 .App-header {
 //   background-color: #f1c40f;
 //   background-color: #f39c12;
-  // background-color:#f6e58d;
+  // background-color:#f6e58d;gT
   // background-color:#c7ecee;
   // background-color:#dff9fb;
   // background-color:#95afc0;
@@ -14,20 +14,29 @@
   // align-items:flex-start;
   // padding: 0 3rem;
   display:flex;
-  justify-content:space-between;
   background:#fdcb6e;
   padding:5px;
 }
 
-.App-header-left {
+.App-header-logo {
   display:flex;
   flex-direction:row;
   align-items: center;
 }
 
-// .App-header-nav{
-// }
+.App-header-nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex:1;
+}
 
+.App-header-login {
+  display:flex;
+  flex:1;
+  flex-direction:row-reverse;
+  align-items:center;
+}
 
 .App-title {
   font-size: 20px;
