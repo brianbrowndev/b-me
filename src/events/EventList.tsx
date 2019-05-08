@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import Event from './Event.interface';
 import EventListItem from './EventListItem';
-import { Api } from '../core/Api';
+import EventApi  from './EventApi';
 
 async function fetchEvents(): Promise<Event[]> {
-    return await Api.get<Event[]>('events');
+    return await EventApi.getEvents();
 }
 
 
