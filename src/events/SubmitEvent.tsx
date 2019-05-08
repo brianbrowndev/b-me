@@ -1,104 +1,139 @@
 import React, { Component, Fragment, useState } from 'react';
 import moment from 'moment';
+import Event from './Event.interface';
+import EventApi from './EventApi';
+import {
+  BrowserRouter as Router,
+  Redirect,
+} from "react-router-dom";
 
 import './SubmitEvent.scss';
 
 function SubmitEvent() {
-    const [name, setName] = useState("");
-    const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
-    const [time, setTime] = useState(moment().format('h:mm'));
-    const [important, setImportant] = useState("No");
-    const [reoccuring, setReoccuring] = useState("No");
-    const [location, setLocation] = useState("");
-    const [url, setUrl] = useState("");
-    
-    function submit(event: React.FormEvent) {
+    const [error, setError] = useState(false);
+    const [redirectToReferrer, setRedirectToReferrer] = useState(false);
+    const initialEventState = {
+        date:moment().format('YYYY-MM-DD'),
+        time:moment().format('HH:mm')
+     } as Event;
+    const [event, setEvent] = useState(initialEventState)
+
+    const onChange = (evt: React.FormEvent) => {
+        const { name, value } = evt.target as any
+        setEvent({ ...event, [name]: value })
+    }
+    const onCheckedChange = (evt: React.FormEvent) => {
+        const { name, checked } = evt.target as any
+        setEvent({ ...event, [name]: checked })
+    }
+
+    const submit = (evt: React.FormEvent) => { 
+        if (evt) evt.preventDefault();
+        EventApi.postEvent(event).then(() => setRedirectToReferrer(true)).catch(err => {
+            setError(err)
+        });
     }
 
     return (
         <Fragment>
+            { redirectToReferrer ? (
+                <Redirect to="/upcoming" />
+            ) : (
+            <Fragment>
 
-            <div>
-                <strong>New Event</strong>
-            </div>
-            <form onSubmit={submit}>
-                <div className="Name-input">
-                    <label>
-                        name: 
-                        <input 
-                            type="text" 
-                            onChange={e => setName(e.target.value)}
-                            required
-                            name="name">
-                        </input>
-                    </label>
+                { error && <div>Submit failed. <br/></div> }
+                <div>
+                    <strong>New Event</strong>
                 </div>
-                <div className="Date-input">
-                    <label>
-                        date: 
-                        <input 
-                            type="date" 
-                            name="date"
-                            value={date}
-                            onChange={e => setDate(e.target.value)}
-                            min="moment().format('YYYY-MM-DD')">
-                        </input>
-                    </label>
-                </div>
-                <div className="Time-input">
-                    <label>
-                        time: 
-                        <input 
-                            type="time" 
-                            name="time"
-                            value={time}
-                            onChange={e => setTime(e.target.value)}>
-                        </input>
-                    </label>
-                </div>
+                <form onSubmit={submit}>
+                    <div className="Name-input">
+                        <label>
+                            name: 
+                            <input 
+                                type="text" 
+                                onChange={onChange}
+                                defaultValue={event.name}
+                                required
+                                name="name">
+                            </input>
+                        </label>
+                    </div>
+                    <div className="Date-input">
+                        <label>
+                            date: 
+                            <input 
+                                type="date" 
+                                name="date"
+                                defaultValue={event.date}
+                                onChange={onChange}
+                                min="moment().format('YYYY-MM-DD')">
+                            </input>
+                        </label>
+                    </div>
+                    <div className="Time-input">
+                        <label>
+                            time: 
+                            <input 
+                                type="time" 
+                                name="time"
+                                defaultValue={event.time}
+                                onChange={onChange}>
+                            </input>
+                        </label>
+                    </div>
 
-                <div className="Location-input">
-                    <label>
-                        location: 
-                        <input 
-                            type="text" 
-                            onChange={e => setLocation(e.target.value)}
-                            name="location">
-                        </input>
-                    </label>
-                </div>
-                <div className="Url-input">
-                    <label>
-                        url: 
-                        <input 
-                            type="text" 
-                            onChange={e => setUrl(e.target.value)}
-                            name="url">
-                        </input>
-                    </label>
-                </div>
-                <div className="Important-input">
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            name="important" 
-                            onChange={e => setImportant(e.target.checked ? 'Yes' : 'No')} 
-                        ></input>
-                        important
-                    </label>
-                </div>
-                <div className="Important-input">
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            name="reoccuring" 
-                            onChange={e => setReoccuring(e.target.checked ? 'Yes' : 'No')} 
-                        ></input>
-                       reoccuring 
-                    </label>
-                </div>
-                  <input type="submit" value="Submit" />
-            </form>
+                    <div className="Location-input">
+                        <label>
+                            location: 
+                            <input 
+                                type="text" 
+                                onChange={onChange}
+                                defaultValue={event.location}
+                                name="location">
+                            </input>
+                        </label>
+                    </div>
+                    <div className="Url-input">
+                        <label>
+                            url: 
+                            <input 
+                                type="text" 
+                                onChange={onChange}
+                                defaultValue={event.url}
+                                name="url">
+                            </input>
+                        </label>
+                    </div>
+                    <div className="Important-input">
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                name="important" 
+                                onChange={onCheckedChange}
+                                defaultChecked={event.important}
+                            ></input>
+                            important
+                        </label>
+                    </div>
+                    <div className="Important-input">
+                        <label>Reoccuring:
+                            <select 
+                                name="reoccuringType" 
+                                defaultValue={event.reoccuringType} 
+                                onChange={onChange}>
+                                <option value=""></option>
+                                <option value="1">Hourly</option>
+                                <option value="2">Daily</option>
+                                <option value="3">Weekly</option>
+                                <option value="4">Monthly</option>
+                                <option value="5">Yearly</option>
+                            </select>
+                        </label>
+                    </div>
+                    <input type="submit" value="Submit" />
+                </form>
+            </Fragment>
+        )}
         </Fragment>
    );
 }

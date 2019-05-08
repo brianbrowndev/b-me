@@ -2,7 +2,8 @@
 interface Event {
     id: number,
     name: string,
-    date: Date,
+    date: string,
+    time: string,
     important: boolean,
     reoccuringType: string,
     location: string,
