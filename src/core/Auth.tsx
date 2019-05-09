@@ -1,4 +1,4 @@
-import React, { Component, useState, Fragment } from 'react';
+import React, { useState, Fragment, useContext } from 'react';
 import auth0, { AuthOptions } from 'auth0-js';
 
 
@@ -92,11 +92,9 @@ interface AuthProps {
     username: string;
 }
 
-const AuthConsumer = AuthContext.Consumer;
-export {AuthProvider, AuthConsumer};
 
 
-export function Login(props: RouteChildrenProps) {
+function Login(props: RouteChildrenProps): JSX.Element {
     const [username, setUsername] = useState("");
     const [pw, setPw] = useState("");
     const [error, setError] = useState(false);
@@ -108,48 +106,46 @@ export function Login(props: RouteChildrenProps) {
         }
     }
 
+    const authContext = useContext(AuthContext);
+
     return (
-        <AuthConsumer>
-            {({ authenticated, login}) => (
-                <Fragment>
-                    { authenticated ? (
-                        <Redirect to={from} />
-                    ) : (
-                    <Fragment>
-                        { error && <div>Login failed. <br/></div> }
-                        <div>
-                            <strong>Login</strong>
-                        </div>
-                        <form onSubmit={e=> {e.preventDefault();login(username, pw, onLogin)}}>
-                            <div className="Login-input">
-                                <label>
-                                    username: 
-                                    <input 
-                                        type="text" 
-                                        onChange={e => setUsername(e.target.value.trim())}
-                                        required
-                                        name="username">
-                                    </input>
-                                </label>
-                            </div>
-                            <div className="Login-input">
-                                <label>
-                                    password: 
-                                    <input 
-                                        type="password" 
-                                        onChange={e => setPw(e.target.value.trim())}
-                                        required
-                                        name="pw">
-                                    </input>
-                                </label>
-                            </div>
-                            <input type="submit" value="Submit" />
-                        </form>
-                    </Fragment>
-                    )}
-                </Fragment>
+        <Fragment>
+            { authContext.authenticated ? (
+                <Redirect to={from} />
+            ) : (
+            <Fragment>
+                { error && <div>Login failed. <br/></div> }
+                <div>
+                    <strong>Login</strong>
+                </div>
+                <form onSubmit={e=> {e.preventDefault();authContext.login(username, pw, onLogin)}}>
+                    <div className="Login-input">
+                        <label>
+                            username: 
+                            <input 
+                                type="text" 
+                                onChange={e => setUsername(e.target.value.trim())}
+                                required
+                                name="username">
+                            </input>
+                        </label>
+                    </div>
+                    <div className="Login-input">
+                        <label>
+                            password: 
+                            <input 
+                                type="password" 
+                                onChange={e => setPw(e.target.value.trim())}
+                                required
+                                name="pw">
+                            </input>
+                        </label>
+                    </div>
+                    <input type="submit" value="Submit" />
+                </form>
+            </Fragment>
             )}
-        </AuthConsumer>
+        </Fragment>
    );
 }
 
@@ -157,30 +153,28 @@ interface PrivateRouteProps extends RouteProps {
     component: React.ComponentType<any> 
 }
 
-export function PrivateRoute( props: PrivateRouteProps ) {
+function PrivateRoute( props: PrivateRouteProps ): JSX.Element {
     let { component: Component, ...rest} = props;
+
+    const authContext = useContext(AuthContext);
     return (
-        <AuthConsumer>
-            {({ authenticated }) => (
-
-                <Route
-                {...rest}
-                render={props =>
-                    authenticated ? (
-                    <Component {...props} />
-                    ) : (
-                    <Redirect
-                        to={{
-                        pathname: "/login",
-                        state: { from: props.location }
-                        }}
-                    />
-                    )
-                }
-                />
-            )}
-        </AuthConsumer>
-
+        <Route
+        {...rest}
+        render={props =>
+            authContext.authenticated ? (
+            <Component {...props} />
+            ) : (
+            <Redirect
+                to={{
+                pathname: "/login",
+                state: { from: props.location }
+                }}
+            />
+            )
+        }
+        />
     );
 }
 
+
+export {Login, PrivateRoute, AuthProvider, AuthContext};
