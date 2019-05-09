@@ -2,10 +2,10 @@ import Api from '../core/Api';
 import Event from './Event.interface';
 
 export const EventApi = {
-    getEvents() {
+    getEvents(): Promise<Event[]> {
         return Api.get<Event[]>('events');
     },
-    postEvent(data:Event) {
+    postEvent(data:Event): Promise<Event> {
         return Api.post<Event>('events', data);
     }
 }
