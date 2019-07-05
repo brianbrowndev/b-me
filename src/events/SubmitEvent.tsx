@@ -82,7 +82,7 @@ function SubmitEvent() {
                         </label>
                     </div>
 
-                    <div className="Location-input">
+                    {/* <div className="Location-input">
                         <label>
                             location: 
                             <input 
@@ -129,7 +129,7 @@ function SubmitEvent() {
                                 <option value="5">Yearly</option>
                             </select>
                         </label>
-                    </div>
+                    </div> */}
                     <input type="submit" value="Submit" />
                 </form>
             </Fragment>

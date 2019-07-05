@@ -1,8 +1,10 @@
 import React from 'react';
-import Event from "./Event.interface";
 
-function EventListItem (props: {value: Event}) {
-    return  <li>{props.value.name} - {props.value.date.toString()}</li>;
+import './EventListItem.scss';
+
+
+function EventListItem (props:any) {
+    return  <div className='Event-list-item'>{props.children}</div>;
 
 }
 
