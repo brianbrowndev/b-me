@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import Event from './Event.interface';
+import Event from '../../common/interfaces/Event.interface';
 import EventListItem from './EventListItem';
-import EventApi  from './EventApi';
+import EventApi  from '../../common/api/EventApi';
 import AddEventListItem from './AddEventListItem';
 import EventListItemView from './EventListItemView';
 
@@ -33,8 +33,7 @@ function EventList () {
         setEvent({ ...event, [name]: checked })
     }
 
-    const handleEventAdd = (evt: React.FormEvent) => { 
-        if (evt) evt.preventDefault();
+    const handleEventAdd = () => { 
         EventApi.postEvent(event).then(result => {
             setEvent(Object.assign({}, initialEventState));
             setEvents(events.concat(result));

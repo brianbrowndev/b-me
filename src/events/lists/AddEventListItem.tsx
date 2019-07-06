@@ -5,7 +5,7 @@ import './AddEventListItem.scss';
 interface AddEventListItemProps {
     onChange (evt:React.FormEvent):void;
     value: Event;
-    onSubmit (evt: React.FormEvent):void;
+    onSubmit ():void;
 }
 
 function AddEventListItem(props:AddEventListItemProps) {
@@ -15,9 +15,13 @@ function AddEventListItem(props:AddEventListItemProps) {
     // not the best to have a ternary to check if null or false
     const [isSaving, setIsSaving] = useState<Boolean | null>(null);
 
-    const onSubmit = (evt: React.FormEvent) => {
+    const onFormSubmit = (evt: React.FormEvent) => {
+        if (evt) evt.preventDefault();
+        onSubmit();
+    }
+    const onSubmit = () => {
         setIsSaving(true);
-        props.onSubmit(evt);
+        props.onSubmit();
     }
 
     useEffect(() => {
@@ -36,7 +40,7 @@ function AddEventListItem(props:AddEventListItemProps) {
             { isSaving ? ( 
                 <div>Saving ...</div>
             ) :  (
-                <form onSubmit={onSubmit}>
+                <form onSubmit={onFormSubmit}>
                     <div className="Name-input">
                         <span className="Event-add-icon">+</span>
                         <input 
@@ -44,6 +48,7 @@ function AddEventListItem(props:AddEventListItemProps) {
                             className="Event-add"
                             type="text" 
                             onChange={props.onChange}
+                            onBlur={onSubmit}
                             defaultValue={props.value.name}
                             required
                             placeholder="Add an event"
