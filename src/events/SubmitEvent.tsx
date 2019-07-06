@@ -1,7 +1,7 @@
-import React, { Component, Fragment, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import moment from 'moment';
 import Event from '../common/interfaces/Event.interface';
-import EventApi from './EventApi';
+import EventApi from '../common/api/EventApi';
 import {
   BrowserRouter as Router,
   Redirect,

@@ -1,5 +1,5 @@
-import Api from '../core/Api';
-import Event from '../common/interfaces/Event.interface';
+import Api from '../../core/Api';
+import Event from '../interfaces/Event.interface';
 
 export const EventApi = {
     getEvents(): Promise<Event[]> {

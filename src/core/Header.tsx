@@ -25,8 +25,8 @@ function Header({ history}: RouteComponentProps) {
                     <div className="App-header-nav">
                         <div>
                             <NavLink exact to="/upcoming" activeClassName="App-header-nav--active">upcoming</NavLink>
-                            &nbsp;|&nbsp;
-                            <NavLink exact to="/submit" activeClassName="App-header-nav--active">submit</NavLink>
+                            {/* &nbsp;|&nbsp; */}
+                            {/* <NavLink exact to="/submit" activeClassName="App-header-nav--active">submit</NavLink> */}
                         </div>
                         <div>
                             {authContext.username}&nbsp;|&nbsp;
