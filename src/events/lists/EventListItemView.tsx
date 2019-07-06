@@ -1,5 +1,5 @@
 import React from 'react';
-import Event from "./Event.interface";
+import Event from '../../common/interfaces/Event.interface';
 
 import './EventListItemView.scss';
 
