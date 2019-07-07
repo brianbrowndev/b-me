@@ -7,7 +7,10 @@ export const EventApi = {
     },
     postEvent(data:Event): Promise<Event> {
         return Api.post<Event>('events', data);
-    }
+    },
+    putEvent(data:Event): Promise<null> {
+        return Api.put<null>(`events/${data.id}`, data);
+    },
 }
 
 export default EventApi;

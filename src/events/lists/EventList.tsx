@@ -4,6 +4,7 @@ import EventListItem from './EventListItem';
 import EventApi  from '../../common/api/EventApi';
 import AddEventListItem from './AddEventListItem';
 import EventListItemView from './EventListItemView';
+import { number } from 'prop-types';
 
 async function fetchEvents(): Promise<Event[]> {
     return await EventApi.getEvents();
@@ -13,34 +14,6 @@ async function fetchEvents(): Promise<Event[]> {
 function EventList () {
     //eventlist
     const [isLoading, setIsLoading] = useState(false);
-
-    // view
-    const [events, setEvents] = useState<Array<Event>>([]);
-
-    // add
-    const [error, setError] = useState(false);
-    const initialEventState = {
-    } as Event;
-    const [event, setEvent] = useState(Object.assign({}, initialEventState));
-
-    const onEventChange = (evt: React.FormEvent) => {
-        const { name, value } = evt.target as any
-        setEvent({ ...event, [name]: value })
-    }
-
-    const onCheckedChange = (evt: React.FormEvent) => {
-        const { name, checked } = evt.target as any
-        setEvent({ ...event, [name]: checked })
-    }
-
-    const handleEventAdd = () => { 
-        EventApi.postEvent(event).then(result => {
-            setEvent(Object.assign({}, initialEventState));
-            setEvents(events.concat(result));
-        }).catch(err => {
-            setError(err)
-        });
-    }
 
     useEffect(
         (() => {
@@ -54,6 +27,51 @@ function EventList () {
         [] // only call the fetch once by passing in empty params
     );
 
+    // view
+    const [events, setEvents] = useState<Array<Event>>([]);
+
+    const onCompleteChanged = (event:Event) => {
+        return (evt: React.FormEvent) => {
+            const { name, checked } = evt.target as any;
+            event = {...event, [name]:checked};
+            EventApi.putEvent(event).then(() => {
+                setEvents(prevEvents => prevEvents.map((e) => {
+                    if (e.id === event.id) {
+                        return event;
+                    }
+                    return e;
+                }));
+            }).catch(err => {
+                setAddError(err)
+            });
+ 
+        }
+    }
+
+    // add
+    const [addError, setAddError] = useState(false);
+    const initialAddEventState = {} as Event;
+    const [addEvent, setAddEvent] = useState({...initialAddEventState});
+
+    const onAddEventChange = (evt: React.FormEvent) => {
+        const { name, value } = evt.target as any
+        setAddEvent({ ...addEvent, [name]: value })
+    }
+
+    const onAddCheckedChange = (evt: React.FormEvent) => {
+        const { name, checked } = evt.target as any
+        setAddEvent({ ...addEvent, [name]: checked })
+    }
+
+    const handleEventAdd = () => { 
+        EventApi.postEvent(addEvent).then(result => {
+            setAddEvent({...initialAddEventState});
+            setEvents(events.concat(result));
+        }).catch(err => {
+            setAddError(err)
+        });
+    }
+
     return (
         // A framgent can be used in place of div to not return extra nodes
         <Fragment>
@@ -64,13 +82,16 @@ function EventList () {
                 {events.map(item => (
                     // <EventListItem key={item.id} value={item} />
                     <EventListItem key={item.id}>
-                        <EventListItemView value={item}/>
+                        <EventListItemView 
+                            event={item}
+                            onCompleteChange={onCompleteChanged(item)}
+                        />
                     </EventListItem>
                 ))}
                 <EventListItem>
                     <AddEventListItem
-                        onChange={onEventChange}
-                        value={event}
+                        onChange={onAddEventChange}
+                        event={addEvent}
                         onSubmit={handleEventAdd}
                     />
                 </EventListItem>
