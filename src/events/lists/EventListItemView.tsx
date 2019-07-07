@@ -12,7 +12,7 @@ function EventListItemView (props: EventListItemViewProps) {
 
     const inputEl: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
-
+    
     const onCompleteChange  = (evt: React.FormEvent) => {
         if (inputEl !== null && inputEl.current != null) { 
             inputEl.current.disabled = true;
