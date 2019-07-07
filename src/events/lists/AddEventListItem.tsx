@@ -4,7 +4,7 @@ import './AddEventListItem.scss';
 
 interface AddEventListItemProps {
     onChange (evt:React.FormEvent):void;
-    value: Event;
+    event: Event;
     onSubmit ():void;
 }
 
@@ -17,16 +17,26 @@ function AddEventListItem(props:AddEventListItemProps) {
 
     const onFormSubmit = (evt: React.FormEvent) => {
         if (evt) evt.preventDefault();
-        onSubmit();
+        if (validateModel()) {
+            setIsSaving(true);
+            onSubmit();
+        }
     }
     const onSubmit = () => {
-        setIsSaving(true);
-        props.onSubmit();
+        if (validateModel()) {
+            setIsSaving(true);
+            props.onSubmit();
+        }
+    }
+
+    const validateModel = ():boolean => {
+        if (props.event.name == null || props.event.name == "") return false;
+        return true;
     }
 
     useEffect(() => {
         if (isSaving != null) setIsSaving(false);
-    }, [props.value])
+    }, [props.event])
 
     useEffect(() => {
         if (inputEl !== null && inputEl.current != null && isSaving == false) { 
@@ -49,7 +59,6 @@ function AddEventListItem(props:AddEventListItemProps) {
                             type="text" 
                             onChange={props.onChange}
                             onBlur={onSubmit}
-                            defaultValue={props.value.name}
                             required
                             placeholder="Add an event"
                             name="name">
