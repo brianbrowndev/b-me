@@ -1,4 +1,6 @@
-// import { Auth } from "./Auth";
+/**
+ * DEPRECATED - Use API derived from Nswag in /src/ommon/client
+ */
 
 export const Api = {
     get<T>(endpoint:string): Promise<T> {

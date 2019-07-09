@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import moment from 'moment';
-import Event from '../common/interfaces/Event.interface';
-import EventApi from '../common/api/EventApi';
+import { Event } from '../common/client/index';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -29,9 +28,9 @@ function SubmitEvent() {
 
     const submit = (evt: React.FormEvent) => { 
         if (evt) evt.preventDefault();
-        EventApi.postEvent(event).then(() => setRedirectToReferrer(true)).catch(err => {
-            setError(err)
-        });
+        // EventApi.postEvent(event).then(() => setRedirectToReferrer(true)).catch(err => {
+        //     setError(err)
+        // });
     }
 
     return (
@@ -70,7 +69,7 @@ function SubmitEvent() {
                             </input>
                         </label>
                     </div>
-                    <div className="Time-input">
+                    {/* <div className="Time-input">
                         <label>
                             time: 
                             <input 
@@ -81,7 +80,7 @@ function SubmitEvent() {
                             </input>
                         </label>
                     </div>
-
+ */}
                     {/* <div className="Location-input">
                         <label>
                             location: 

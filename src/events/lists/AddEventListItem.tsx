@@ -1,5 +1,5 @@
 import React, {  useEffect, Fragment, useState, useRef,  RefObject } from 'react';
-import Event from '../../common/interfaces/Event.interface';
+import { Event } from '../../common/client/index';
 import './AddEventListItem.scss';
 
 interface AddEventListItemProps {
