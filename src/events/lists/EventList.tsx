@@ -1,10 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import Event from '../../common/interfaces/Event.interface';
+import { Event } from '../../common/client/index';
 import EventListItem from './EventListItem';
-import EventApi  from '../../common/api/EventApi';
+import EventApi  from '../../common/client/EventApi';
 import AddEventListItem from './AddEventListItem';
 import EventListItemView from './EventListItemView';
-import { number } from 'prop-types';
 
 async function fetchEvents(): Promise<Event[]> {
     return await EventApi.getEvents();
@@ -34,7 +33,7 @@ function EventList () {
         return (evt: React.FormEvent) => {
             const { name, checked } = evt.target as any;
             event = {...event, [name]:checked};
-            EventApi.putEvent(event).then(() => {
+            EventApi.updateEvent((event.id as number), event).then(() => {
                 setEvents(prevEvents => prevEvents.map((e) => {
                     if (e.id === event.id) {
                         return event;
@@ -64,7 +63,7 @@ function EventList () {
     }
 
     const handleEventAdd = () => { 
-        EventApi.postEvent(addEvent).then(result => {
+        EventApi.insertEvent(addEvent).then(result => {
             setAddEvent({...initialAddEventState});
             setEvents(events.concat(result));
         }).catch(err => {

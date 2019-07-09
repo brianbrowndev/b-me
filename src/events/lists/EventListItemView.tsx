@@ -1,5 +1,5 @@
 import React, { useState, useEffect, RefObject, useRef } from 'react';
-import Event from '../../common/interfaces/Event.interface';
+import { Event } from '../../common/client/index';
 
 import './EventListItemView.scss';
 
