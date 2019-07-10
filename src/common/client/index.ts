@@ -148,15 +148,18 @@ export class EventClient extends ApiClientBase {
             result200 = _responseText === "" ? null : <Event[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server error occurred.", status, _responseText, _headers);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Event[]>(<any>null);
     }
 
-    insertEvent(item: Event): Promise<Event> {
+    createEvent(item: Event): Promise<Event> {
         let url_ = this.baseUrl + "/api/event/events";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -174,33 +177,28 @@ export class EventClient extends ApiClientBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processInsertEvent(_response);
+            return this.processCreateEvent(_response);
         });
     }
 
-    protected processInsertEvent(response: Response): Promise<Event> {
+    protected processCreateEvent(response: Response): Promise<Event> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 201) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : <Event>JSON.parse(_responseText, this.jsonParseReviver);
-            return result200;
+            let result201: any = null;
+            result201 = _responseText === "" ? null : <Event>JSON.parse(_responseText, this.jsonParseReviver);
+            return result201;
             });
-        } else if (status === 404) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server error occurred.", status, _responseText, _headers);
             });
-        } else if (status === 500) {
+        } else {
             return response.text().then((_responseText) => {
             return throwException("A server error occurred.", status, _responseText, _headers);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Event>(<any>null);
     }
 
     getReoccuringTypes(): Promise<ReoccuringType[]> {
@@ -230,12 +228,15 @@ export class EventClient extends ApiClientBase {
             result200 = _responseText === "" ? null : <ReoccuringType[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server error occurred.", status, _responseText, _headers);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ReoccuringType[]>(<any>null);
     }
 
     getEvent(id: number): Promise<Event> {
@@ -268,12 +269,15 @@ export class EventClient extends ApiClientBase {
             result200 = _responseText === "" ? null : <Event>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server error occurred.", status, _responseText, _headers);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Event>(<any>null);
     }
 
     updateEvent(id: number, item: Event): Promise<void> {
@@ -307,26 +311,19 @@ export class EventClient extends ApiClientBase {
             return response.text().then((_responseText) => {
             return;
             });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            result400 = _responseText === "" ? null : <{ [key: string] : any; }>JSON.parse(_responseText, this.jsonParseReviver);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server error occurred.", status, _responseText, _headers);
             });
-        } else if (status === 500) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server error occurred.", status, _responseText, _headers);
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
     }
 
     deleteEvent(id: number): Promise<void> {
@@ -352,30 +349,23 @@ export class EventClient extends ApiClientBase {
     protected processDeleteEvent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             return;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            result400 = _responseText === "" ? null : <{ [key: string] : any; }>JSON.parse(_responseText, this.jsonParseReviver);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server error occurred.", status, _responseText, _headers);
             });
-        } else if (status === 500) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server error occurred.", status, _responseText, _headers);
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
     }
 }
 
@@ -3333,12 +3323,6 @@ export interface EventUser {
 export interface ReoccuringType {
     id?: number;
     name?: string | undefined;
-}
-
-/** Defines a serializable container for storing ModelState information. This information is stored as key/value pairs. */
-export interface SerializableError {
-
-    [key: string]: any; 
 }
 
 export interface GroceryCart {
