@@ -63,7 +63,7 @@ function EventList () {
     }
 
     const handleEventAdd = () => { 
-        EventApi.insertEvent(addEvent).then(result => {
+        EventApi.createEvent(addEvent).then(result => {
             setAddEvent({...initialAddEventState});
             setEvents(events.concat(result));
         }).catch(err => {
@@ -79,7 +79,6 @@ function EventList () {
             ) : (
             <div>
                 {events.map(item => (
-                    // <EventListItem key={item.id} value={item} />
                     <EventListItem key={item.id}>
                         <EventListItemView 
                             event={item}
