@@ -1,9 +1,11 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Event } from '../../common/client/index';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
+import { Event, SwaggerException } from '../../common/client/index';
 import EventListItem from './EventListItem';
 import EventApi  from '../../common/client/EventApi';
 import EventListItemAdd from './EventListItemAdd';
 import EventListItemView from './EventListItemView';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AppSnackbar from '../../core/components/AppSnackbar';
 
 async function fetchEvents(): Promise<Event[]> {
     return await EventApi.getEvents();
@@ -12,7 +14,8 @@ async function fetchEvents(): Promise<Event[]> {
 
 function EventList () {
     //eventlist
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
 
     useEffect(
         (() => {
@@ -31,26 +34,26 @@ function EventList () {
 
     const onCompleteChanged = (event:Event) => {
         return () => {
-            event = {...event};
-            event.complete = !event.complete;
-            EventApi.updateEvent((event.id as number), event).then(() => {
+            const newEvent = {...event};
+            newEvent.complete = !newEvent.complete;
+            EventApi.updateEvent((newEvent.id as number), newEvent).then(() => {
                 setEvents(prevEvents => prevEvents.map((e) => {
-                    if (e.id === event.id) {
-                        return event;
+                    if (e.id === newEvent.id) {
+                        return newEvent;
                     }
                     return e;
                 }));
             }).catch(err => {
-                setAddError(err)
+                console.error(err.message);
+                setError(err.message);
             });
  
         }
     }
 
     // add
-    const [addError, setAddError] = useState(false);
     const initialAddEventState = {} as Event;
-    const [addEvent, setAddEvent] = useState({...initialAddEventState});
+    const [addEvent, setAddEvent] = useState<Event>({...initialAddEventState});
 
     const onAddEventChange = (evt: React.FormEvent) => {
         const { name, value } = evt.target as any
@@ -66,16 +69,22 @@ function EventList () {
         EventApi.createEvent(addEvent).then(result => {
             setAddEvent({...initialAddEventState});
             setEvents(events.concat(result));
-        }).catch(err => {
-            setAddError(err)
+        }).catch((err: SwaggerException) => {
+            console.error(err);
+            setError(err.message);
         });
     }
+
+    const snackbar = useRef(null);
 
     return (
         // A framgent can be used in place of div to not return extra nodes
         <Fragment>
             { isLoading ? (
-                <div>Loading ...</div>
+                <div>
+                    <FontAwesomeIcon icon="spinner" pulse />
+                    &nbsp;Loading ...
+                </div>
             ) : (
             <div>
                 <ul className="fa-ul">
@@ -95,7 +104,9 @@ function EventList () {
                         />
                     </EventListItem>
                 </ul>
-            </div>
+                <AppSnackbar message={error}/>
+           </div>
+
             )}
         </Fragment>
     );
