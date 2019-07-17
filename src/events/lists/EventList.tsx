@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Event } from '../../common/client/index';
 import EventListItem from './EventListItem';
 import EventApi  from '../../common/client/EventApi';
-import AddEventListItem from './AddEventListItem';
+import EventListItemAdd from './EventListItemAdd';
 import EventListItemView from './EventListItemView';
 
 async function fetchEvents(): Promise<Event[]> {
@@ -88,7 +88,7 @@ function EventList () {
                         </EventListItem>
                     ))}
                     <EventListItem>
-                        <AddEventListItem
+                        <EventListItemAdd
                             onChange={onAddEventChange}
                             event={addEvent}
                             onSubmit={handleEventAdd}

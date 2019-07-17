@@ -1,15 +1,15 @@
 import React, {  useEffect, Fragment, useState, useRef,  RefObject } from 'react';
 import { Event } from '../../common/client/index';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './AddEventListItem.scss';
+import './EventListItemAdd.scss';
 
-interface AddEventListItemProps {
+interface EventListItemAddProps {
     onChange (evt:React.FormEvent):void;
     event: Event;
     onSubmit ():void;
 }
 
-function AddEventListItem(props:AddEventListItemProps) {
+function EventListItemAdd(props:EventListItemAddProps) {
 
     const inputEl: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
@@ -71,4 +71,4 @@ function AddEventListItem(props:AddEventListItemProps) {
    );
 }
 
-export default AddEventListItem;
+export default EventListItemAdd;
