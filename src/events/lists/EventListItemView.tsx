@@ -1,9 +1,8 @@
-import React, { useState, useEffect, RefObject, useRef, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Event } from '../../common/client/index';
 
 import './EventListItemView.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import EventCompleteCheckbox from './EventCompleteCheckbox';
+import BooleanSubmitIcon from '../../core/components/BooleanSubmitIcon';
 
 interface EventListItemViewProps {
     event: Event;
@@ -14,7 +13,13 @@ function EventListItemView (props: EventListItemViewProps) {
 
     return  (
         <Fragment>
-            <EventCompleteCheckbox event={props.event} onCheckboxClick={props.onCompleteChange} />
+            <BooleanSubmitIcon
+                state={props.event.complete}
+                onClick={props.onCompleteChange}
+                falseIcon={['far', 'square']}
+                trueIcon={['far', 'check-square']}
+                isListIcon={true}
+                />
             {props.event.name}
         </Fragment>
 
