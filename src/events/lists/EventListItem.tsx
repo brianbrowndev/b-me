@@ -4,7 +4,7 @@ import './EventListItem.scss';
 
 
 function EventListItem (props:any) {
-    return  <div className='Event-list-item'>{props.children}</div>;
+    return  <li className='Event-list-item'>{props.children}</li>;
 
 }
 
