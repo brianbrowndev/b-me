@@ -30,9 +30,9 @@ function EventList () {
     const [events, setEvents] = useState<Array<Event>>([]);
 
     const onCompleteChanged = (event:Event) => {
-        return (evt: React.FormEvent) => {
-            const { name, checked } = evt.target as any;
-            event = {...event, [name]:checked};
+        return () => {
+            event = {...event};
+            event.complete = !event.complete;
             EventApi.updateEvent((event.id as number), event).then(() => {
                 setEvents(prevEvents => prevEvents.map((e) => {
                     if (e.id === event.id) {
@@ -78,21 +78,23 @@ function EventList () {
                 <div>Loading ...</div>
             ) : (
             <div>
-                {events.map(item => (
-                    <EventListItem key={item.id}>
-                        <EventListItemView 
-                            event={item}
-                            onCompleteChange={onCompleteChanged(item)}
+                <ul className="fa-ul">
+                    {events.map(item => (
+                        <EventListItem key={item.id}>
+                            <EventListItemView 
+                                event={item}
+                                onCompleteChange={onCompleteChanged(item)}
+                            />
+                        </EventListItem>
+                    ))}
+                    <EventListItem>
+                        <AddEventListItem
+                            onChange={onAddEventChange}
+                            event={addEvent}
+                            onSubmit={handleEventAdd}
                         />
                     </EventListItem>
-                ))}
-                <EventListItem>
-                    <AddEventListItem
-                        onChange={onAddEventChange}
-                        event={addEvent}
-                        onSubmit={handleEventAdd}
-                    />
-                </EventListItem>
+                </ul>
             </div>
             )}
         </Fragment>

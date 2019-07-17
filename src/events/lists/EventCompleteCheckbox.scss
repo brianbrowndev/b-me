@@ -1,0 +1,14 @@
+
+.Checkbox-container {
+    display:flex;
+    align-items:center;
+
+    & svg {
+        cursor:pointer;
+
+        &.Checkbox-pending {
+            cursor:initial;
+        }
+    }
+
+}

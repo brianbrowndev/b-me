@@ -1,5 +1,6 @@
 import React, {  useEffect, Fragment, useState, useRef,  RefObject } from 'react';
 import { Event } from '../../common/client/index';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './AddEventListItem.scss';
 
 interface AddEventListItemProps {
@@ -12,8 +13,7 @@ function AddEventListItem(props:AddEventListItemProps) {
 
     const inputEl: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
-    // not the best to have a ternary to check if null or false
-    const [isSaving, setIsSaving] = useState<Boolean | null>(null);
+    const [isSaving, setIsSaving] = useState<Boolean>();
 
     const onFormSubmit = (evt: React.FormEvent) => {
         if (evt) evt.preventDefault();
@@ -35,11 +35,11 @@ function AddEventListItem(props:AddEventListItemProps) {
     }
 
     useEffect(() => {
-        if (isSaving != null) setIsSaving(false);
+        if (isSaving === true) setIsSaving(false);
     }, [props.event])
 
     useEffect(() => {
-        if (inputEl !== null && inputEl.current != null && isSaving == false) { 
+        if (inputEl !== null && inputEl.current != null && isSaving === false) { 
             inputEl.current.focus();
         }
     }, [isSaving])
@@ -48,11 +48,11 @@ function AddEventListItem(props:AddEventListItemProps) {
 
         <Fragment>
             { isSaving ? ( 
-                <div>Saving ...</div>
+                <FontAwesomeIcon icon='spinner' pulse listItem />
             ) :  (
                 <form onSubmit={onFormSubmit}>
                     <div className="Name-input">
-                        <span className="Event-add-icon">+</span>
+                        <FontAwesomeIcon icon="plus" className="Event-add-icon" listItem />
                         <input 
                             ref={inputEl} 
                             className="Event-add"
@@ -67,7 +67,6 @@ function AddEventListItem(props:AddEventListItemProps) {
                 </form>
             )
             }
-
         </Fragment>
    );
 }

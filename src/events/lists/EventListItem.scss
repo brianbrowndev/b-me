@@ -2,15 +2,12 @@
 .Event-list-item {
     border-bottom:1px solid #e5e5e5;
     padding:12px 0px;
-
+    width:100%;
+    display:flex;
+    align-items:center;
 }
 
 .Event-add {
     border:none !important;
     background:none !important;
-}
-
-.Event-add-icon {
-    font-size:25px;
-    padding-right:5px;
 }

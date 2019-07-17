@@ -1,42 +1,23 @@
-import React, { useState, useEffect, RefObject, useRef } from 'react';
+import React, { useState, useEffect, RefObject, useRef, Fragment } from 'react';
 import { Event } from '../../common/client/index';
 
 import './EventListItemView.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import EventCompleteCheckbox from './EventCompleteCheckbox';
 
 interface EventListItemViewProps {
     event: Event;
-    onCompleteChange(evt: React.FormEvent): void;
+    onCompleteChange(): void;
 };
 
 function EventListItemView (props: EventListItemViewProps) {
 
-    const inputEl: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
-
-    
-    const onCompleteChange  = (evt: React.FormEvent) => {
-        if (inputEl !== null && inputEl.current != null) { 
-            inputEl.current.disabled = true;
-        }
-        props.onCompleteChange(evt);
-    };
-
-    useEffect( () => {
-        if (inputEl !== null && inputEl.current != null) { 
-            inputEl.current.disabled = false;
-        }
-    },[props.event]);
-
     return  (
-        <div>
-            <input 
-                ref={inputEl} 
-                type="checkbox" 
-                id={props.event.name} 
-                name="complete"
-                defaultChecked={props.event.complete}
-                onChange={onCompleteChange}></input>
+        <Fragment>
+            <EventCompleteCheckbox event={props.event} onCheckboxClick={props.onCompleteChange} />
             {props.event.name}
-        </div>
+        </Fragment>
+
     );
 
 }
