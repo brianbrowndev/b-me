@@ -44,9 +44,13 @@ function EventList () {
                     return e;
                 }));
             }).catch(err => {
-                console.error(err.message);
-                setError(err.message);
-                setEvents([...events]);
+                setError(`Updating Event Error: ${err.message}`);
+                setEvents(prevEvents => prevEvents.map((e) => {
+                    if (e.id === newEvent.id) {
+                        return {...event};
+                    }
+                    return e;
+                }));
             });
         }
     }
@@ -71,11 +75,11 @@ function EventList () {
             setEvents(events.concat(result));
         }).catch((err: SwaggerException) => {
             console.error(err);
-            setError(err.message);
+            setError(`Adding Event Error: ${err.message}`);
+            setAddEvent({...initialAddEventState});
         });
     }
 
-    const snackbar = useRef(null);
 
     return (
         // A framgent can be used in place of div to not return extra nodes
@@ -104,7 +108,10 @@ function EventList () {
                         />
                     </EventListItem>
                 </ul>
-                <AppSnackbar message={error}/>
+                <AppSnackbar 
+                    message={error}
+                    onClose={() => setError('')}
+                />
            </div>
 
             )}

@@ -17,10 +17,7 @@ function EventListItemAdd(props:EventListItemAddProps) {
 
     const onFormSubmit = (evt: React.FormEvent) => {
         if (evt) evt.preventDefault();
-        if (validateModel()) {
-            setIsSaving(true);
-            onSubmit();
-        }
+        onSubmit();
     }
     const onSubmit = () => {
         if (validateModel()) {
@@ -34,25 +31,30 @@ function EventListItemAdd(props:EventListItemAddProps) {
         return true;
     }
 
+    /**
+     * After an event is added, reset the form
+     */
     useEffect(() => {
-        if (isSaving === true) setIsSaving(false);
-    }, [props.event])
+        if (isSaving === true) {
+            setIsSaving(false);
 
-    useEffect(() => {
-        if (inputEl !== null && inputEl.current != null && isSaving === false) { 
-            inputEl.current.focus();
+            if (inputEl !== null && inputEl.current != null) { 
+                inputEl.current.value = '';
+                inputEl.current.focus();
+            }
         }
-    }, [isSaving])
+    }, [props.event])
 
     return (
 
         <Fragment>
-            { isSaving ? ( 
-                <FontAwesomeIcon icon='spinner' pulse listItem />
-            ) :  (
-                <form onSubmit={onFormSubmit}>
+               <form onSubmit={onFormSubmit}>
                     <div className="Name-input">
-                        <FontAwesomeIcon icon="plus" className="Event-add-icon" listItem />
+                        { isSaving ? ( 
+                            <FontAwesomeIcon icon='spinner' pulse listItem />
+                        ) :  (
+                            <FontAwesomeIcon icon="plus" className="Event-add-icon" listItem />
+                        )}
                         <input 
                             ref={inputEl} 
                             className="Event-add"
@@ -61,12 +63,11 @@ function EventListItemAdd(props:EventListItemAddProps) {
                             onBlur={onSubmit}
                             required
                             placeholder="Add an event"
+                            disabled={isSaving ? true : false}
                             name="name">
                         </input>
                     </div>
                 </form>
-            )
-            }
         </Fragment>
    );
 }

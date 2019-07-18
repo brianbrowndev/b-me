@@ -1,34 +1,12 @@
 import React, { useEffect } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 
-// import { makeStyles } from '@material-ui/styles';
-// import { Theme } from '@material-ui/core';
-
 interface AppSnackbarProps {
     duration?:number;
     message:string;
+    onClose?: () => void;
 };
 
-// const variantStyle = {
-//   error: 'error',
-//   info: 'info',
-// };
-
-// const useStyles = makeStyles((theme: Theme) => ({
-//   error: {
-//     backgroundColor: theme.palette.error.dark,
-//   },
-//   info: {
-//     backgroundColor: theme.palette.primary.main,
-//   }
-// }));
-
-export interface Props {
-//   className?: string;
-  message?: string;
-//   onClose?: () => void;
-//   variant: keyof typeof variantStyle;
-}
 
 function AppSnackbar (props: AppSnackbarProps) {
     // const classes = useStyles();
@@ -39,10 +17,11 @@ function AppSnackbar (props: AppSnackbarProps) {
     }
 
     function handleClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
-        if (reason === 'clickaway') {
-        return;
-        }
         setOpen(false);
+        if (props.onClose) {
+            props.onClose();
+        }
+
     }
 
     useEffect(() => {

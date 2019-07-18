@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Event } from '../../common/client/index';
 
 import './EventListItemView.scss';
@@ -11,11 +11,26 @@ interface EventListItemViewProps {
 
 function EventListItemView (props: EventListItemViewProps) {
 
+
+    const [isPending, setIsPending] = useState<boolean>(false);
+    
+    const handleClick = () => {
+        if (isPending !== true) {
+            setIsPending(true);
+            props.onCompleteChange();
+        }
+    }
+
+    useEffect(() => {
+        if(isPending === true) setIsPending(false)
+    }, [props.event])
+
     return  (
         <Fragment>
             <BooleanSubmitIcon
-                state={{status:props.event.complete}}
-                onClick={props.onCompleteChange}
+                isPending={isPending}
+                state={props.event.complete}
+                onClick={handleClick}
                 falseIcon={['far', 'square']}
                 trueIcon={['far', 'check-square']}
                 isListIcon={true}
