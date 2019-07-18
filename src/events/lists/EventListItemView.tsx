@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Event } from '../../common/client/index';
 
 import './EventListItemView.scss';
@@ -14,7 +14,7 @@ function EventListItemView (props: EventListItemViewProps) {
     return  (
         <Fragment>
             <BooleanSubmitIcon
-                state={props.event.complete}
+                state={{status:props.event.complete}}
                 onClick={props.onCompleteChange}
                 falseIcon={['far', 'square']}
                 trueIcon={['far', 'check-square']}
