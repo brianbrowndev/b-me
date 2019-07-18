@@ -46,8 +46,8 @@ function EventList () {
             }).catch(err => {
                 console.error(err.message);
                 setError(err.message);
+                setEvents([...events]);
             });
- 
         }
     }
 

@@ -5,7 +5,9 @@ import './BooleanSubmitIcon.scss';
 import { IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 
 interface BooleanSubmitIconProps {
-    state?: boolean;
+    // an object is used instead of the boolean so that
+    // every time the object is updated, the status, the effect retriggers
+    state: {status:boolean | undefined};
     isListIcon: boolean;
     falseIcon: [IconPrefix, IconName];
     trueIcon: [IconPrefix, IconName];
@@ -25,8 +27,8 @@ function BooleanSubmitIcon (props: BooleanSubmitIconProps) {
     }
 
     useEffect(() => {
-        if (isPending === true) setIsPending(false);
-    }, [props.state])
+        if(isPending === true) setIsPending(false)
+    }, [props.state]);
 
     return  (
         <div className="Boolean-submit-container" onClick={handleClick}>
@@ -34,7 +36,7 @@ function BooleanSubmitIcon (props: BooleanSubmitIconProps) {
                 isPending ? (
                     <FontAwesomeIcon icon='spinner' className="Boolean-submit-pending" pulse listItem={props.isListIcon} />
                 ) : (
-                    props.state ?
+                    props.state.status ?
                         <FontAwesomeIcon icon={props.trueIcon} listItem={props.isListIcon} />
                     :
                         <FontAwesomeIcon icon={props.falseIcon} listItem={props.isListIcon} />
