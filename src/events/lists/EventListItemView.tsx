@@ -1,12 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Event } from '../../common/client/index';
+import { Event, SwaggerException } from '../../common/client/index';
 
 import './EventListItemView.scss';
 import BooleanSubmitIcon from '../../core/components/BooleanSubmitIcon';
+import EventApi  from '../../common/client/EventApi';
 
 interface EventListItemViewProps {
     event: Event;
-    onCompleteChange(): void;
+    onUpdate(event:Event):void
+    onError (err:string):void
 };
 
 function EventListItemView (props: EventListItemViewProps) {
@@ -17,13 +19,21 @@ function EventListItemView (props: EventListItemViewProps) {
     const handleClick = () => {
         if (isPending !== true) {
             setIsPending(true);
-            props.onCompleteChange();
+            updateEvent();
         }
     }
 
-    useEffect(() => {
-        if(isPending === true) setIsPending(false)
-    }, [props.event])
+    const updateEvent = () => {
+        const newEvent = {...props.event};
+        newEvent.complete = !newEvent.complete;
+        EventApi.updateEvent((newEvent.id as number), newEvent).then(() => {
+            props.onUpdate(newEvent);
+            setIsPending(false);
+        }).catch((err: SwaggerException) => {
+            props.onError(`Error updating event: ${err.message}`);
+            setIsPending(false);
+        });
+    }
 
     return  (
         <Fragment>

@@ -7,24 +7,21 @@ import EventListItemView from './EventListItemView';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AppSnackbar from '../../core/components/AppSnackbar';
 
-async function fetchEvents(): Promise<Event[]> {
-    return await EventApi.getEvents();
-}
-
 
 function EventList () {
     //eventlist
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
 
     useEffect(
         (() => {
-            // iife the async call
-            (async () => {
-                setIsLoading(true);
-                setEvents(await fetchEvents())
+            EventApi.getEvents().then((events) => {
+                setEvents(events)
                 setIsLoading(false);
-            })()
+            }).catch(err => {
+                setError(`Error fetching events: ${err.message}`)
+                setEvents([]);
+            });
         }), 
         [] // only call the fetch once by passing in empty params
     );
@@ -32,53 +29,15 @@ function EventList () {
     // view
     const [events, setEvents] = useState<Array<Event>>([]);
 
-    const onCompleteChanged = (event:Event) => {
-        return () => {
-            const newEvent = {...event};
-            newEvent.complete = !newEvent.complete;
-            EventApi.updateEvent((newEvent.id as number), newEvent).then(() => {
-                setEvents(prevEvents => prevEvents.map((e) => {
-                    if (e.id === newEvent.id) {
-                        return newEvent;
-                    }
-                    return e;
-                }));
-            }).catch(err => {
-                setError(`Updating Event Error: ${err.message}`);
-                setEvents(prevEvents => prevEvents.map((e) => {
-                    if (e.id === newEvent.id) {
-                        return {...event};
-                    }
-                    return e;
-                }));
-            });
-        }
+    const onEventUpdate = (event: Event) => {
+        setEvents(prevEvents => prevEvents.map((e) => {
+            if (e.id === event.id) {
+                return event;
+            }
+            return e;
+        }));
     }
 
-    // add
-    const initialAddEventState = {} as Event;
-    const [addEvent, setAddEvent] = useState<Event>({...initialAddEventState});
-
-    const onAddEventChange = (evt: React.FormEvent) => {
-        const { name, value } = evt.target as any
-        setAddEvent({ ...addEvent, [name]: value })
-    }
-
-    const onAddCheckedChange = (evt: React.FormEvent) => {
-        const { name, checked } = evt.target as any
-        setAddEvent({ ...addEvent, [name]: checked })
-    }
-
-    const handleEventAdd = () => { 
-        EventApi.createEvent(addEvent).then(result => {
-            setAddEvent({...initialAddEventState});
-            setEvents(events.concat(result));
-        }).catch((err: SwaggerException) => {
-            console.error(err);
-            setError(`Adding Event Error: ${err.message}`);
-            setAddEvent({...initialAddEventState});
-        });
-    }
 
 
     return (
@@ -96,15 +55,15 @@ function EventList () {
                         <EventListItem key={item.id}>
                             <EventListItemView 
                                 event={item}
-                                onCompleteChange={onCompleteChanged(item)}
+                                onUpdate={onEventUpdate}
+                                onError={(err) => setError(err)}
                             />
                         </EventListItem>
                     ))}
                     <EventListItem>
                         <EventListItemAdd
-                            onChange={onAddEventChange}
-                            event={addEvent}
-                            onSubmit={handleEventAdd}
+                            onAdd={(event) => setEvents(events.concat(event))}
+                            onError={(err) => setError(err)}
                         />
                     </EventListItem>
                 </ul>
