@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './App.scss';
 
 import Header from './core/Header';
-import {Login, PrivateRoute} from './core/Auth';
+import {PrivateRoute} from './core/Auth';
+import Login from './core/Login';
 import About from './core/About';
 
 import EventList from './events/lists/EventList';
@@ -11,15 +12,19 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import {  faPlus, faSpinner  } from '@fortawesome/free-solid-svg-icons'
+import {  faPlus, faSpinner, faWind  } from '@fortawesome/free-solid-svg-icons'
 import { faSquare, faCheckSquare } from '@fortawesome/free-regular-svg-icons'
 
-library.add( faCheckSquare, faPlus, faSpinner, faSquare);
+library.add( faCheckSquare, faPlus, faSpinner, faSquare, faWind);
 
+import { ThemeProvider } from '@material-ui/styles';
+
+import theme from './theme/theme';
 
 class App extends Component {
   render() {
     return (
+    <ThemeProvider theme={theme}>
       <Router>
         <AuthProvider>
           <div className="App">
@@ -34,6 +39,7 @@ class App extends Component {
           </div>
         </AuthProvider>
       </Router>
+    </ThemeProvider>
     );
   }
 }

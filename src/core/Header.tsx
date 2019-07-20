@@ -10,17 +10,29 @@ import {
   withRouter,
   RouteComponentProps
 } from "react-router-dom";
-
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import './Header.scss';
+import { Typography, Divider, Icon } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Header({ history}: RouteComponentProps) {
     const authContext = useContext(AuthContext);
     return (
-        <header className="App-header">
-            <Fragment>
-                <div className="App-header-logo">
+        <AppBar position="static" color="primary" elevation={0}>
+        {/* // <header className="App-header"> */}
+            <Toolbar>
+                {/* <div className="App-header-logo">
                     <Link to="/"><strong className="App-title">Events</strong></Link>
-                </div>
+                </div> */}
+
+                <Icon>
+                    <FontAwesomeIcon icon='wind'  />
+                </Icon>
+                <Divider/>
+                <Typography variant="h6" >
+                    Mythic
+                </Typography>
                 { authContext.authenticated ? (
                     <div className="App-header-nav">
                         <div>
@@ -43,8 +55,9 @@ function Header({ history}: RouteComponentProps) {
                     <Link to="/login">login</Link>
                 </div>
                 )}
-            </Fragment>
-        </header>
+            </Toolbar>
+        </AppBar>
+        // {/* // </header> */}
     );
 }
 
