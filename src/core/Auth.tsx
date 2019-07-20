@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from 'react';
+import React, { useState,  useContext } from 'react';
 import auth0, { AuthOptions } from 'auth0-js';
 
 
@@ -10,7 +10,6 @@ import {
   Redirect,
   RouteProps
 } from "react-router-dom";
-import { RouteChildrenProps } from 'react-router';
 
 const AuthContext = React.createContext({} as AuthProps);
 
@@ -94,61 +93,6 @@ interface AuthProps {
 
 
 
-function Login(props: RouteChildrenProps): JSX.Element {
-    const [username, setUsername] = useState("");
-    const [pw, setPw] = useState("");
-    const [error, setError] = useState(false);
-    let { from } = props.location.state || { from: { pathname: "/upcoming" } };
-
-    function onLogin(err:any, result:any): void {
-        if (err) {
-            setError(true);
-        }
-    }
-
-    const authContext = useContext(AuthContext);
-
-    return (
-        <Fragment>
-            { authContext.authenticated ? (
-                <Redirect to={from} />
-            ) : (
-            <Fragment>
-                { error && <div>Login failed. <br/></div> }
-                <div>
-                    <strong>Login</strong>
-                </div>
-                <form onSubmit={e=> {e.preventDefault();authContext.login(username, pw, onLogin)}}>
-                    <div className="Login-input">
-                        <label>
-                            username: 
-                            <input 
-                                type="text" 
-                                onChange={e => setUsername(e.target.value.trim())}
-                                required
-                                name="username">
-                            </input>
-                        </label>
-                    </div>
-                    <div className="Login-input">
-                        <label>
-                            password: 
-                            <input 
-                                type="password" 
-                                onChange={e => setPw(e.target.value.trim())}
-                                required
-                                name="pw">
-                            </input>
-                        </label>
-                    </div>
-                    <input type="submit" value="Submit" />
-                </form>
-            </Fragment>
-            )}
-        </Fragment>
-   );
-}
-
 interface PrivateRouteProps extends RouteProps {
     component: React.ComponentType<any> 
 }
@@ -177,4 +121,4 @@ function PrivateRoute( props: PrivateRouteProps ): JSX.Element {
 }
 
 
-export {Login, PrivateRoute, AuthProvider, AuthContext};
+export {PrivateRoute, AuthProvider, AuthContext};
