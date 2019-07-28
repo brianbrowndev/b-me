@@ -5,13 +5,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building'
-                sh './build.sh'
+                sh './server/build.sh'
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh './deploy.sh'
+                sh './server/deploy.sh'
             }
         }
     }
