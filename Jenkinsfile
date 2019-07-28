@@ -5,12 +5,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building'
+                chmod +x ./server/build.sh
                 sh './server/build.sh'
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+                chmod +x ./server/build.sh
                 sh './server/deploy.sh'
             }
         }
