@@ -12,14 +12,15 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import {  faPlus, faSpinner, faWind  } from '@fortawesome/free-solid-svg-icons'
+import {  faPlus, faSpinner, faSignOutAlt, } from '@fortawesome/free-solid-svg-icons'
 import { faSquare, faCheckSquare } from '@fortawesome/free-regular-svg-icons'
 
-library.add( faCheckSquare, faPlus, faSpinner, faSquare, faWind);
 
 import { ThemeProvider } from '@material-ui/styles';
 
 import theme from './theme/theme';
+
+library.add( faCheckSquare, faPlus, faSpinner, faSquare, faSignOutAlt);
 
 class App extends Component {
   render() {

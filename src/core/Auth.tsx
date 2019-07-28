@@ -5,7 +5,6 @@ import auth0, { AuthOptions } from 'auth0-js';
 import './Auth.scss';
 
 import {
-  BrowserRouter as Router,
   Route,
   Redirect,
   RouteProps

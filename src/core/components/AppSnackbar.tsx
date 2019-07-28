@@ -12,9 +12,6 @@ function AppSnackbar (props: AppSnackbarProps) {
     // const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    function handleClick() {
-        setOpen(true);
-    }
 
     function handleClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
         setOpen(false);
@@ -24,8 +21,9 @@ function AppSnackbar (props: AppSnackbarProps) {
 
     }
 
+
     useEffect(() => {
-        if (props.message != null && props.message != "") setOpen(true);
+        if (props.message !== null && props.message !== "") setOpen(true);
     }, [props.message]);
 
     return  (
