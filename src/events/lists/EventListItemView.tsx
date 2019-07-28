@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Event, SwaggerException } from '../../common/client/index';
 
 import './EventListItemView.scss';

@@ -3,10 +3,7 @@ import React, { useState, Fragment, useContext } from 'react';
 import './Auth.scss';
 
 import {
-  BrowserRouter as Router,
-  Route,
   Redirect,
-  RouteProps
 } from "react-router-dom";
 import { RouteChildrenProps } from 'react-router';
 import { Input, FormControl, InputLabel,  Theme, Button, Container, Paper, Typography } from '@material-ui/core';
@@ -64,7 +61,6 @@ export default function Login(props: RouteChildrenProps): JSX.Element {
                         <Typography variant="overline" color="error">
                             Login failed.
                         </Typography>
-
                     }
                     <Typography variant="h5" component="h3">
                         Login
@@ -85,7 +81,7 @@ export default function Login(props: RouteChildrenProps): JSX.Element {
                                 type="password"
                             />
                         </FormControl>
-                        <Button className={classes.submit} type="submit" variant="contained"  onClick={handleSubmit} color="primary">
+                        <Button className={classes.submit} type="submit" variant="contained"  onClick={handleSubmit} color="inherit">
                             Submit
                         </Button>
                     </form>

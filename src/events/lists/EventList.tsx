@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment, useRef } from 'react';
-import { Event, SwaggerException } from '../../common/client/index';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Event } from '../../common/client/index';
 import EventListItem from './EventListItem';
 import EventApi  from '../../common/client/EventApi';
 import EventListItemAdd from './EventListItemAdd';

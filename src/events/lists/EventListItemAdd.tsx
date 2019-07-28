@@ -42,7 +42,7 @@ function EventListItemAdd(props:EventListItemAddProps) {
     const reset = () => {
         setIsSaving(false);
         setAddEvent({...initialAddEventState});
-        if (inputEl !== null && inputEl.current != null) { 
+        if (inputEl !== null && inputEl.current !== null) { 
             inputEl.current.value = '';
             inputEl.current.focus();
         }
@@ -58,7 +58,7 @@ function EventListItemAdd(props:EventListItemAddProps) {
         }
     }
     const validateModel = ():boolean => {
-        if (addEvent.name == null || addEvent.name == "") return false;
+        if (addEvent.name === null || addEvent.name === "") return false;
         return true;
     }
 
