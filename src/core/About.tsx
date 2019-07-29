@@ -10,7 +10,7 @@ function About() {
     const [text, setText] = useState('');
     useEffect(
         (() => {
-            fetch('./org/life.html').then(r => r.text()).then(t => setText(t))
+            fetch('./org/raleigh.html').then(r => r.text()).then(t => setText(t))
             }), 
         [] // only call the fetch once by passing in empty params
     );
