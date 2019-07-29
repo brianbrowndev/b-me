@@ -60,7 +60,7 @@ function Header({ history}: RouteComponentProps) {
                 </Icon> */}
                 <Divider/>
                 <Typography variant="h6" className={classes.title} >
-                    Mythic
+                    Me
                 </Typography>
                 { authContext.authenticated ? (
                     <Fragment>
