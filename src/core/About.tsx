@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-const ReactMarkdown = require('react-markdown/with-html')
-// import ReactMarkdown from 'react-markdown/with-html';
+import OrgApi from '../common/client/OrgApi'
+const DOMPurify = require('dompurify')
 
  
 
@@ -10,16 +10,15 @@ function About() {
     const [text, setText] = useState('');
     useEffect(
         (() => {
-            fetch('./org/raleigh.html').then(r => r.text()).then(t => setText(t))
+            OrgApi.getRaleigh().then(t => setText(t))
             }), 
         [] // only call the fetch once by passing in empty params
     );
 
     return (
-        <ReactMarkdown
-        source={text}
-        escapeHtml={false}
-        />
+        <div className="Org-container">
+            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
+        </div>
     );
 }
 

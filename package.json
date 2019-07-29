@@ -17,10 +17,10 @@
     "@types/react-dom": "16.8.3",
     "@types/react-router-dom": "^4.3.2",
     "auth0-js": "^9.10.2",
+    "dompurify": "^1.0.11",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-markdown": "^4.1.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1"
   },
