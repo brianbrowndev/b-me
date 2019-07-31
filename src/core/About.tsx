@@ -10,7 +10,7 @@ function About() {
     const [text, setText] = useState('');
     useEffect(
         (() => {
-            OrgApi.getRaleigh().then(t => setText(t))
+            OrgApi.getPlaces('raleigh').then(t => setText(t))
             }), 
         [] // only call the fetch once by passing in empty params
     );
