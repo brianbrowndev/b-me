@@ -1,8 +1,10 @@
 import Api from './Api';
 
+type places = 'raleigh'
+
 export const OrgApi = {
-    getRaleigh(): Promise<string> {
-        return Api.getText('api/org/trips/raleigh');
+    getPlaces(name:places): Promise<string> {
+        return Api.getText(`api/org/life/places/${name}`);
     },
 
 }
