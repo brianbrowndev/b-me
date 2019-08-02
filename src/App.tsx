@@ -7,7 +7,6 @@ import Login from './core/Login';
 import About from './core/About';
 
 import EventList from './events/lists/EventList';
-// import SubmitEvent from './events/SubmitEvent'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
@@ -33,7 +32,6 @@ class App extends Component {
             <main>
               <Route exact path="/" component={About} />
               <PrivateRoute exact path="/upcoming" component={EventList} />
-              {/* <PrivateRoute exact path="/submit" component={SubmitEvent} /> */}
               <Route exact path="/login" component={Login} />
             </main>
             <footer></footer>

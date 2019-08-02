@@ -9,7 +9,6 @@ type OrgContentName  = 'raleigh';
 interface OrgContentProps {
     name: OrgContentName
 }
-
  
 
 function OrgContent(props:OrgContentProps) {
