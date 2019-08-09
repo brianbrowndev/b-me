@@ -7,20 +7,20 @@ import Login from './core/Login';
 import About from './core/About';
 
 import EventList from './events/lists/EventList';
-// import SubmitEvent from './events/SubmitEvent'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import {  faPlus, faSpinner, faSignOutAlt, } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSpinner, faSignOutAlt, faBars, faMap } from '@fortawesome/free-solid-svg-icons'
 import { faSquare, faCheckSquare } from '@fortawesome/free-regular-svg-icons'
 
 
 import { ThemeProvider } from '@material-ui/styles';
 
 import theme from './theme/theme';
+import OrgRoute from './org/OrgRoute';
 
-library.add( faCheckSquare, faPlus, faSpinner, faSquare, faSignOutAlt);
+library.add( faCheckSquare, faPlus, faSpinner, faSquare, faSignOutAlt, faBars, faMap);
 
 class App extends Component {
   render() {
@@ -32,8 +32,8 @@ class App extends Component {
             <Header />
             <main>
               <Route exact path="/" component={About} />
+              <Route exact path="/org/*" component={OrgRoute} />
               <PrivateRoute exact path="/upcoming" component={EventList} />
-              {/* <PrivateRoute exact path="/submit" component={SubmitEvent} /> */}
               <Route exact path="/login" component={Login} />
             </main>
             <footer></footer>
