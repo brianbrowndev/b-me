@@ -4,7 +4,7 @@ import EventListItem from './EventListItem';
 import EventApi  from '../../common/client/EventApi';
 import EventListItemAdd from './EventListItemAdd';
 import EventListItemView from './EventListItemView';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AppSnackbar from '../../core/components/AppSnackbar';
 
 
@@ -45,7 +45,7 @@ function EventList () {
         <Fragment>
             { isLoading ? (
                 <div>
-                    <FontAwesomeIcon icon="spinner" pulse />
+                    {/* <FontAwesomeIcon icon="spinner" pulse /> */}
                     &nbsp;Loading ...
                 </div>
             ) : (

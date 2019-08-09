@@ -1,6 +1,6 @@
 import React, {  Fragment, useState, useRef,  RefObject } from 'react';
 import { Event, SwaggerException } from '../../common/client/index';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './EventListItemAdd.scss';
 import EventApi  from '../../common/client/EventApi';
 
@@ -68,11 +68,11 @@ function EventListItemAdd(props:EventListItemAddProps) {
         <Fragment>
                <form onSubmit={onFormSubmit}>
                     <div className="Name-input">
-                        { isSaving ? ( 
+                        {/* { isSaving ? ( 
                             <FontAwesomeIcon icon='spinner' pulse listItem />
                         ) :  (
                             <FontAwesomeIcon icon="plus" className="Event-add-icon" listItem />
-                        )}
+                        )} */}
                         <input 
                             ref={inputEl} 
                             className="Event-add"

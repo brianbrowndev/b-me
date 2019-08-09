@@ -13,8 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import './Header.scss';
 import { Typography, Divider,  Button, createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, ListSubheader } from '@material-ui/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -154,7 +153,7 @@ function Header({ history }: RouteComponentProps) {
           Me
         </Typography>
         <IconButton color="inherit" onClick={handleDrawerOpen}>
-          <FontAwesomeIcon icon='bars'  />
+          <MenuIcon />
         </IconButton>
       </Toolbar>
       <Drawer
