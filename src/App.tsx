@@ -10,17 +10,12 @@ import EventList from './events/lists/EventList';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faSpinner, faSignOutAlt, faBars, faMap } from '@fortawesome/free-solid-svg-icons'
-import { faSquare, faCheckSquare } from '@fortawesome/free-regular-svg-icons'
-
 
 import { ThemeProvider } from '@material-ui/styles';
 
 import theme from './theme/theme';
 import OrgRoute from './org/OrgRoute';
 
-library.add( faCheckSquare, faPlus, faSpinner, faSquare, faSignOutAlt, faBars, faMap);
 
 class App extends Component {
   render() {
