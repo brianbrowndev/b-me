@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 
 
 import {AuthContext } from './Auth'
@@ -12,106 +12,166 @@ import {
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import './Header.scss';
-import { Typography, Divider,  Button, createStyles, makeStyles, IconButton } from '@material-ui/core';
+import { Typography, Divider,  Button, createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, ListSubheader } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-// const useStyles = makeStyles( () => {
-//     createStyles({
-//         title: {
-//             flexGrow:1
-//         }
-//     })
-// });
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    title: {
-      flexGrow: 1
-    }
-  }),
+const drawerWidth = 240;
+const useStyles = makeStyles((theme: Theme) =>
+  {
+    return createStyles({
+      title: {
+        flexGrow: 1
+      },
+      root: {
+        display: 'flex',
+      },
+      drawer: {
+        [theme.breakpoints.up('sm')]: {
+          width: drawerWidth,
+          flexShrink: 0,
+        },
+      },
+      appBar: {
+        marginLeft: drawerWidth,
+        [theme.breakpoints.up('sm')]: {
+          width: `calc(100% - ${drawerWidth}px)`,
+        },
+      },
+      menuButton: {
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up('sm')]: {
+          display: 'none',
+        },
+      },
+      toolbar: theme.mixins.toolbar,
+      drawerPaper: {
+        width: drawerWidth,
+      },
+      content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+      },
+      listNested: {
+        paddingLeft: theme.spacing(4)
+      },
+      link: {
+        color:'none',
+        textDecoration:'none'
+      }
+    });
+  },
 );
 
+function ListItemLink(props:{path:string, name:string}) {
+  const classes = useStyles();
+  return  (
+    <NavLink exact to={props.path}>
+      <ListItem className={classes.listNested} button>
+        <ListItemText primary={props.name} />
+      </ListItem>
+    </NavLink>
+  )
 
-function Header({ history}: RouteComponentProps) {
+}
+
+
+function Header({ history }: RouteComponentProps) {
 
     const authContext = useContext(AuthContext);
 
     const classes = useStyles();
-
-    // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    // const open = Boolean(anchorEl);
 
     const logout = () => {
         // setAnchorEl(null);
         authContext.logout(() => history.push("/"));
     }
 
-    return (
-        <AppBar position="static" color="primary" elevation={1}>
-        {/* // <header className="App-header"> */}
-            <Toolbar>
-                {/* <div className="App-header-logo">
-                    <Link to="/"><strong className="App-title">Events</strong></Link>
-                </div> */}
+    const [open, setOpen] = useState(false);
 
-                {/* <Icon>
-                    <FontAwesomeIcon icon='wind'  />
-                </Icon> */}
-                <Divider/>
-                <Typography variant="h6" className={classes.title} >
-                    Me
-                </Typography>
-                { authContext.authenticated ? (
-                    <Fragment>
+    function handleDrawerToggle() {
+        setOpen(!open);
+    }
 
-                    <NavLink exact to="/upcoming" activeClassName="App-header-nav--active">upcoming</NavLink>
-                    <IconButton
-                        aria-label="User"
-                        onClick={logout}>
-                        <FontAwesomeIcon icon='sign-out-alt'/>
-                    </IconButton>
 
-                    </Fragment>
-// // {/* <div className="App-header-nav"> */}
-//                         // <div>
-//                             {/* &nbsp;|&nbsp; */}
-//                             {/* <NavLink exact to="/submit" activeClassName="App-header-nav--active">submit</NavLink> */}
-//                         // </div>
-//                         // <div>
-//                                                     {/* <IconButton
-//                                     aria-label="User"
-//                                     aria-controls="long-menu"
-//                                     aria-haspopup="true"
-//                                     onClick={(evt) => setAnchorEl(evt.currentTarget)}>
-//                                     <FontAwesomeIcon icon='user-circle'/>
-//                                 </IconButton>
-//                                 <Menu
-//                                     id="long-menu"
-//                                     anchorEl={anchorEl}
-//                                     open={open}
-//                                     onClose={() => setAnchorEl(null)}>
-//                                         <Container>
-//                                             <div>{authContext.username}</div>
-//                                             <MenuItem onClick={logout}>Logout</MenuItem>
-//                                         </Container>
-//                                 </Menu> */}
-//                                 {/* Logout */}
-//                             {/* </Button> */}
-//                         // </div>
-//                     // </div>
+  function handleDrawerOpen() {
+    setOpen(true);
+  }
+
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <Divider />
+      <List
+        component="div"
+        subheader={
+          <ListSubheader>
+            Org
+          </ListSubheader>
+      }>
+        <ListItem>
+          <ListItemText primary="Places" />
+        </ListItem>       
+        <List disablePadding component="div">
+          <ListItemLink path="/org/life/places/raleigh" name="Raleigh" />
+          <ListItemLink path="/org/life/places/santa-barbara" name="Santa Barbara" />
+        </List>
+        { authContext.authenticated && 
+          <Fragment>
+            <ListItem>
+              <ListItemText primary="Life" />
+            </ListItem>       
+            <List disablePadding component="div">
+              <ListItemLink path="/org/life/birthdays" name="Birthdays" />
+              <ListItemLink path="/org/life/homes" name="Homes" />
+            </List>
+          </Fragment> 
+        }
+        <Divider />
+        <List component="div">
+          <ListItem>
+            { authContext.authenticated ?
+            (
+              <Button color="inherit" onClick={logout}>
+                Logout
+              </Button>
             ) : (
-                <Button color="inherit">
-                    <Link to="/login">login</Link>
+              <Link to="/login">
+                <Button color="inherit">login
                 </Button>
-                )}
-            </Toolbar>
-        </AppBar>
-        // {/* // </header> */}
-    );
+              </Link>
+            )}
+          </ListItem>
+        </List>
+     </List>
+    </div>
+  );
+
+  return (
+    <AppBar position="static" color="primary" elevation={1}>
+      <Toolbar>
+        <Typography variant="h6" className={classes.title} >
+          Me
+        </Typography>
+        <IconButton color="inherit" onClick={handleDrawerOpen}>
+          <FontAwesomeIcon icon='bars'  />
+        </IconButton>
+      </Toolbar>
+      <Drawer
+        variant="temporary"
+        anchor="left"
+        open={open}
+        onClose={handleDrawerToggle}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        ModalProps={{keepMounted: true }} // Better open performance on mobile.
+      >
+        {drawer}
+      </Drawer>
+    </AppBar>
+  );
 }
-
-
 
 
 export default withRouter(Header);

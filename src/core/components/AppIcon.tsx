@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon, { IconProps } from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/styles';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const useStyles = makeStyles({
   root: {
