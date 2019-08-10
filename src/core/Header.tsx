@@ -14,6 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import './Header.scss';
 import { Typography, Divider,  Button, createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, ListSubheader } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { OrgContext, OrgItem } from '../org/OrgContext';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,10 +63,10 @@ const useStyles = makeStyles((theme: Theme) =>
   },
 );
 
-function ListItemLink(props:{path:string, name:string}) {
+function ListItemLink(props:{path:string, name:string, onClick?():void}) {
   const classes = useStyles();
   return  (
-    <NavLink exact to={props.path}>
+    <NavLink exact to={props.path} onClick={props.onClick}>
       <ListItem className={classes.listNested} button>
         <ListItemText primary={props.name} />
       </ListItem>
@@ -77,55 +78,48 @@ function ListItemLink(props:{path:string, name:string}) {
 
 function Header({ history }: RouteComponentProps) {
 
-    const authContext = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  const orgContext = useContext(OrgContext);
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    const logout = () => {
-        // setAnchorEl(null);
-        authContext.logout(() => history.push("/"));
-    }
+  const logout = () => authContext.logout(() => history.push("/"));
 
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleDrawerToggle = () => setOpen(!open);
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
-    function handleDrawerToggle() {
-        setOpen(!open);
-    }
-
-
-  function handleDrawerOpen() {
-    setOpen(true);
-  }
 
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-      <Divider />
-      <List
-        component="div"
-        subheader={
-          <ListSubheader>
-            Org
-          </ListSubheader>
-      }>
-        <ListItem>
-          <ListItemText primary="Places" />
-        </ListItem>       
-        <List disablePadding component="div">
-          <ListItemLink path="/org/life/places/raleigh" name="Raleigh" />
-          <ListItemLink path="/org/life/places/santa-barbara" name="Santa Barbara" />
-        </List>
-        { authContext.authenticated && 
-          <Fragment>
+        <Divider />
+        <List
+          component="div"
+          subheader={
+            <ListSubheader>
+              Org
+            </ListSubheader>
+        }>
+        {Object.entries(orgContext.routes).map(([title, items]) => 
+          <Fragment key={title}>
+            <Divider />
             <ListItem>
-              <ListItemText primary="Life" />
+              <ListItemText primary={title} />
             </ListItem>       
             <List disablePadding component="div">
-              <ListItemLink path="/org/life/birthdays" name="Birthdays" />
-              <ListItemLink path="/org/life/homes" name="Homes" />
-            </List>
-          </Fragment> 
-        }
+              {(items as OrgItem[]).map(item => 
+                <Fragment key={item.title}>
+                  {(!item.authenticate || (item.authenticate && authContext.authenticated)) &&
+                    <ListItemLink path={item.path} name={item.title} onClick={handleDrawerClose} />
+                  }
+                </Fragment>
+              )}
+              </List>
+          </Fragment>
+        )}
+        
         <Divider />
         <List component="div">
           <ListItem>
@@ -135,7 +129,7 @@ function Header({ history }: RouteComponentProps) {
                 Logout
               </Button>
             ) : (
-              <Link to="/login">
+              <Link to="/login" onClick={handleDrawerClose}>
                 <Button color="inherit">login
                 </Button>
               </Link>

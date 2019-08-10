@@ -15,6 +15,7 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import theme from './theme/theme';
 import OrgRoute from './org/OrgRoute';
+import { OrgProvider } from './org/OrgContext';
 
 
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
     <ThemeProvider theme={theme}>
       <Router>
         <AuthProvider>
+        <OrgProvider>
           <div className="App">
             <Header />
             <main>
@@ -33,6 +35,7 @@ class App extends Component {
             </main>
             <footer></footer>
           </div>
+        </OrgProvider>
         </AuthProvider>
       </Router>
     </ThemeProvider>
