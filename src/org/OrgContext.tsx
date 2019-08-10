@@ -7,7 +7,8 @@ export interface OrgItem {
     authenticate: boolean;
 }
 export interface OrgGroup {
-    Places: OrgItem[];
+    Travel: OrgItem[];
+    Life: OrgItem[];
 }
 export interface OrgProps {
     routes: OrgGroup;
@@ -20,16 +21,16 @@ function OrgProvider (props: any) {
 
     const orgProps = {
         routes: { 
-            Places: [
+            Travel: [
                 {
                     title: 'Raleigh',
-                    filePath: '/org/life/places/raleigh',
-                    path: '/org/places/raleigh',
+                    filePath: '/org/public/travel/raleigh',
+                    path: '/org/travel/raleigh',
                     authenticate: false 
                 },
                 {
                     title: 'Santa Barbara',
-                    filePath: '/org/life/places/santa-barbara',
+                    filePath: '/org/public/travel/santa-barbara',
                     path: '/org/places/santa-barbara',
                     authenticate: false 
                 }
@@ -37,13 +38,13 @@ function OrgProvider (props: any) {
             Life: [
                 {
                     title: 'Birthdays',
-                    filePath: '/org/life/birthdays',
+                    filePath: '/org/private/life/birthdays',
                     path: '/org/life/birthdays',
                     authenticate: true 
                 },
                 {
                     title: 'Homes',
-                    filePath: '/org/life/homes',
+                    filePath: '/org/private/life/homes',
                     path: '/org/places/homes',
                     authenticate: true 
                 }
