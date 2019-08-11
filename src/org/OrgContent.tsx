@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo, useContext } from 'react';
 import OrgApi from '../common/client/OrgApi'
 import './OrgContent.scss';
-import { OrgContext, OrgItem, OrgGroup } from './OrgContext';
-import { Typography } from '@material-ui/core';
+import { OrgContext, OrgItem } from './OrgContext';
+import { Typography, Container } from '@material-ui/core';
 const DOMPurify = require('dompurify')
 
 
@@ -18,29 +18,24 @@ function OrgContent(props:OrgContentProps) {
 
     useEffect(
         (() => { 
-            function findOrgItem (group: OrgGroup, url:string): OrgItem | null {
-                for (let items of Object.values(group)) 
-                    for (let item of items as OrgItem[]) 
-                        if (url === item.path) return item;
-                return null;
-            }
-            const item = findOrgItem(orgContext.routes, props.url);
+
+            const item = orgContext.findOrgItemByPath(props.url);
             if (item !== null) {
                 setItem(item);
                 OrgApi.get(item.filePath).then(t => setText(t))
             }
         }),
-        [props.url, orgContext.routes]
+        [props.url, orgContext]
     );
 
 
     return useMemo(() => (
-        <div className="Org-content">
-            <Typography variant="h4">
+        <Container className="Org-content">
+            <Typography variant="h1" className="Org-title">
             {item && item.title}
             </Typography>
             <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
-        </div>
+        </Container>
     ), [text, item]);
 }
 

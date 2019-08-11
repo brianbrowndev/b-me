@@ -1,7 +1,5 @@
 import React, { useState, Fragment, useContext } from 'react';
 
-import './Auth.scss';
-
 import {
   Redirect,
 } from "react-router-dom";
