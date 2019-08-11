@@ -1,8 +1,18 @@
 .Org-content {
 
+  font-family:"Roboto", "Helvetica", "Arial", sans-serif !important;
+
+  padding-top:20px;
+  padding-bottom:20px;
+
+  & .Org-title {
+    font-size:40px;
+  }
+
   & h2,h3,h4,h5,h6 {
     border-bottom: 1px solid #eaecef;
     padding-bottom: .3em;
+    font-weight:400;
   }
 
   & table {
@@ -24,6 +34,11 @@
       background-color: #f6f8fa;
     }
 
+  }
+
+  & .org-dl dt {
+    font-weight:bold;
+    padding-left:20px;
   }
 
 }

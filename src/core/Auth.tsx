@@ -1,9 +1,6 @@
 import React, { useState,  useContext } from 'react';
 import auth0, { AuthOptions } from 'auth0-js';
 
-
-import './Auth.scss';
-
 import {
   Route,
   Redirect,

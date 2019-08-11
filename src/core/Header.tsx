@@ -4,16 +4,16 @@ import React, { Fragment, useContext, useState } from 'react';
 import {AuthContext } from './Auth'
 
 import {
-  Link,
   NavLink,
   withRouter,
   RouteComponentProps
 } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import './Header.scss';
-import { Typography, Divider,  Button, createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, ListSubheader } from '@material-ui/core';
+import { Typography, Divider,  createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, ListSubheader, ListItemIcon } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { OrgContext, OrgItem } from '../org/OrgContext';
 
 const drawerWidth = 240;
@@ -56,8 +56,12 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingLeft: theme.spacing(4)
       },
       link: {
-        color:'none',
-        textDecoration:'none'
+        color:'inherit',
+        textDecoration:'none',
+      },
+      linkActive: {
+        color:'#1976d2',
+        fontWeight: 500,
       }
     });
   },
@@ -66,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function ListItemLink(props:{path:string, name:string, onClick?():void}) {
   const classes = useStyles();
   return  (
-    <NavLink exact to={props.path} onClick={props.onClick}>
+    <NavLink exact to={props.path} onClick={props.onClick} activeClassName={classes.linkActive} className={classes.link}>
       <ListItem className={classes.listNested} button>
         <ListItemText primary={props.name} />
       </ListItem>
@@ -102,9 +106,8 @@ function Header({ history }: RouteComponentProps) {
               Org
             </ListSubheader>
         }>
-        {Object.entries(orgContext.routes).map(([title, items]) => 
+        {Object.entries(orgContext.routes(authContext.authenticated)).map(([title, items]) => 
           <Fragment key={title}>
-            <Divider />
             <ListItem>
               <ListItemText primary={title} />
             </ListItem>       
@@ -122,19 +125,21 @@ function Header({ history }: RouteComponentProps) {
         
         <Divider />
         <List component="div">
-          <ListItem>
             { authContext.authenticated ?
             (
-              <Button color="inherit" onClick={logout}>
-                Logout
-              </Button>
+              <ListItem button  onClick={logout}>
+                <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+
             ) : (
-              <Link to="/login" onClick={handleDrawerClose}>
-                <Button color="inherit">login
-                </Button>
-              </Link>
+              <NavLink to="/login" onClick={handleDrawerClose} activeClassName={classes.linkActive} className={classes.link}>
+                <ListItem button>
+                    <ListItemIcon className={classes.link}><AccountCircleIcon /></ListItemIcon>
+                    <ListItemText primary="Login" />
+                </ListItem>
+              </NavLink>
             )}
-          </ListItem>
         </List>
      </List>
     </div>
