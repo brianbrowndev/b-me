@@ -30,7 +30,7 @@ export const Api = {
         } else if (status === 400) {
             return r.text().then((_responseText) => throwException("A server error occurred.", status, _responseText, _headers));
         } else {
-            return r.text().then((_responseText) =>  throwException("A server error occurred.", status, _responseText, _headers));
+            return r.text().then((_responseText) => throwException("A server error occurred.", status, _responseText, _headers));
         }
         })
     },

@@ -14,7 +14,7 @@ import { Typography, Divider,  createStyles, makeStyles, IconButton, Theme, Draw
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { OrgContext, OrgItem } from '../org/OrgContext';
+import { OrgContext  } from '../org/OrgContext';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -106,17 +106,17 @@ function Header({ history }: RouteComponentProps) {
               Org
             </ListSubheader>
         }>
-        {Object.entries(orgContext.routes(authContext.authenticated)).map(([title, items]) => 
-          <Fragment key={title}>
+        {orgContext.routes().map(groupItem => 
+          <Fragment key={groupItem.title}>
             <ListItem>
-              <ListItemText primary={title} />
+              <ListItemText primary={groupItem.title} />
             </ListItem>       
             <List disablePadding component="div">
-              {(items as OrgItem[]).map(item => 
+              {groupItem.items.map(item => 
                 <Fragment key={item.title}>
-                  {(!item.authenticate || (item.authenticate && authContext.authenticated)) &&
+                  {/* {(!item.authenticate || (item.authenticate && authContext.authenticated)) && */}
                     <ListItemLink path={item.path} name={item.title} onClick={handleDrawerClose} />
-                  }
+                  {/* } */}
                 </Fragment>
               )}
               </List>

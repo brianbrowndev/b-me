@@ -4,7 +4,7 @@ import './App.scss';
 import Header from './core/Header';
 import {PrivateRoute} from './core/Auth';
 import Login from './core/Login';
-import About from './core/About';
+import Home from './core/Home';
 
 import EventList from './events/lists/EventList';
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -28,7 +28,7 @@ class App extends Component {
           <div className="App">
             <Header />
             <main>
-              <Route exact path="/" component={About} />
+              <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgRoute} />
               <PrivateRoute exact path="/upcoming" component={EventList} />
               <Route exact path="/login" component={Login} />

@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useContext, Fragment } from 'react';
 import OrgApi from '../common/client/OrgApi'
 import './OrgContent.scss';
 import { OrgContext, OrgItem } from './OrgContext';
 import { Typography, Container } from '@material-ui/core';
+import { SwaggerException } from '../common/client';
+import OrgBreadcrumb from './OrgBreadCrumb';
 const DOMPurify = require('dompurify')
 
 
@@ -15,6 +17,7 @@ function OrgContent(props:OrgContentProps) {
 
     const [item, setItem] = useState<OrgItem>();
     const [text, setText] = useState('');
+    const [error, setError] = useState();
 
     useEffect(
         (() => { 
@@ -22,7 +25,9 @@ function OrgContent(props:OrgContentProps) {
             const item = orgContext.findOrgItemByPath(props.url);
             if (item !== null) {
                 setItem(item);
-                OrgApi.get(item.filePath).then(t => setText(t))
+                OrgApi.get(item.filePath).then(t => setText(t)).catch((e: SwaggerException) => {
+                    setError(e.message)
+                })
             }
         }),
         [props.url, orgContext]
@@ -30,13 +35,20 @@ function OrgContent(props:OrgContentProps) {
 
 
     return useMemo(() => (
-        <Container className="Org-content">
-            <Typography variant="h1" className="Org-title">
-            {item && item.title}
-            </Typography>
-            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
-        </Container>
-    ), [text, item]);
+        <Fragment>
+            <OrgBreadcrumb url={props.url}></OrgBreadcrumb>
+            <Container className="Org-content">
+                <Typography variant="h1" className="Org-title">
+                {item && item.title}
+                </Typography>
+                { error ? (
+                    <div>Error</div>
+                ) : (
+                    <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
+                )}
+            </Container>
+        </Fragment>
+    ), [text, item, error, props.url]);
 }
 
 export default OrgContent;
