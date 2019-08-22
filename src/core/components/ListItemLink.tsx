@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
         textDecoration:'none',
       },
       linkActive: {
-        color:'#1976d2',
+        color:theme.palette.secondary.dark,
         fontWeight: 500,
       }
     });

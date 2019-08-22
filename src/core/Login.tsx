@@ -20,9 +20,6 @@ const useLoginStyles = makeStyles((theme: Theme) =>
     },
     paper: {
         padding: theme.spacing(3, 2),
-    },
-    submit: {
-        color: theme.palette.primary.dark
     }
   }),
 );
@@ -31,17 +28,20 @@ export default function Login(props: RouteChildrenProps): JSX.Element {
     const [username, setUsername] = useState("");
     const [pw, setPw] = useState("");
     const [error, setError] = useState(false);
-    let { from } = props.location.state || { from: { pathname: "/upcoming" } };
+    const [disabled, setDisabled] = useState(false);
+    let { from } = props.location.state || { from: { pathname: "/" } };
     const classes = useLoginStyles();
 
     function onLogin(err:any, result:any): void {
         if (err) {
             setError(true);
         }
+        setDisabled(false);
     }
     
     const handleSubmit = (evt: React.FormEvent) => {
         setError(false);
+        setDisabled(true);
         evt.preventDefault();
         authContext.login(username, pw, onLogin)
     }
@@ -79,7 +79,7 @@ export default function Login(props: RouteChildrenProps): JSX.Element {
                                 type="password"
                             />
                         </FormControl>
-                        <Button className={classes.submit} type="submit" variant="contained"  onClick={handleSubmit} color="inherit">
+                        <Button type="submit" variant="contained" onClick={handleSubmit} color="secondary" disabled={disabled}>
                             Submit
                         </Button>
                     </form>
