@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, Fragment } from 'react';
-import { OrgContext, OrgGroupItem, OrgItem } from './OrgContext';
+import { OrgContext, OrgGroup, OrgItem } from './OrgContext';
 import { Typography, Paper, makeStyles, Breadcrumbs, Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 
@@ -26,7 +26,7 @@ function OrgBreadcrumb(props:OrgBreadcrumbProps) {
   const orgContext = useContext(OrgContext);
   const classes = useStyles();
 
-  const [groupItem, setGroupItem] = useState<OrgGroupItem>();
+  const [groupItem, setGroupItem] = useState<OrgGroup>();
   const [item, setItem] = useState<OrgItem>();
 
   useEffect(

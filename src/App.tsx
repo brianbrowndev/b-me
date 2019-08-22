@@ -14,7 +14,7 @@ import {AuthProvider} from './core/Auth';
 import { ThemeProvider } from '@material-ui/styles';
 
 import theme from './theme/theme';
-import OrgRoute from './org/OrgRoute';
+import OrgContentRoute from './org/OrgContentRoute';
 import { OrgProvider } from './org/OrgContext';
 
 
@@ -29,7 +29,7 @@ class App extends Component {
             <Header />
             <main>
               <Route exact path="/" component={Home} />
-              <Route exact path="/org/*" component={OrgRoute} />
+              <Route exact path="/org/*" component={OrgContentRoute} />
               <PrivateRoute exact path="/upcoming" component={EventList} />
               <Route exact path="/login" component={Login} />
             </main>
