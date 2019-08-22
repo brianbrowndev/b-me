@@ -8,21 +8,17 @@ export interface OrgItem {
     authenticate: boolean;
     type: 'item';
 }
-export interface OrgGroupItem {
+export interface OrgGroup {
     title: string;
+    description: string,
     path: string;
     items: OrgItem[];
     type: 'group';
 }
-export interface OrgGroup {
-    Travel: OrgGroupItem;
-    Life: OrgGroupItem;
-    Dev: OrgGroupItem;
-}
 export interface OrgProps {
-    routes (): OrgGroupItem[];
+    routes (): OrgGroup[];
     findOrgItemByPath (path:string): OrgItem | null;
-    findOrgGroupItemByPath (path:string): OrgGroupItem | null;
+    findOrgGroupItemByPath (path:string): OrgGroup | null;
 }
 
 
@@ -32,10 +28,11 @@ function OrgProvider (props: any) {
 
     const authContext = useContext(AuthContext);
 
-    const routes = {
-        Travel: {
+    const routes = [
+        {
             type: 'group',
             title: 'Travel',
+            description: 'Places visited or planning to visit',
             path: '/org/travel',
             items: [
                 {
@@ -53,10 +50,11 @@ function OrgProvider (props: any) {
                     authenticate: false 
                 }
             ],
-        } as OrgGroupItem,
-        Life: {
+        } as OrgGroup,
+        {
             type: 'group',
             title: 'Life',
+            description: 'Information for me',
             path: '/org/life',
             items: [
                 {
@@ -74,10 +72,11 @@ function OrgProvider (props: any) {
                     authenticate: true 
                 }
             ],
-        } as OrgGroupItem,
-        Dev: {
+        } as OrgGroup,
+        {
             type: 'group',
             title: 'Dev',
+            description: 'Development resources',
             path: '/org/dev',
             items: [
             {
@@ -88,21 +87,21 @@ function OrgProvider (props: any) {
                 authenticate: false 
             }
         ]
-    }
-    } as OrgGroup;
+        } as OrgGroup
+    ];
 
     // include only groupings and routes that require no authentication
     // so that grouping isn't displayed that has all authenticated routes
-    const filterAuthenticatedRoutes = () => {
-        let filteredRoutes = {} as OrgGroup;
-        (Object.entries(routes) as [string, OrgGroupItem][]).forEach(([key, groupItem]) => {
+    const filterAuthenticatedRoutes = (): OrgGroup[] => {
+        let filteredRoutes: OrgGroup[] = [];
+        routes.forEach(groupItem => {
             for (let item of groupItem.items) 
-                if (!item.authenticate && !filteredRoutes.hasOwnProperty(key)) {
+                if (!item.authenticate && !filteredRoutes.find(route => route.title === groupItem.title)) {
                     const filteredItems = groupItem.items.filter((i:OrgItem) => !i.authenticate);
-                    (filteredRoutes as any)[key] = {
+                    filteredRoutes.push({
                         ...groupItem,
                         items:filteredItems
-                    }
+                    });
                 }
         });
         return filteredRoutes;
@@ -110,8 +109,8 @@ function OrgProvider (props: any) {
 
     const unauthenticatedRoutes = filterAuthenticatedRoutes();
 
-    function findRoutes (): OrgGroupItem[] {
-        return authContext.authenticated ? (Object.values(routes) as OrgGroupItem[]) : (Object.values(unauthenticatedRoutes) as OrgGroupItem[]);
+    function findRoutes (): OrgGroup[] {
+        return authContext.authenticated ? routes : unauthenticatedRoutes;
     }
 
     /**
@@ -119,7 +118,7 @@ function OrgProvider (props: any) {
      * @param path 
      */
     function findOrgItemByPath (path:string): OrgItem | null {
-        for (let groupItem of Object.values(routes) as OrgGroupItem[]) 
+        for (let groupItem of routes) 
             for (let item of groupItem.items) 
                 if (path === item.path) return item;
         return null;
@@ -128,8 +127,8 @@ function OrgProvider (props: any) {
      * Build a tree given an item path, very rudimentary. returns only the specified item  
      * @param path 
      */
-    function findOrgGroupItemByPath (path:string): OrgGroupItem | null {
-        for (let groupItem of Object.values(routes) as OrgGroupItem[]) 
+    function findOrgGroupItemByPath (path:string): OrgGroup | null {
+        for (let groupItem of routes) 
             for (let item of groupItem.items) 
                 if (path === item.path) return {...groupItem, items:[item]};
         return null;

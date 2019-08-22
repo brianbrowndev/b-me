@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useMemo, useContext, Fragment } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import OrgApi from '../common/client/OrgApi'
 import './OrgContent.scss';
 import { OrgContext, OrgItem } from './OrgContext';
 import { Typography, Container } from '@material-ui/core';
 import { SwaggerException } from '../common/client';
-import OrgBreadcrumb from './OrgBreadCrumb';
 const DOMPurify = require('dompurify')
 
 
@@ -35,20 +34,17 @@ function OrgContent(props:OrgContentProps) {
 
 
     return useMemo(() => (
-        <Fragment>
-            <OrgBreadcrumb url={props.url}></OrgBreadcrumb>
-            <Container className="Org-content">
-                <Typography variant="h1" className="Org-title">
-                {item && item.title}
-                </Typography>
-                { error ? (
-                    <div>Error</div>
-                ) : (
-                    <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
-                )}
-            </Container>
-        </Fragment>
-    ), [text, item, error, props.url]);
+        <Container className="Org-content">
+            <Typography variant="h1" className="Org-title">
+            {item && item.title}
+            </Typography>
+            { error ? (
+                <div>Error</div>
+            ) : (
+                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
+            )}
+        </Container>
+    ), [text, item, error]);
 }
 
 export default OrgContent;

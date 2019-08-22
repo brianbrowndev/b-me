@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 
 
 import {AuthContext } from './Auth'
@@ -15,6 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { OrgContext  } from '../org/OrgContext';
+import OrgGroupRouteList from '../org/OrgGroupRouteList';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,37 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
       title: {
         flexGrow: 1
       },
-      root: {
-        display: 'flex',
-      },
-      drawer: {
-        [theme.breakpoints.up('sm')]: {
-          width: drawerWidth,
-          flexShrink: 0,
-        },
-      },
-      appBar: {
-        marginLeft: drawerWidth,
-        [theme.breakpoints.up('sm')]: {
-          width: `calc(100% - ${drawerWidth}px)`,
-        },
-      },
-      menuButton: {
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
-          display: 'none',
-        },
-      },
       toolbar: theme.mixins.toolbar,
       drawerPaper: {
         width: drawerWidth,
-      },
-      content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-      },
-      listNested: {
-        paddingLeft: theme.spacing(4)
       },
       link: {
         color:'inherit',
@@ -66,20 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
     });
   },
 );
-
-function ListItemLink(props:{path:string, name:string, onClick?():void}) {
-  const classes = useStyles();
-  return  (
-    <NavLink exact to={props.path} onClick={props.onClick} activeClassName={classes.linkActive} className={classes.link}>
-      <ListItem className={classes.listNested} button>
-        <ListItemText primary={props.name} />
-      </ListItem>
-    </NavLink>
-  )
-
-}
-
-
 function Header({ history }: RouteComponentProps) {
 
   const authContext = useContext(AuthContext);
@@ -107,22 +66,13 @@ function Header({ history }: RouteComponentProps) {
             </ListSubheader>
         }>
         {orgContext.routes().map(groupItem => 
-          <Fragment key={groupItem.title}>
+          <Fragment>
             <ListItem>
               <ListItemText primary={groupItem.title} />
             </ListItem>       
-            <List disablePadding component="div">
-              {groupItem.items.map(item => 
-                <Fragment key={item.title}>
-                  {/* {(!item.authenticate || (item.authenticate && authContext.authenticated)) && */}
-                    <ListItemLink path={item.path} name={item.title} onClick={handleDrawerClose} />
-                  {/* } */}
-                </Fragment>
-              )}
-              </List>
+            <OrgGroupRouteList orgGroup={groupItem} onClick={handleDrawerClose} key={groupItem.title} nested={true}></OrgGroupRouteList>
           </Fragment>
         )}
-        
         <Divider />
         <List component="div">
             { authContext.authenticated ?
@@ -149,7 +99,9 @@ function Header({ history }: RouteComponentProps) {
     <AppBar position="static" color="primary" elevation={1}>
       <Toolbar>
         <Typography variant="h6" className={classes.title} >
-          Me
+          <NavLink to="/" className={classes.link}>
+            Me
+          </NavLink>
         </Typography>
         <IconButton color="inherit" onClick={handleDrawerOpen}>
           <MenuIcon />
