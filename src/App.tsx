@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.scss';
 
 import Header from './core/Header';
 import {PrivateRoute} from './core/Auth';
@@ -11,36 +10,57 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
 
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider, createStyles, makeStyles } from '@material-ui/styles';
 
 import theme from './theme/theme';
 import OrgContentRoute from './org/OrgContentRoute';
 import { OrgProvider } from './org/OrgContext';
+import { Container, CssBaseline, Theme, Box, Toolbar } from '@material-ui/core';
+
+const useStyles = makeStyles((theme: Theme) =>
+  {
+    return createStyles({
+      app: {
+        display:'flex',
+        minHeight:'100vh',
+        width:'100%',
+        margin: '0 auto'
+      },
+      main: {
+        flexGrow:1,
+      }
+    });
+  },
+);
 
 
-class App extends Component {
-  render() {
-    return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <AuthProvider>
-        <OrgProvider>
-          <div className="App">
-            <Header />
-            <main>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/org/*" component={OrgContentRoute} />
-              <PrivateRoute exact path="/upcoming" component={EventList} />
-              <Route exact path="/login" component={Login} />
-            </main>
-            <footer></footer>
-          </div>
-        </OrgProvider>
-        </AuthProvider>
-      </Router>
-    </ThemeProvider>
-    );
-  }
+function App () {
+  const classes = useStyles();
+  return (
+  <ThemeProvider theme={theme}>
+    <Router>
+      <CssBaseline />
+      <AuthProvider>
+      <OrgProvider>
+        <div className={classes.app}>
+          <Header />
+          <main className={classes.main}>
+            <Toolbar />
+            <Container>
+              <Box my={2}>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/org/*" component={OrgContentRoute} />
+                <PrivateRoute exact path="/upcoming" component={EventList} />
+                <Route exact path="/login" component={Login} />
+              </Box>
+            </Container>
+          </main>
+        </div>
+      </OrgProvider>
+      </AuthProvider>
+    </Router>
+  </ThemeProvider>
+  );
 }
 
 export default App;

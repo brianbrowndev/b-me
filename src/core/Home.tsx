@@ -7,7 +7,6 @@ function Home() {
   const orgContext = useContext(OrgContext);
 
   return (
-    <Container>
       <Grid container spacing={3}>
         {orgContext.routes().map(groupItem => 
           <Grid item xs={12} sm>
@@ -15,7 +14,6 @@ function Home() {
           </Grid>
         )}
       </Grid>
-    </Container>
   );
 }
 
