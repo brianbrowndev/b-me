@@ -23,11 +23,15 @@ const useStyles = makeStyles((theme: Theme) =>
   {
     return createStyles({
       title: {
-        flexGrow: 1
+        flexGrow: 1,
+        marginBottom:'5px'
       },
       logo: {
         color:theme.palette.text.primary,
-        fontWeight:900
+        fontWeight:700,
+        opacity: 0.8,
+        fontFamily: 'Libre Franklin'
+
       },
       appBar: {
         marginLeft: drawerWidth,
@@ -45,9 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
       toolbar: theme.mixins.toolbar,
       drawerPaper: {
         width: drawerWidth,
-        overflow:'hidden',
         backgroundColor: theme.palette.primary.light,
-        boxShadow:'none'
       },
       menuButton: {
         marginRight: theme.spacing(2),
@@ -62,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       contentList: {
         flex:1,
-        overflowY:'auto'
       },
       listTitle: {
         fontWeight:theme.typography.fontWeightBold,
@@ -126,24 +127,6 @@ function Header({ history }: RouteComponentProps) {
           </Fragment>
         )}
       </List>
-      <List component="div" className={classes.login}>
-          <Divider />
-          { authContext.authenticated ?
-          (
-            <ListItem button  onClick={logout}>
-              <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItem>
-
-          ) : (
-            <AppLink to="/login" onClick={handleDrawerClose}>
-              <ListItem button>
-                  <ListItemIcon className={classes.listIcon}><AccountCircleIcon className={classes.listIcon}/></ListItemIcon>
-                  <ListItemText primary="Login" />
-              </ListItem>
-            </AppLink>
-          )}
-      </List>
     </Fragment>
   );
 
@@ -163,10 +146,29 @@ function Header({ history }: RouteComponentProps) {
             </IconButton>
             <Typography variant="h4" className={classes.title} >
               <AppLink to="/">
-                <span className={classes.logo}>Me</span>
+                <span className={classes.logo}>me</span>
               </AppLink>
             </Typography>
-          </Toolbar>
+            { authContext.authenticated ?
+            (
+                <IconButton
+                  onClick={logout}
+                  color="inherit"
+                  aria-label="logout"
+                  edge="start">
+                  <ExitToAppIcon />
+                </IconButton> 
+            ) : (
+              <AppLink to="/login">
+                <IconButton
+                  color="inherit"
+                  aria-label="login"
+                >
+                  <AccountCircleIcon />
+                </IconButton>
+              </AppLink>
+            )}
+         </Toolbar>
 
         </AppBar>
       </ElevationScroll>
