@@ -35,7 +35,7 @@ function OrgContent(props:OrgContentProps) {
 
     return useMemo(() => (
         <Container className="Org-content">
-            <Typography variant="h1" className="Org-title">
+            <Typography variant="h3" className="Org-title">
             {item && item.title}
             </Typography>
             { error ? (

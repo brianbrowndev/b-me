@@ -20,6 +20,9 @@ const useLoginStyles = makeStyles((theme: Theme) =>
     },
     paper: {
         padding: theme.spacing(3, 2),
+    },
+    submit: {
+        margin: theme.spacing(2, 0, 0, 0)
     }
   }),
 );
@@ -79,7 +82,7 @@ export default function Login(props: RouteChildrenProps): JSX.Element {
                                 type="password"
                             />
                         </FormControl>
-                        <Button type="submit" variant="contained" onClick={handleSubmit} color="secondary" disabled={disabled}>
+                        <Button type="submit" variant="contained" onClick={handleSubmit} color="secondary" disabled={disabled} className={classes.submit}>
                             Submit
                         </Button>
                     </form>
