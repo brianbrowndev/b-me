@@ -39,6 +39,14 @@ function OrgProvider (props: any) {
             items: [
                 {
                     type: 'item',
+                    title: 'Packing Checklist',
+                    description: 'Is a trip not a trip with the absence of something?',
+                    filePath: '/org/public/travel/packing-list',
+                    path: '/org/travel/packing-list',
+                    authenticate: false,
+                },
+                {
+                    type: 'item',
                     title: 'Raleigh',
                     description: 'Visit to Raleigh, North Carolina in Summer 2019',
                     filePath: '/org/public/travel/raleigh',
@@ -62,6 +70,13 @@ function OrgProvider (props: any) {
             path: '/org/life',
             items: [
                 {
+                    type: 'item',
+                    title: 'Schedule',
+                    description: 'What needs to get done, now',
+                    filePath: '/org/private/life/schedule',
+                    path: '/org/life/schedule',
+                    authenticate: true 
+                },                {
                     type: 'item',
                     title: 'Birthdays',
                     description: 'Dates I must not forget',

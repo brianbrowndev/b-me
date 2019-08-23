@@ -9,7 +9,6 @@ interface AppSnackbarProps {
 
 
 function AppSnackbar (props: AppSnackbarProps) {
-    // const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
 
@@ -28,7 +27,6 @@ function AppSnackbar (props: AppSnackbarProps) {
 
     return  (
         <Snackbar
-            // className={clsx(classes[props.variant], className)}
             anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
             open={open}
             autoHideDuration={props.duration || 2000}
