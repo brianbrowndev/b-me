@@ -81,7 +81,7 @@ function OrgProvider (props: any) {
         } as OrgGroup,
         {
             type: 'group',
-            title: 'Dev',
+            title: 'Development',
             description: 'Development resources',
             path: '/org/dev',
             items: [
