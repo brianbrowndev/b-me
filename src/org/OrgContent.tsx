@@ -38,8 +38,11 @@ function OrgContent(props:OrgContentProps) {
             <Typography variant="h3" className="Org-title">
             {item && item.title}
             </Typography>
+            <Typography  color="textSecondary" gutterBottom>
+            {item && item.description}
+            </Typography>
             { error ? (
-                <div>Error</div>
+                <Typography color="error" variant="overline">Something went wrong, failed to load page.</Typography>
             ) : (
                 <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
             )}
