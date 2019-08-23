@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Typography, Divider,  createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, ListItemIcon, useScrollTrigger, Hidden, useTheme } from '@material-ui/core';
+import { Typography, createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, useScrollTrigger, Hidden, useTheme } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -24,20 +24,18 @@ const useStyles = makeStyles((theme: Theme) =>
     return createStyles({
       title: {
         flexGrow: 1,
-        marginBottom:'5px'
       },
       logo: {
         color:theme.palette.text.primary,
-        fontWeight:700,
-        opacity: 0.8,
-        fontFamily: 'Libre Franklin'
-
+        fontWeight:300,
+        fontFamily: 'Montserrat',
       },
       appBar: {
         marginLeft: drawerWidth,
         [theme.breakpoints.up('sm')]: {
           width: `calc(100% - ${drawerWidth}px)`,
         },
+        borderBottom: `1px solid rgba(0,0,0,0.12)`
       },
       drawer: {
         [theme.breakpoints.up('sm')]: {
@@ -133,7 +131,7 @@ function Header({ history }: RouteComponentProps) {
   return (
     <Fragment>
       <ElevationScroll>
-        <AppBar color="primary" elevation={1} className={classes.appBar}>
+        <AppBar color="primary" elevation={2} className={classes.appBar}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -144,9 +142,9 @@ function Header({ history }: RouteComponentProps) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h4" className={classes.title} >
+            <Typography variant="h6" className={classes.title} >
               <AppLink to="/">
-                <span className={classes.logo}>me</span>
+                <span className={classes.logo}>ME</span>
               </AppLink>
             </Typography>
             { authContext.authenticated ?

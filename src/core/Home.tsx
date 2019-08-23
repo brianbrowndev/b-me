@@ -1,19 +1,22 @@
-import React, { useContext } from 'react';
-import { Container, Grid, } from '@material-ui/core';
-import { OrgContext } from '../org/OrgContext';
-import OrgGroupCard from '../org/OrgGroupCard';
+import React, { useContext, Fragment } from 'react';
+import {  Grid, Typography, } from '@material-ui/core';
+import { OrgContext, OrgItem } from '../org/OrgContext';
+import OrgItemCard from '../org/OrgItemCard';
 
 function Home() {
   const orgContext = useContext(OrgContext);
 
   return (
+    <Fragment>
+      <Typography color="textSecondary" variant="h6" gutterBottom>Org</Typography>
       <Grid container spacing={3}>
-        {orgContext.routes().map(groupItem => 
+        {orgContext.routes().reduce((a, b) => a.concat(b.items), ([] as OrgItem[])).map(item => 
           <Grid item xs={12} sm>
-            <OrgGroupCard orgGroup={groupItem} key={groupItem.title}></OrgGroupCard>
+            <OrgItemCard orgItem={item} key={item.title}></OrgItemCard>
           </Grid>
         )}
       </Grid>
+    </Fragment>
   );
 }
 

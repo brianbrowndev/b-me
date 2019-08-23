@@ -4,6 +4,7 @@ import { AuthContext } from '../core/Auth';
 export interface OrgItem {
     filePath: string;
     title: string;
+    description: string;
     path: string;
     authenticate: boolean;
     type: 'item';
@@ -18,6 +19,7 @@ export interface OrgGroup {
 export interface OrgProps {
     routes (): OrgGroup[];
     findOrgItemByPath (path:string): OrgItem | null;
+    findOrgItemParentByPath (path:string): OrgGroup | null;
     findOrgGroupItemByPath (path:string): OrgGroup | null;
 }
 
@@ -38,6 +40,7 @@ function OrgProvider (props: any) {
                 {
                     type: 'item',
                     title: 'Raleigh',
+                    description: 'Visit to Raleigh, North Carolina in Summer 2019',
                     filePath: '/org/public/travel/raleigh',
                     path: '/org/travel/raleigh',
                     authenticate: false,
@@ -45,6 +48,7 @@ function OrgProvider (props: any) {
                 {
                     type: 'item',
                     title: 'Santa Barbara',
+                    description: 'Wedding trip in Fall 2019',
                     filePath: '/org/public/travel/santa-barbara',
                     path: '/org/places/santa-barbara',
                     authenticate: false 
@@ -60,6 +64,7 @@ function OrgProvider (props: any) {
                 {
                     type: 'item',
                     title: 'Birthdays',
+                    description: 'Dates I must not forget',
                     filePath: '/org/private/life/birthdays',
                     path: '/org/life/birthdays',
                     authenticate: true 
@@ -67,6 +72,7 @@ function OrgProvider (props: any) {
                 {
                     type: 'item',
                     title: 'Homes',
+                    description: 'List of homes toured around Richmond, Virginia',
                     filePath: '/org/private/life/homes',
                     path: '/org/places/homes',
                     authenticate: true 
@@ -82,6 +88,7 @@ function OrgProvider (props: any) {
             {
                 type: 'item',
                 title: 'VS Code Tips',
+                description: 'Shortcuts and tips to move faster in Visual Studio Code',
                 filePath: '/org/public/dev/vscode',
                 path: '/org/public/vscode',
                 authenticate: false 
@@ -123,6 +130,18 @@ function OrgProvider (props: any) {
                 if (path === item.path) return item;
         return null;
     }
+
+    /**
+     * Find the parent of an item given the path. Used for cards.
+     * @param path 
+     */
+    function findOrgItemParentByPath (path:string): OrgGroup | null {
+        for (let groupItem of routes) 
+            for (let item of groupItem.items) 
+                if (path === item.path) return groupItem;
+        return null;
+    }
+
     /**
      * Build a tree given an item path, very rudimentary. returns only the specified item  
      * @param path 
@@ -137,6 +156,7 @@ function OrgProvider (props: any) {
 
     const orgProps = {
         findOrgItemByPath: (path) => findOrgItemByPath(path),
+        findOrgItemParentByPath: (path) => findOrgItemParentByPath(path),
         findOrgGroupItemByPath: (path) => findOrgGroupItemByPath(path),
         routes: () => findRoutes()
     } as OrgProps;
