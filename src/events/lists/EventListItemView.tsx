@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { Event, SwaggerException } from '../../common/client/index';
 
 import './EventListItemView.scss';
-import BooleanSubmitIcon from '../../core/components/BooleanSubmitIcon';
 import EventApi  from '../../common/client/EventApi';
 
 interface EventListItemViewProps {
@@ -37,14 +36,14 @@ function EventListItemView (props: EventListItemViewProps) {
 
     return  (
         <Fragment>
-            <BooleanSubmitIcon
+            {/* <BooleanSubmitIcon
                 isPending={isPending}
                 state={props.event.complete}
                 onClick={handleClick}
                 falseIcon={['far', 'square']}
                 trueIcon={['far', 'check-square']}
                 isListIcon={true}
-                />
+            /> */}
             {props.event.name}
         </Fragment>
 
