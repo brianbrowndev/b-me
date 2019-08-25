@@ -100,15 +100,23 @@ function OrgProvider (props: any) {
             description: 'Development resources',
             path: '/org/dev',
             items: [
-            {
-                type: 'item',
-                title: 'VS Code Tips',
-                description: 'Shortcuts and tips to move faster in Visual Studio Code',
-                filePath: '/org/public/dev/vscode',
-                path: '/org/public/vscode',
-                authenticate: false 
-            }
-        ]
+                {
+                    type: 'item',
+                    title: 'VS Code Tips',
+                    description: 'Shortcuts and tips to move faster in Visual Studio Code',
+                    filePath: '/org/public/dev/vscode',
+                    path: '/org/public/vscode',
+                    authenticate: false 
+                },
+                {
+                    type: 'item',
+                    title: 'Favicons',
+                    description: 'References for adding a favicon',
+                    filePath: '/org/public/dev/favicon',
+                    path: '/org/public/favicon',
+                    authenticate: false 
+                }
+            ]
         } as OrgGroup
     ];
 
