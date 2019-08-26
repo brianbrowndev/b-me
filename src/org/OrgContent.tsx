@@ -8,14 +8,16 @@ const DOMPurify = require('dompurify')
 const useStyles = makeStyles((theme: Theme) =>
   {
     return createStyles({
-        OrgContent: {
-            fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
+        container: {
             paddingTop:'20px',
-            paddingBottom:'20px',
+        },
+        orgContent: {
+            fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
+            paddingBottom: theme.spacing(4),
+            paddingTop: theme.spacing(1),
            "& h2,h3,h4,h5,h6": {
                 borderBottom: '1px solid #eaecef',
-                paddingBottom: ".3em",
-                fontWeight:400
+                fontWeight:500
             },
 
             "& table": {
@@ -33,17 +35,42 @@ const useStyles = makeStyles((theme: Theme) =>
                 },
 
                 "& tbody tr:nth-child(2n)": {
-                    backgroundColor: '#f6f8fa'
+                    backgroundColor: theme.palette.primary.light
                 }
             },
 
             "& .org-dl dt": {
                 fontWeight:'bold',
-                paddingLeft:'20px'
+                paddingLeft:theme.spacing(1)
+            },
+
+            "& a": {
+                color: theme.palette.secondary.main,
+                textDecoration: "none",
+                "&:hover, &:focus": {
+                    color: theme.palette.secondary.light,
+                }
+            },
+
+            "& .todo": {
+                opacity:0.5,
+                color: theme.palette.secondary.dark
+            },
+
+            "& .timestamp-kwd": {
+                display:'none',
+            },
+
+            "& .timestamp": {
             }
+            
         },
         orgTitle: {
-            borderBottom:"none"
+            paddingBottom: theme.spacing(1),
+            "&h3": {
+                borderBottom:"none"
+
+            }
         },
 
  
@@ -81,7 +108,7 @@ function OrgContent(props:OrgContentProps) {
 
 
     return useMemo(() => (
-        <Container className={classes.OrgContent}>
+        <Container className={classes.container}>
             <Typography variant="h3" className={classes.orgTitle}>
             {item && item.title}
             </Typography>
@@ -91,7 +118,7 @@ function OrgContent(props:OrgContentProps) {
             { error ? (
                 <Typography color="error" variant="overline">Something went wrong, failed to load page.</Typography>
             ) : (
-                <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
+                <div className={classes.orgContent} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
             )}
         </Container>
     ), [text, item, error, classes]);
