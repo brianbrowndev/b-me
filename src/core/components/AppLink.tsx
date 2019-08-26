@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
         textDecoration:'none',
       },
       linkActive: {
-        color:theme.palette.secondary.dark,
+        color:theme.palette.secondary.main,
         fontWeight:700
       }
     });
