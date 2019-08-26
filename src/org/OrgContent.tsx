@@ -1,17 +1,64 @@
 import React, { useEffect, useState, useMemo, useContext } from 'react';
 import OrgApi from '../common/client/OrgApi'
-import './OrgContent.scss';
 import { OrgContext, OrgItem } from './OrgContext';
-import { Typography, Container } from '@material-ui/core';
+import { Typography, Container, createStyles, makeStyles, Theme } from '@material-ui/core';
 import { SwaggerException } from '../common/client';
 const DOMPurify = require('dompurify')
 
+const useStyles = makeStyles((theme: Theme) =>
+  {
+    return createStyles({
+        OrgContent: {
+            fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
+            paddingTop:'20px',
+            paddingBottom:'20px',
+           "& h2,h3,h4,h5,h6": {
+                borderBottom: '1px solid #eaecef',
+                paddingBottom: ".3em",
+                fontWeight:400
+            },
+
+            "& table": {
+                display:'block',
+                overflow:'auto',
+                width:'100%',
+                "& tr": {
+                    backgroundColor: '#fff',
+                    borderTop: '1px solid #c6cbd1'
+                },
+
+                "& tr td, & tr th": {
+                    border: '1px solid #dfe2e5',
+                    padding: '6px 13px'
+                },
+
+                "& tbody tr:nth-child(2n)": {
+                    backgroundColor: '#f6f8fa'
+                }
+            },
+
+            "& .org-dl dt": {
+                fontWeight:'bold',
+                paddingLeft:'20px'
+            }
+        },
+        orgTitle: {
+            borderBottom:"none"
+        },
+
+ 
+    });
+});
+ 
 
 interface OrgContentProps {
     url:string; 
 }
 
 function OrgContent(props:OrgContentProps) {
+
+    const classes = useStyles();
+
     const orgContext = useContext(OrgContext);
 
     const [item, setItem] = useState<OrgItem>();
@@ -34,8 +81,8 @@ function OrgContent(props:OrgContentProps) {
 
 
     return useMemo(() => (
-        <Container className="Org-content">
-            <Typography variant="h3" className="Org-title">
+        <Container className={classes.OrgContent}>
+            <Typography variant="h3" className={classes.orgTitle}>
             {item && item.title}
             </Typography>
             <Typography  color="textSecondary" gutterBottom>
@@ -47,7 +94,7 @@ function OrgContent(props:OrgContentProps) {
                 <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
             )}
         </Container>
-    ), [text, item, error]);
+    ), [text, item, error, classes]);
 }
 
 export default OrgContent;
