@@ -102,6 +102,14 @@ function OrgProvider (props: any) {
             items: [
                 {
                     type: 'item',
+                    title: 'TODO',
+                    description: 'Outline plans and thoughts around app updates',
+                    filePath: '/org/public/dev/todo',
+                    path: '/org/public/todo',
+                    authenticate: false 
+                },                
+                {
+                    type: 'item',
                     title: 'VS Code Tips',
                     description: 'Shortcuts and tips to move faster in Visual Studio Code',
                     filePath: '/org/public/dev/vscode',

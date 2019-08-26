@@ -52,10 +52,17 @@ const useStyles = makeStyles((theme: Theme) =>
                 }
             },
 
-            "& .todo": {
-                opacity:0.5,
-                color: theme.palette.secondary.dark
+            "& .todo, & .done": {
+                opacity:0.7,
             },
+            "& .todo": {
+                color: "#e17055"
+            },
+            "& .done": {
+                color: "#00b894"
+            },
+
+
 
             "& .timestamp-kwd": {
                 display:'none',
