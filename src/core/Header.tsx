@@ -118,7 +118,7 @@ function Header({ history }: RouteComponentProps) {
         </AppLink>
         {orgContext.routes().map(groupItem => 
           <Fragment key={groupItem.title}>
-            <OrgGroupRouteList orgGroup={groupItem} onClick={handleDrawerClose} key={groupItem.title} nested={true}></OrgGroupRouteList>
+            <OrgGroupRouteList orgGroup={groupItem} onClick={handleDrawerClose} key={groupItem.title} nested={true} history={history}></OrgGroupRouteList>
           </Fragment>
         )}
       </List>
