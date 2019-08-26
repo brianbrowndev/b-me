@@ -78,10 +78,10 @@ function OrgProvider (props: any) {
                     authenticate: true 
                 },                {
                     type: 'item',
-                    title: 'Birthdays',
+                    title: 'Events',
                     description: 'Dates I must not forget',
-                    filePath: '/org/private/life/birthdays',
-                    path: '/org/life/birthdays',
+                    filePath: '/org/private/life/events',
+                    path: '/org/life/events',
                     authenticate: true 
                 },
                 {
