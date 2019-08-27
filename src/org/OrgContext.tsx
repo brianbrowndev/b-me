@@ -71,12 +71,21 @@ function OrgProvider (props: any) {
             items: [
                 {
                     type: 'item',
+                    title: 'Emergency',
+                    description: 'Urgent contact information',
+                    filePath: '/org/private/life/emergency',
+                    path: '/org/life/emergency',
+                    authenticate: true 
+                },
+                {
+                    type: 'item',
                     title: 'Schedule',
                     description: 'What needs to get done, now',
                     filePath: '/org/private/life/schedule',
                     path: '/org/life/schedule',
                     authenticate: true 
-                },                {
+                },
+                {
                     type: 'item',
                     title: 'Events',
                     description: 'Dates I must not forget',
