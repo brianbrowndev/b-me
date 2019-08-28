@@ -10,11 +10,11 @@ const useStyles = makeStyles((theme: Theme) =>
   {
     return createStyles({
         container: {
-            paddingTop:'20px',
+            paddingTop:theme.spacing(3),
         },
         title: {
             paddingBottom: theme.spacing(1),
-            fontWeight:300,
+            fontWeight:theme.typography.fontWeightLight,
             "&h3": {
                 borderBottom:"none"
             }
@@ -23,14 +23,15 @@ const useStyles = makeStyles((theme: Theme) =>
             fontSize: textFontSize,
             borderBottom: '1px dashed #eaecef',
             paddingBottom: theme.spacing(2),
-            fontWeight: 400,
+            fontWeight: theme.typography.fontWeightRegular,
         },
         content: {
-            fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
+            fontFamily:theme.typography.fontFamily,
             paddingBottom: theme.spacing(4),
             paddingTop: theme.spacing(1),
+
            "& h2,h3,h4,h5,h6": {
-                fontWeight:500
+                fontWeight: theme.typography.fontWeightMedium
             },
            "& h2,h3": {
                 borderBottom: '1px solid #eaecef',
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 overflow:'auto',
                 width:'100%',
                 "& tr": {
-                    backgroundColor: '#fff',
+                    backgroundColor: theme.palette.primary.main,
                     borderTop: '1px solid #c6cbd1'
                 },
 
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
             },
 
             "& .org-dl dt": {
-                fontWeight:500,
+                fontWeight: theme.typography.fontWeightRegular,
             },
 
             "& a": {
@@ -83,12 +84,14 @@ const useStyles = makeStyles((theme: Theme) =>
                 color: "#00b894"
             },
 
+            "& li.on": {
+                color: theme.palette.text.secondary
+            },
 
 
             "& .timestamp-kwd": {
                 display:'none',
             },
-
             "& .timestamp": {
             }
             
