@@ -14,56 +14,39 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         title: {
             paddingBottom: theme.spacing(1),
+            fontWeight:300,
             "&h3": {
                 borderBottom:"none"
             }
         },
         subtitle: {
-            fontSize: textFontSize
+            fontSize: textFontSize,
+            borderBottom: '1px dashed #eaecef',
+            paddingBottom: theme.spacing(2),
+            fontWeight: 400,
         },
-        orgContent: {
+        content: {
             fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
             paddingBottom: theme.spacing(4),
             paddingTop: theme.spacing(1),
-            fontSize: textFontSize,
-            lineHeight:1,
-           "& h1,h2,h3,h4,h5,h6": {
-                margin:0,
+           "& h2,h3,h4,h5,h6": {
+                fontWeight:500
             },
-
-            "& h2": {
+           "& h2,h3": {
                 borderBottom: '1px solid #eaecef',
-                fontSize: "2.3rem",
-                fontWeight: 400,
-                lineHeight: 1.04,
-                letterSpacing: "0em",
-                marginBottom:"0.35em"
-            },
-
-            "& h3": {
-                fontSize: "1.6rem",
-                fontWeight: 500,
-                letterSpacing: "0em",
-                // marginBottom:"0.35em"
-            },
-
- 
-
-            "& .outline-2": {
-                paddingTop: theme.spacing(4)
-            },
-
-            "& .outline-3, .outline-4": {
-                paddingTop: theme.spacing(2)
-            },
-
+           },
+           "& h2": {
+               fontSize:"1.5rem"
+           },
+           "& h3": {
+               fontSize:"1.25rem"
+           },
 
 
             "& table": {
                 display:'block',
                 overflow:'auto',
                 width:'100%',
-                paddingTop: theme.spacing(2),
                 "& tr": {
                     backgroundColor: '#fff',
                     borderTop: '1px solid #c6cbd1'
@@ -81,8 +64,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
             "& .org-dl dt": {
                 fontWeight:500,
-                paddingLeft:theme.spacing(1),
-                paddingTop:theme.spacing(2)
             },
 
             "& a": {
@@ -93,13 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 }
             },
 
-            "& li": {
-                lineHeight: 1.3,
-                paddingTop: theme.spacing(2)
-            },
-
             "& .todo, & .done": {
-                fontWeight:500
             },
             "& .todo": {
                 color: "#e17055"
@@ -113,7 +88,9 @@ const useStyles = makeStyles((theme: Theme) =>
             "& .timestamp-kwd": {
                 display:'none',
             },
-            "& .timestamp": {}
+
+            "& .timestamp": {
+            }
             
         },
  
@@ -162,7 +139,7 @@ function OrgContent(props:OrgContentProps) {
             { error ? (
                 <Typography color="error" variant="overline">Something went wrong, failed to load page.</Typography>
             ) : (
-                <div className={classes.orgContent} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
+                <div className={classes.content} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
             )}
         </Container>
     ), [text, item, error, classes]);
