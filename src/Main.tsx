@@ -6,6 +6,7 @@ import { Route } from "react-router";
 import Home from "./core/Home";
 import OrgContentRoute from "./org/OrgContentRoute";
 import Login from "./core/Login";
+import ScrollToTop from './core/components/ScrollToTop';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -36,9 +37,11 @@ function Main() {
         <Toolbar />
         <Container>
           <Box my={2}>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/org/*" component={OrgContentRoute} />
-            <Route exact path="/login" component={Login} />
+            <ScrollToTop >
+              <Route exact path="/" component={Home} />
+              <Route exact path="/org/*" component={OrgContentRoute} />
+              <Route exact path="/login" component={Login} />
+            </ ScrollToTop>
           </Box>
         </Container>
       </main>
