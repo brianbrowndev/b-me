@@ -15,10 +15,20 @@ const useStyles = makeStyles((theme: Theme) =>
             fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
             paddingBottom: theme.spacing(4),
             paddingTop: theme.spacing(1),
-           "& h2,h3,h4,h5,h6": {
+           "& h1,h2": {
                 borderBottom: '1px solid #eaecef',
                 fontWeight:500
             },
+
+            "& .outline-2": {
+                paddingTop: theme.spacing(2)
+            },
+
+            "& .outline-3, .outline-4": {
+                paddingTop: theme.spacing(1)
+            },
+
+
 
             "& table": {
                 display:'block',
@@ -48,12 +58,13 @@ const useStyles = makeStyles((theme: Theme) =>
                 color: theme.palette.secondary.main,
                 textDecoration: "none",
                 "&:hover, &:focus": {
-                    color: theme.palette.secondary.light,
+                    color: theme.palette.secondary.dark,
                 }
             },
 
             "& .todo, & .done": {
-                opacity:0.7,
+                // opacity:0.7,
+                fontWeight:700
             },
             "& .todo": {
                 color: "#e17055"
@@ -69,6 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
             },
 
             "& .timestamp": {
+                // color:"#6c5ce7",
+                // color:"#2d3436",
+                // fontWeight:700
             }
             
         },
@@ -104,6 +118,7 @@ function OrgContent(props:OrgContentProps) {
 
             const item = orgContext.findOrgItemByPath(props.url);
             if (item !== null) {
+                setError(null);
                 setItem(item);
                 OrgApi.get(item.filePath).then(t => setText(t)).catch((e: SwaggerException) => {
                     setError(e.message)
