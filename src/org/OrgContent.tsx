@@ -5,27 +5,56 @@ import { Typography, Container, createStyles, makeStyles, Theme } from '@materia
 import { SwaggerException } from '../common/client';
 const DOMPurify = require('dompurify')
 
+const textFontSize = "18px";
 const useStyles = makeStyles((theme: Theme) =>
   {
     return createStyles({
         container: {
             paddingTop:'20px',
         },
+        title: {
+            paddingBottom: theme.spacing(1),
+            "&h3": {
+                borderBottom:"none"
+            }
+        },
+        subtitle: {
+            fontSize: textFontSize
+        },
         orgContent: {
             fontFamily:'Roboto, Helvetica, Arial, sans-serif !important',
             paddingBottom: theme.spacing(4),
             paddingTop: theme.spacing(1),
-           "& h1,h2": {
-                borderBottom: '1px solid #eaecef',
-                fontWeight:500
+            fontSize: textFontSize,
+            lineHeight:1,
+           "& h1,h2,h3,h4,h5,h6": {
+                margin:0,
             },
 
+            "& h2": {
+                borderBottom: '1px solid #eaecef',
+                fontSize: "2.3rem",
+                fontWeight: 400,
+                lineHeight: 1.04,
+                letterSpacing: "0em",
+                marginBottom:"0.35em"
+            },
+
+            "& h3": {
+                fontSize: "1.6rem",
+                fontWeight: 500,
+                letterSpacing: "0em",
+                // marginBottom:"0.35em"
+            },
+
+ 
+
             "& .outline-2": {
-                paddingTop: theme.spacing(2)
+                paddingTop: theme.spacing(4)
             },
 
             "& .outline-3, .outline-4": {
-                paddingTop: theme.spacing(1)
+                paddingTop: theme.spacing(2)
             },
 
 
@@ -34,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 display:'block',
                 overflow:'auto',
                 width:'100%',
+                paddingTop: theme.spacing(2),
                 "& tr": {
                     backgroundColor: '#fff',
                     borderTop: '1px solid #c6cbd1'
@@ -50,8 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
             },
 
             "& .org-dl dt": {
-                fontWeight:'bold',
-                paddingLeft:theme.spacing(1)
+                fontWeight:500,
+                paddingLeft:theme.spacing(1),
+                paddingTop:theme.spacing(2)
             },
 
             "& a": {
@@ -62,9 +93,13 @@ const useStyles = makeStyles((theme: Theme) =>
                 }
             },
 
+            "& li": {
+                lineHeight: 1.3,
+                paddingTop: theme.spacing(2)
+            },
+
             "& .todo, & .done": {
-                // opacity:0.7,
-                fontWeight:700
+                fontWeight:500
             },
             "& .todo": {
                 color: "#e17055"
@@ -78,22 +113,9 @@ const useStyles = makeStyles((theme: Theme) =>
             "& .timestamp-kwd": {
                 display:'none',
             },
-
-            "& .timestamp": {
-                // color:"#6c5ce7",
-                // color:"#2d3436",
-                // fontWeight:700
-            }
+            "& .timestamp": {}
             
         },
-        orgTitle: {
-            paddingBottom: theme.spacing(1),
-            "&h3": {
-                borderBottom:"none"
-
-            }
-        },
-
  
     });
 });
@@ -131,10 +153,10 @@ function OrgContent(props:OrgContentProps) {
 
     return useMemo(() => (
         <Container className={classes.container}>
-            <Typography variant="h3" className={classes.orgTitle}>
+            <Typography variant="h3" className={classes.title}>
             {item && item.title}
             </Typography>
-            <Typography  color="textSecondary" gutterBottom>
+            <Typography  color="textSecondary" variant="subtitle1" className={classes.subtitle}>
             {item && item.description}
             </Typography>
             { error ? (
