@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
       main: {
         flexGrow:1,
         overflow:'hidden'
+      },
+      container: {
       }
     });
   },
@@ -35,8 +37,8 @@ function Main() {
       <Header />
       <main className={classes.main}>
         <Toolbar />
-        <Container>
-          <Box my={2}>
+        <Container className={classes.container}>
+          <Box my={4}>
             <ScrollToTop >
               <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgContentRoute} />

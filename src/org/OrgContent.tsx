@@ -9,7 +9,6 @@ const useStyles = makeStyles((theme: Theme) =>
   {
     return createStyles({
         container: {
-            paddingTop:theme.spacing(3),
         },
         title: {
             paddingBottom: theme.spacing(1),

@@ -5,13 +5,6 @@ import AppLink from '../core/components/AppLink';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
-    expand: {
-      transform: 'rotate(0deg)',
-      marginLeft: 'auto',
-    },
-    expandOpen: {
-      transform: 'rotate(180deg)',
-    },
     card: {
       [theme.breakpoints.up('md')]: {
         width:'300px',
