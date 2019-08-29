@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
         },
         title: {
-            paddingBottom: theme.spacing(1),
             fontWeight:theme.typography.fontWeightLight,
             "&h3": {
                 borderBottom:"none"
@@ -20,7 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
         subtitle: {
             fontSize: "18px",
             borderBottom: `4px double ${theme.palette.primary.dark}`,
-            marginBottom:theme.spacing(2),
+            marginBottom: theme.spacing(2),
+            paddingBottom: theme.spacing(1),
             fontWeight: theme.typography.fontWeightRegular,
         },
         content: {
