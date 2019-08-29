@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, List, ListItemText, ListItem, CircularProgress, Grid, ListItemIcon } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, List, ListItemText, ListItem, CircularProgress, Grid, ListItemIcon, CardActions, Button } from '@material-ui/core';
 import AppLink from '../core/components/AppLink';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
@@ -9,9 +9,6 @@ const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     card: {
         width:'300px',
-    },
-    description: {
-      min:'60px'
     },
     progress: {
       margin: theme.spacing(2),
@@ -51,28 +48,31 @@ function RecentBooksCard() {
             <CircularProgress className={classes.progress} color="secondary" />
           </Grid>
         ) : (
-        <Typography variant="body2" className={classes.description}>
-            <List disablePadding component="div" dense>
-                { error && 
-                  <Typography color="error" variant="overline">{error}</Typography>
-                }
-                {books.map(book => 
-                  <ListItem   key={book.id}>
-                    { (book.bookStatus && book.bookStatus.name == 'Started') && 
-                    <ListItemIcon>
-                      <BookIcon color="secondary" />
-                    </ListItemIcon>
-                    }
-                    <ListItemText primary={book.name} secondary={book.bookAuthor ? book.bookAuthor.name : null}/>
-                  </ListItem>
-                )}
-            </List>
-          </Typography>
+          <List disablePadding component="div" dense>
+              { error && 
+                <Typography color="error" variant="overline">{error}</Typography>
+              }
+              {books.map(book => 
+                <ListItem key={book.id}>
+                  { (book.bookStatus && book.bookStatus.name === 'Started') && 
+                  <ListItemIcon>
+                    <BookIcon color="secondary" />
+                  </ListItemIcon>
+                  }
+                  <ListItemText primary={book.name} secondary={book.bookAuthor ? book.bookAuthor.name : null}/>
+                </ListItem>
+              )}
+          </List>
         ) }
       </CardContent>
+      <CardActions>
+        <AppLink to="/books" exact={true}>
+          <Button size="small" color="secondary">
+            View
+          </Button>
+        </AppLink>
+      </CardActions>
     </Card>
-    // <AppLink >
-    // </AppLink>
   );
 }
 

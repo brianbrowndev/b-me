@@ -7,6 +7,7 @@ import Home from "./core/Home";
 import OrgContentRoute from "./org/OrgContentRoute";
 import Login from "./core/Login";
 import ScrollToTop from './core/components/ScrollToTop';
+import BookTable from './books/BookTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
         minHeight:'100vh',
         width:'100%',
         margin: '0 auto',
-        background: '#ffffff'
+        background: theme.palette.primary.main
       },
       main: {
         flexGrow:1,
@@ -42,6 +43,7 @@ function Main() {
             <ScrollToTop >
               <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgContentRoute} />
+              <Route exact path="/books" component={BookTable} />
               <Route exact path="/login" component={Login} />
             </ ScrollToTop>
           </Box>

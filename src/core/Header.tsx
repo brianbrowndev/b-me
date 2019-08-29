@@ -121,6 +121,11 @@ function Header({ history }: RouteComponentProps) {
             <OrgGroupRouteList orgGroup={groupItem} onClick={handleDrawerClose} key={groupItem.title} nested={true} history={history}></OrgGroupRouteList>
           </Fragment>
         )}
+        <AppLink to="/books" exact={true} onClick={handleDrawerClose}>
+          <ListItem button>
+              <ListItemText primary="Books" classes={{primary: classes.listTitle}}/>
+          </ListItem>
+        </AppLink>
       </List>
     </Fragment>
   );
