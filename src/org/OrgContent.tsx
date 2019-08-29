@@ -5,7 +5,6 @@ import { Typography, Container, createStyles, makeStyles, Theme } from '@materia
 import { SwaggerException } from '../common/client';
 const DOMPurify = require('dompurify')
 
-const textFontSize = "18px";
 const useStyles = makeStyles((theme: Theme) =>
   {
     return createStyles({
@@ -20,27 +19,28 @@ const useStyles = makeStyles((theme: Theme) =>
             }
         },
         subtitle: {
-            fontSize: textFontSize,
-            borderBottom: '1px dashed #eaecef',
-            paddingBottom: theme.spacing(2),
+            fontSize: "18px",
+            borderBottom: `4px double ${theme.palette.primary.dark}`,
+            marginBottom:theme.spacing(2),
             fontWeight: theme.typography.fontWeightRegular,
         },
         content: {
             fontFamily:theme.typography.fontFamily,
             paddingBottom: theme.spacing(4),
             paddingTop: theme.spacing(1),
+            fontSize: "16px",
 
            "& h2,h3,h4,h5,h6": {
                 fontWeight: theme.typography.fontWeightMedium
             },
-           "& h2,h3": {
-                borderBottom: '1px solid #eaecef',
-           },
+        //    "& h2,h3": {
+        //    },
            "& h2": {
+                borderBottom: '1px solid #eaecef',
                fontSize:"1.5rem"
            },
            "& h3": {
-               fontSize:"1.25rem"
+               fontSize:"1.3rem"
            },
 
 
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
             },
 
             "& .org-dl dt": {
-                fontWeight: theme.typography.fontWeightRegular,
+                fontWeight: theme.typography.fontWeightMedium,
             },
 
             "& a": {
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
             },
 
             "& li.on": {
-                color: theme.palette.text.secondary
+                opacity:0.5
             },
 
 
