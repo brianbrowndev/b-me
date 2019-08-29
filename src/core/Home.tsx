@@ -8,6 +8,9 @@ const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     container: {
       marginTop: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        justifyContent: 'center'
+      }
     },
     title: {
       marginTop: theme.spacing(4)
@@ -23,7 +26,10 @@ function Home() {
 
   return (
     <Fragment>
-      <Grid container className={classes.container}  justify="center">
+      <Typography color="textSecondary" variant="h5" gutterBottom className={classes.title}>
+        Dashboard
+      </Typography>
+      <Grid container className={classes.container}>
         <Grid item spacing={1}>
           <RecentBooksCard></RecentBooksCard>
         </Grid>

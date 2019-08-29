@@ -41,7 +41,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Packing Checklist',
                     description: 'Is a trip not a trip with the absence of something?',
-                    filePath: '/org/public/travel/packing-list',
+                    filePath: 'org/public/travel/packing-list',
                     path: '/org/travel/packing-list',
                     authenticate: false,
                 },
@@ -49,7 +49,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Raleigh',
                     description: 'Visit to Raleigh, North Carolina in Summer 2019',
-                    filePath: '/org/public/travel/raleigh',
+                    filePath: 'org/public/travel/raleigh',
                     path: '/org/travel/raleigh',
                     authenticate: false,
                 },
@@ -57,7 +57,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Santa Barbara',
                     description: 'Wedding trip in Fall 2019',
-                    filePath: '/org/public/travel/santa-barbara',
+                    filePath: 'org/public/travel/santa-barbara',
                     path: '/org/places/santa-barbara',
                     authenticate: false 
                 }
@@ -73,7 +73,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Emergency',
                     description: 'Urgent contact information',
-                    filePath: '/org/private/life/emergency',
+                    filePath: 'org/private/life/emergency',
                     path: '/org/life/emergency',
                     authenticate: true 
                 },
@@ -81,7 +81,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Schedule',
                     description: 'What needs to get done, now',
-                    filePath: '/org/private/life/schedule',
+                    filePath: 'org/private/life/schedule',
                     path: '/org/life/schedule',
                     authenticate: true 
                 },
@@ -89,7 +89,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Events',
                     description: 'Dates I must not forget',
-                    filePath: '/org/private/life/events',
+                    filePath: 'org/private/life/events',
                     path: '/org/life/events',
                     authenticate: true 
                 },
@@ -97,7 +97,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Homes',
                     description: 'List of homes toured around Richmond, Virginia',
-                    filePath: '/org/private/life/homes',
+                    filePath: 'org/private/life/homes',
                     path: '/org/places/homes',
                     authenticate: true 
                 }
@@ -113,7 +113,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'TODO',
                     description: 'Outline plans and thoughts around app updates',
-                    filePath: '/org/public/dev/todo',
+                    filePath: 'org/public/dev/todo',
                     path: '/org/public/todo',
                     authenticate: false 
                 },                
@@ -121,7 +121,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'VS Code Tips',
                     description: 'Shortcuts and tips to move faster in Visual Studio Code',
-                    filePath: '/org/public/dev/vscode',
+                    filePath: 'org/public/dev/vscode',
                     path: '/org/public/vscode',
                     authenticate: false 
                 },
@@ -129,7 +129,7 @@ function OrgProvider (props: any) {
                     type: 'item',
                     title: 'Favicons',
                     description: 'References for adding a favicon',
-                    filePath: '/org/public/dev/favicon',
+                    filePath: 'org/public/dev/favicon',
                     path: '/org/public/favicon',
                     authenticate: false 
                 }

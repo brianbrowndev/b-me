@@ -42,7 +42,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getBookCategories(): Promise<BookCategory[]> {
-        let url_ = this.baseUrl + "/api/books/categories";
+        let url_ = this.baseUrl + "/books/categories";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -77,7 +77,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getStatuses(): Promise<BookStatus[]> {
-        let url_ = this.baseUrl + "/api/books/statuses";
+        let url_ = this.baseUrl + "/books/statuses";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -112,7 +112,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getBooks(year?: string | null | undefined, author?: string | null | undefined, categoryNames?: string[] | null | undefined): Promise<Book[]> {
-        let url_ = this.baseUrl + "/api/books?";
+        let url_ = this.baseUrl + "/books?";
         if (year !== undefined)
             url_ += "year=" + encodeURIComponent("" + year) + "&"; 
         if (author !== undefined)
@@ -153,7 +153,7 @@ export class BookClient extends ApiClientBase {
     }
 
     createBook(id?: number | undefined, name?: string | null | undefined, readYear?: string | null | undefined, bookCategory_id?: number | undefined, bookCategory_name?: string | null | undefined, bookAuthor_id?: number | undefined, bookAuthor_name?: string | null | undefined, bookStatus_id?: number | undefined, bookStatus_name?: string | null | undefined): Promise<Book> {
-        let url_ = this.baseUrl + "/api/books?";
+        let url_ = this.baseUrl + "/books?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
@@ -214,7 +214,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getRecentBooks(): Promise<Book[]> {
-        let url_ = this.baseUrl + "/api/books/recent";
+        let url_ = this.baseUrl + "/books/recent";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -249,7 +249,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getBook(id: number): Promise<Book> {
-        let url_ = this.baseUrl + "/api/books/{id}";
+        let url_ = this.baseUrl + "/books/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -287,7 +287,7 @@ export class BookClient extends ApiClientBase {
     }
 
     updateBook(idPath: number, idQuery?: number | undefined, name?: string | null | undefined, readYear?: string | null | undefined, bookCategory_id?: number | undefined, bookCategory_name?: string | null | undefined, bookAuthor_id?: number | undefined, bookAuthor_name?: string | null | undefined, bookStatus_id?: number | undefined, bookStatus_name?: string | null | undefined): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/books/{id}?";
+        let url_ = this.baseUrl + "/books/{id}?";
         if (idPath === undefined || idPath === null)
             throw new Error("The parameter 'idPath' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + idPath)); 
@@ -350,7 +350,7 @@ export class BookClient extends ApiClientBase {
     }
 
     deleteBook(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/books/{id}";
+        let url_ = this.baseUrl + "/books/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -387,7 +387,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getAuthors(): Promise<BookAuthor[]> {
-        let url_ = this.baseUrl + "/api/books/authors";
+        let url_ = this.baseUrl + "/books/authors";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -422,7 +422,7 @@ export class BookClient extends ApiClientBase {
     }
 
     createAuthor(id?: number | undefined, name?: string | null | undefined): Promise<BookAuthor> {
-        let url_ = this.baseUrl + "/api/books/authors?";
+        let url_ = this.baseUrl + "/books/authors?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
@@ -463,7 +463,7 @@ export class BookClient extends ApiClientBase {
     }
 
     getAuthor(id: number): Promise<BookAuthor> {
-        let url_ = this.baseUrl + "/api/books/authors/{id}";
+        let url_ = this.baseUrl + "/books/authors/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -501,7 +501,7 @@ export class BookClient extends ApiClientBase {
     }
 
     updateAuthor(idPath: number, idQuery?: number | undefined, name?: string | null | undefined): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/books/authors/{id}?";
+        let url_ = this.baseUrl + "/books/authors/{id}?";
         if (idPath === undefined || idPath === null)
             throw new Error("The parameter 'idPath' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + idPath)); 
@@ -544,7 +544,7 @@ export class BookClient extends ApiClientBase {
     }
 
     deleteAuthor(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/books/authors/{id}";
+        let url_ = this.baseUrl + "/books/authors/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -3274,7 +3274,7 @@ export class OrgClient extends ApiClientBase {
     }
 
     getSecondary(primary: string | null, secondary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/org/publlic/{primary}/{secondary}/{name}";
+        let url_ = this.baseUrl + "/org/publlic/{primary}/{secondary}/{name}";
         if (primary === undefined || primary === null)
             throw new Error("The parameter 'primary' must be defined.");
         url_ = url_.replace("{primary}", encodeURIComponent("" + primary)); 
@@ -3317,7 +3317,7 @@ export class OrgClient extends ApiClientBase {
     }
 
     getPrimary(primary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/org/public/{primary}/{name}";
+        let url_ = this.baseUrl + "/org/public/{primary}/{name}";
         if (primary === undefined || primary === null)
             throw new Error("The parameter 'primary' must be defined.");
         url_ = url_.replace("{primary}", encodeURIComponent("" + primary)); 
@@ -3357,7 +3357,7 @@ export class OrgClient extends ApiClientBase {
     }
 
     getPrivateSecondary(primary: string | null, secondary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/org/private/{primary}/{secondary}/{name}";
+        let url_ = this.baseUrl + "/org/private/{primary}/{secondary}/{name}";
         if (primary === undefined || primary === null)
             throw new Error("The parameter 'primary' must be defined.");
         url_ = url_.replace("{primary}", encodeURIComponent("" + primary)); 
@@ -3400,7 +3400,7 @@ export class OrgClient extends ApiClientBase {
     }
 
     getPrivatePrimary(primary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/org/private/{primary}/{name}";
+        let url_ = this.baseUrl + "/org/private/{primary}/{name}";
         if (primary === undefined || primary === null)
             throw new Error("The parameter 'primary' must be defined.");
         url_ = url_.replace("{primary}", encodeURIComponent("" + primary)); 
