@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
-import CoreTableHead, { HeadRow, TableHeaderOrder } from '../core/components/Table/CoreTableHead';
+import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination, Fab } from '@material-ui/core';
+import CoreTableHead, { HeadRow, TableHeaderOrder } from '../core/components/tables/CoreTableHead';
+import { AuthContext } from '../core/Auth';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -17,15 +18,18 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
+const propertyOf = (e: keyof Book) => e;
+
 const headRows: HeadRow[] = [
-  { id: 'name', numeric: false, disablePadding: false, label: 'Book' },
-  { id: 'bookAuthor', numeric: false, disablePadding: false, label: 'Author' },
-  { id: 'bookCategory', numeric: false, disablePadding: false, label: 'Category' },
-  { id: 'readYear', numeric: true, disablePadding: false, label: 'Year Book Read' },
+  { id: propertyOf('name'), numeric: false, disablePadding: false, label: 'Book' },
+  { id: propertyOf('bookAuthor'), numeric: false, disablePadding: false, label: 'Author' },
+  { id: propertyOf('bookCategory'), numeric: false, disablePadding: false, label: 'Category' },
+  { id: propertyOf('readYear'), numeric: true, disablePadding: false, label: 'Year Book Read' },
 ];
 
 function BookTable() {
   const classes = useStyles();
+  const authContext = useContext(AuthContext);
 
   const [books, setBooks] = useState<Array<Book>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -37,6 +41,7 @@ function BookTable() {
   const [sort, setSort] = React.useState("id_desc");
   const [order, setOrder] = React.useState<TableHeaderOrder>('desc');
   const [orderBy, setOrderBy] = React.useState<string>('id');
+
 
   useEffect(
     (() => {
