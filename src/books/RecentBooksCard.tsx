@@ -49,7 +49,7 @@ function RecentBooksCard() {
               }
               {books.map(book => 
                 <ListItem key={book.id}>
-                  { (book.bookStatus && book.bookStatus.name === 'Started') && 
+                  { (book.bookStatus && book.bookStatus.keyword === 'STARTED') && 
                   <ListItemIcon>
                     <BookIcon color="secondary" />
                   </ListItemIcon>
