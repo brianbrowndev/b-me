@@ -42,8 +42,6 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
   const classes = useStyles();
 
   const [books, setBooks] = useState<Array<Book>>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
 
   // table
   const [headRows, setHeadRows] = useState<HeadRow[]>(defaultHeadRows);
@@ -58,10 +56,8 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
       BookApi.getBooks(sort, page + 1).then(result => {
         setBooks((result.items as Book[]));
         setTotalBookCount(result.count as number);
-        setIsLoading(false);
       }).catch(err => {
         setAppMessage('Failed to get books.');
-        setIsLoading(false);
         setBooks([]);
       });
     }), 

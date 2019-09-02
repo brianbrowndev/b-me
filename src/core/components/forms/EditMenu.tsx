@@ -36,6 +36,7 @@ export default function EditMenu({ onDelete, onEdit}: EditMenuProps)  {
         component="span"
         aria-haspopup="true"
         onClick={handleClick}
+        size="small"
       >
         <MoreVertIcon />
       </IconButton>
