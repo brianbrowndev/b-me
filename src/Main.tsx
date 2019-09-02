@@ -21,7 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       main: {
         flexGrow:1,
-        overflow:'hidden'
+        overflow:'hidden',
+        paddingBottom:theme.spacing(2),
+        marginBottom:theme.spacing(4)
       },
       container: {
       }
