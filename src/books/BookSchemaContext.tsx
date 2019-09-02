@@ -5,15 +5,15 @@ import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
 import { AuthContext } from '../core/Auth';
 
-interface BookEditContextProps {
-  get():FormSchema
+interface BookSchemaContextProps {
+  get(book?: Book):FormSchema
 }
-const BookEditContext = React.createContext({} as BookEditContextProps);
+const BookSchemaContext = React.createContext({} as BookSchemaContextProps);
 
 const propertyOf = (e: keyof Book) => e;
 const readYears = ["2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014"].map(year => ({value: year, label:year} as FormOptionType));
 
-function BookEditContextProvider  (props: any) {
+function BookSchemaContextProvider  (props: any) {
     const authContext = useContext(AuthContext);
 
     const [authors, setAuthors] = useState<FormOptionType[]>([]);
@@ -88,8 +88,7 @@ function BookEditContextProvider  (props: any) {
     } as FormSchema;
 
   const add = (book: Book) => BookApi.createBook(book);
-  // const save = (book: Book) => BookApi.updateBook(book);
-  const save = (book: Book) => {};
+  const save = (book: Book) => BookApi.updateBook(book.id as number, book);
 
 
 
@@ -102,13 +101,13 @@ function BookEditContextProvider  (props: any) {
         save: book ? save : add
       }
     },
-  } as BookEditContextProps;
+  } as BookSchemaContextProps;
 
   return (
-    <BookEditContext.Provider value={{...bookEditProps}}>
+    <BookSchemaContext.Provider value={{...bookEditProps}}>
       {props.children}
-    </BookEditContext.Provider>
+    </BookSchemaContext.Provider>
   )
 }
 
-export { BookEditContext, BookEditContextProvider};
+export { BookSchemaContext, BookSchemaContextProvider};

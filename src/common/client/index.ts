@@ -272,42 +272,20 @@ export class BookClient extends ApiClientBase {
         return Promise.resolve<Book>(<any>null);
     }
 
-    updateBook(idPath: number, idQuery?: number | undefined, name?: string | null | undefined, readYear?: string | null | undefined, bookCategory_id?: number | undefined, bookCategory_name?: string | null | undefined, bookAuthor_id?: number | undefined, bookAuthor_name?: string | null | undefined, bookStatus_id?: number | undefined, bookStatus_name?: string | null | undefined): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/books/{id}?";
-        if (idPath === undefined || idPath === null)
-            throw new Error("The parameter 'idPath' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + idPath)); 
-        if (idQuery === null)
-            throw new Error("The parameter 'idQuery' cannot be null.");
-        else if (idQuery !== undefined)
-            url_ += "id=" + encodeURIComponent("" + idQuery) + "&"; 
-        if (name !== undefined)
-            url_ += "name=" + encodeURIComponent("" + name) + "&"; 
-        if (readYear !== undefined)
-            url_ += "readYear=" + encodeURIComponent("" + readYear) + "&"; 
-        if (bookCategory_id === null)
-            throw new Error("The parameter 'bookCategory_id' cannot be null.");
-        else if (bookCategory_id !== undefined)
-            url_ += "bookCategory.id=" + encodeURIComponent("" + bookCategory_id) + "&"; 
-        if (bookCategory_name !== undefined)
-            url_ += "bookCategory.name=" + encodeURIComponent("" + bookCategory_name) + "&"; 
-        if (bookAuthor_id === null)
-            throw new Error("The parameter 'bookAuthor_id' cannot be null.");
-        else if (bookAuthor_id !== undefined)
-            url_ += "bookAuthor.id=" + encodeURIComponent("" + bookAuthor_id) + "&"; 
-        if (bookAuthor_name !== undefined)
-            url_ += "bookAuthor.name=" + encodeURIComponent("" + bookAuthor_name) + "&"; 
-        if (bookStatus_id === null)
-            throw new Error("The parameter 'bookStatus_id' cannot be null.");
-        else if (bookStatus_id !== undefined)
-            url_ += "bookStatus.id=" + encodeURIComponent("" + bookStatus_id) + "&"; 
-        if (bookStatus_name !== undefined)
-            url_ += "bookStatus.name=" + encodeURIComponent("" + bookStatus_name) + "&"; 
+    updateBook(id: number, item: Book): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/books/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(item);
+
         let options_ = <RequestInit>{
+            body: content_,
             method: "PUT",
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             }
         };

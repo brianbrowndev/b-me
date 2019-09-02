@@ -8,7 +8,6 @@ import OrgContentRoute from "./org/OrgContentRoute";
 import Login from "./core/Login";
 import ScrollToTop from './core/components/ScrollToTop';
 import Books from './books/Books';
-import { BookEditContextProvider } from './books/BookEditContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -44,9 +43,7 @@ function Main() {
             <ScrollToTop >
               <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgContentRoute} />
-              <BookEditContextProvider>
-                <Route exact path="/books" component={Books} />
-              </BookEditContextProvider>
+              <Route exact path="/books" component={Books} />
               <Route exact path="/login" component={Login} />
             </ ScrollToTop>
           </Box>

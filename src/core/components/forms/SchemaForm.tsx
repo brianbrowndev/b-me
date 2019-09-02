@@ -91,11 +91,11 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
   const handleSubmit = () => {
       const failed = validate();
       if (failed) return;
-      const result = transform();
+      const saveObj = transform();
       setIsSaving(true);
-      schema.save(result).then(result => {
+      schema.save(saveObj).then(result => {
         setAppMessage('Entity saved.')
-        onSaveSuccess(result);
+        onSaveSuccess(result || saveObj);
       }).catch(err => {
         console.error(err);
         setAppMessage('Failed to save, unexpected error.')

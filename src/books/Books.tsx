@@ -1,14 +1,15 @@
 import React, { Fragment, useState, useContext, useEffect } from 'react';
 import BookTable from './BookTable';
-import { BookEditContext } from './BookEditContext';
+import { BookSchemaContext, BookSchemaContextProvider } from './BookSchemaContext';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import AddModal from '../core/components/forms/AddModal';
 import { Book } from '../common/client';
+import withProvider from '../core/components/withProvider';
 
 function Books() {
 
 
-  const bookContext = useContext(BookEditContext);
+  const bookContext = useContext(BookSchemaContext);
 
   const [schema, setSchema] = useState({} as FormSchema);
   const [addedBook, setAddedBook] = useState({} as Book);
@@ -30,4 +31,4 @@ function Books() {
   );
 }
 
-export default Books;
+export default withProvider(Books, BookSchemaContextProvider);
