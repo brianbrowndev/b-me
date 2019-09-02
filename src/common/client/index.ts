@@ -156,39 +156,17 @@ export class BookClient extends ApiClientBase {
         return Promise.resolve<PaginatedResultOfBook>(<any>null);
     }
 
-    createBook(id?: number | undefined, name?: string | null | undefined, readYear?: string | null | undefined, bookCategory_id?: number | undefined, bookCategory_name?: string | null | undefined, bookAuthor_id?: number | undefined, bookAuthor_name?: string | null | undefined, bookStatus_id?: number | undefined, bookStatus_name?: string | null | undefined): Promise<Book> {
-        let url_ = this.baseUrl + "/books?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&"; 
-        if (name !== undefined)
-            url_ += "name=" + encodeURIComponent("" + name) + "&"; 
-        if (readYear !== undefined)
-            url_ += "readYear=" + encodeURIComponent("" + readYear) + "&"; 
-        if (bookCategory_id === null)
-            throw new Error("The parameter 'bookCategory_id' cannot be null.");
-        else if (bookCategory_id !== undefined)
-            url_ += "bookCategory.id=" + encodeURIComponent("" + bookCategory_id) + "&"; 
-        if (bookCategory_name !== undefined)
-            url_ += "bookCategory.name=" + encodeURIComponent("" + bookCategory_name) + "&"; 
-        if (bookAuthor_id === null)
-            throw new Error("The parameter 'bookAuthor_id' cannot be null.");
-        else if (bookAuthor_id !== undefined)
-            url_ += "bookAuthor.id=" + encodeURIComponent("" + bookAuthor_id) + "&"; 
-        if (bookAuthor_name !== undefined)
-            url_ += "bookAuthor.name=" + encodeURIComponent("" + bookAuthor_name) + "&"; 
-        if (bookStatus_id === null)
-            throw new Error("The parameter 'bookStatus_id' cannot be null.");
-        else if (bookStatus_id !== undefined)
-            url_ += "bookStatus.id=" + encodeURIComponent("" + bookStatus_id) + "&"; 
-        if (bookStatus_name !== undefined)
-            url_ += "bookStatus.name=" + encodeURIComponent("" + bookStatus_name) + "&"; 
+    createBook(item: Book): Promise<Book> {
+        let url_ = this.baseUrl + "/books";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(item);
+
         let options_ = <RequestInit>{
+            body: content_,
             method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             }
         };
@@ -203,11 +181,15 @@ export class BookClient extends ApiClientBase {
     protected processCreateBook(response: Response): Promise<Book> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 201) {
             return response.text().then((_responseText) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : <Book>JSON.parse(_responseText, this.jsonParseReviver);
-            return result200;
+            let result201: any = null;
+            result201 = _responseText === "" ? null : <Book>JSON.parse(_responseText, this.jsonParseReviver);
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -697,15 +679,15 @@ export class EventClient extends ApiClientBase {
     protected processGetEvents(response: Response): Promise<Event[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Event[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -777,15 +759,15 @@ export class EventClient extends ApiClientBase {
     protected processGetReoccuringTypes(response: Response): Promise<ReoccuringType[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <ReoccuringType[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -818,15 +800,15 @@ export class EventClient extends ApiClientBase {
     protected processGetEvent(response: Response): Promise<Event> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Event>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -862,17 +844,17 @@ export class EventClient extends ApiClientBase {
     protected processUpdateEvent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 400) {
+        if (status === 204) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return;
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
-        } else if (status === 204) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
-            return;
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -904,17 +886,17 @@ export class EventClient extends ApiClientBase {
     protected processDeleteEvent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {

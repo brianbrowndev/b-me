@@ -1,24 +1,31 @@
-import React, { Fragment, useContext } from 'react';
-import BookApi from '../common/client/BookApi';
-import { Theme, makeStyles, createStyles, Fab } from '@material-ui/core';
-import { AuthContext } from '../core/Auth';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import BookTable from './BookTable';
-import BookAddModal from './BookAddModal';
-
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-  })
-});
+import { BookEditContext } from './BookEditContext';
+import { FormSchema } from '../core/components/forms/SchemaForm';
+import AddModal from '../core/components/forms/AddModal';
+import { Book } from '../common/client';
 
 function Books() {
-  const classes = useStyles();
-  const authContext = useContext(AuthContext);
 
+
+  const bookContext = useContext(BookEditContext);
+
+  const [schema, setSchema] = useState({} as FormSchema);
+  const [addedBook, setAddedBook] = useState({} as Book);
+
+  useEffect(() => {
+    setSchema(bookContext.get());
+  }, [bookContext])
+
+
+  const handleSave = (book: Book) => {
+    setAddedBook(book);
+  }
 
   return (
     <Fragment>
-      <BookTable></BookTable>
-      <BookAddModal></BookAddModal>
+      <BookTable addedBook={addedBook} />
+      <AddModal schema={schema} onSaveSuccess={handleSave} />
     </Fragment>
   );
 }

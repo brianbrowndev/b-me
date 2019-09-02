@@ -19,11 +19,11 @@ interface FormAppBarProps {
   title: string;
   onCancel():void;
   onSubmit():void;
-  disabled: boolean;
+  isSaving: boolean;
 }
 
 
-export default function FormAppBar({ title, onCancel, disabled, onSubmit }: FormAppBarProps) {
+export default function FormAppBar({ title, onCancel, isSaving, onSubmit }: FormAppBarProps) {
   const classes = useStyles();
   
   return (
@@ -35,7 +35,7 @@ export default function FormAppBar({ title, onCancel, disabled, onSubmit }: Form
         <Typography variant="h6" className={classes.title}>
           {title}
         </Typography>
-        <Button color="inherit" disabled={disabled} onClick={onSubmit}>Save</Button>
+        <Button color="inherit" disabled={isSaving} onClick={onSubmit}>Save</Button>
       </Toolbar>
     </AppBar>
   );

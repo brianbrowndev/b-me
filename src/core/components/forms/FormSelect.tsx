@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     input: {
       display: 'flex',
-      padding: 0,
-      height: 'auto',
+      // padding: 0,
+      // height: 'auto',
     },
     valueContainer: {
       display: 'flex',
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       position: 'absolute',
-      zIndex: 1,
+      zIndex: 2,
       marginTop: theme.spacing(1),
       left: 0,
       right: 0,
@@ -171,11 +171,13 @@ interface SelectProps {
   obj: {[key:string]:any} | undefined;
   valueProperty: string; 
   labelProperty: string;
+  required: boolean;
+  error: string;
   onChange(obj:{[key:string]:any}): void;
 }
 
 
-export default function FormSelect({label, id, options, obj, valueProperty, labelProperty, onChange}: SelectProps) {
+export default function FormSelect({label, id, options, obj, valueProperty, labelProperty, required, onChange, error}: SelectProps) {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -212,6 +214,9 @@ export default function FormSelect({label, id, options, obj, valueProperty, labe
           inputId={id}
           TextFieldProps={{
             label: label,
+            variant: 'filled',
+            error: !!error,
+            helperText:error,
             InputLabelProps: {
               htmlFor: id,
               shrink: true,
@@ -222,6 +227,7 @@ export default function FormSelect({label, id, options, obj, valueProperty, labe
           components={components}
           value={option}
           onChange={handleChange}
+          required={required}
         />
  );
 }

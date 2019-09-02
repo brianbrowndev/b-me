@@ -1,10 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useImperativeHandle, forwardRef } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import AddIcon from '@material-ui/icons/Add';
-import { Fab } from '@material-ui/core';
-import { AuthContext } from '../core/Auth';
-import BookEditForm from './BookEditForm';
+import SchemaForm, { FormSchema } from './SchemaForm';
 
 const modalWidth = 800;
 
@@ -30,49 +27,49 @@ const useStyles = makeStyles((theme: Theme) =>
       border: `4px double ${theme.palette.secondary.light}`,
       boxShadow: theme.shadows[5],
       // padding: theme.spacing(2, 4, 3),
-    },
-    fab: {
-      position: 'fixed',
-      bottom: theme.spacing(2),
-      right: theme.spacing(2),
     }
   }),
 );
 
-export default function BookAddModal() {
+export interface EditModalProps {
+  schema: FormSchema;
+  onSaveSuccess(obj:{[key:string]:any}):void;
+}
+
+export interface EditModalRef {
+  handleOpen (): void
+}
+
+const EditModal = forwardRef(({schema, onSaveSuccess}:EditModalProps, ref) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
+
   const [open, setOpen] = React.useState(false);
-
-  const authContext = useContext(AuthContext);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
+  useImperativeHandle(ref, () => ({
+    handleOpen() {
+      setOpen(true);
+    }
+  }));
+
+  const handleSave = (obj: {[key:string]:any}) => {
+    handleClose();
+    onSaveSuccess(obj);
+  }
 
   return (
-    <div>
-     { authContext.authenticated &&
-        <Fab color="secondary" aria-label="add" className={classes.fab} onClick={handleOpen}>
-          <AddIcon />
-        </Fab>
-      }
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+     <Modal
         open={open}
         onClose={handleClose}
       >
         <div style={modalStyle} className={classes.paper}>
-          <BookEditForm onCancel={handleClose} onSubmit={()=>{}} />
+          <SchemaForm schema={schema} onCancel={handleClose} onSaveSuccess={handleSave}/>
         </div>
       </Modal>
-
-    </div>
   );
-}
+});
+
+export { EditModal};

@@ -27,7 +27,11 @@ const headRows: HeadRow[] = [
   { id: propertyOf('readYear'), numeric: true, disablePadding: false, label: 'Year Book Read' },
 ];
 
-function BookTable() {
+interface BookTableProps {
+  addedBook?: Book;
+}
+
+function BookTable({addedBook} : BookTableProps) {
   const classes = useStyles();
   const authContext = useContext(AuthContext);
 
@@ -55,7 +59,7 @@ function BookTable() {
         setBooks([]);
       });
     }), 
-    [sort, page, rowsPerPage] 
+    [sort, page, rowsPerPage, addedBook] 
   );
 
   function handleChangePage(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {

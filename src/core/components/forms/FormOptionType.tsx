@@ -1,4 +1,4 @@
 export default interface FormOptionType {
   label: string;
-  value: string; 
+  value: string | number; 
 }
