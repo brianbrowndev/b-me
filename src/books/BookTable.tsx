@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, Fragment, useRef } from 'react';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination  } from '@material-ui/core';
+import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
 import CoreTableHead, { HeadRow, TableHeaderOrder } from '../core/components/tables/CoreTableHead';
 import { AuthContext } from '../core/Auth';
 import EditMenu from '../core/components/forms/EditMenu';
@@ -92,7 +92,7 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
     if (authContext.authenticated)
       setHeadRows([
         ...defaultHeadRows,
-        { id: 'actions', numeric: false, disablePadding: false, label: 'Actions' },
+        { id: 'actions', numeric: false, disablePadding: false, label: '' },
       ])
 
 
