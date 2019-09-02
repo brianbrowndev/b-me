@@ -75,7 +75,7 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
     // Modify value on load, if needed
     const load = (): {[key:string]:any} => {
       let result = {...schema.object};
-      Object.entries(schema.properties).map(([prop, fieldSchema]) =>  {
+      Object.entries(schema.properties).forEach(([prop, fieldSchema]) =>  {
         if (fieldSchema.load) {
           result[prop] = fieldSchema.load(schema.object[prop]);
         }
@@ -83,7 +83,7 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
       return result;
     } 
     setObject(load());
-  }, [schema.object])
+  }, [schema.object, schema.properties])
 
   const handleChange = (changeObj: {[key:string]:any}) => {
     setObject({ ...obj, ...changeObj});
@@ -104,7 +104,7 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
 
   const validate = (): boolean => {
     let errors: {[key:string]:any} = {};
-    Object.entries(schema.properties).map(([prop, fieldSchema]) =>  {
+    Object.entries(schema.properties).forEach(([prop, fieldSchema]) =>  {
       if (fieldSchema.required && (obj[prop] === undefined || obj[prop] === null || obj[prop] === '')) {
         errors[prop] = `${fieldSchema.title} is required.`;
       }
@@ -117,7 +117,7 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
   // Modify value on submit, if needed
   const transform = (): {[key:string]:any} => {
     let result = {...obj};
-    Object.entries(schema.properties).map(([prop, fieldSchema]) =>  {
+    Object.entries(schema.properties).forEach(([prop, fieldSchema]) =>  {
       if (fieldSchema.transform) {
         result[prop] = fieldSchema.transform(obj[prop]);
       }

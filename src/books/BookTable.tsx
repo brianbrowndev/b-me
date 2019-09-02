@@ -1,7 +1,7 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination, Fab } from '@material-ui/core';
+import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
 import CoreTableHead, { HeadRow, TableHeaderOrder } from '../core/components/tables/CoreTableHead';
 import { AuthContext } from '../core/Auth';
 
@@ -29,9 +29,12 @@ const headRows: HeadRow[] = [
 
 interface BookTableProps {
   addedBook?: Book;
+  rowsPerPage?: number;
 }
 
-function BookTable({addedBook} : BookTableProps) {
+const defaultRowsPerPage = 25;
+
+function BookTable({addedBook, rowsPerPage} : BookTableProps) {
   const classes = useStyles();
   const authContext = useContext(AuthContext);
 
@@ -41,7 +44,6 @@ function BookTable({addedBook} : BookTableProps) {
 
   const [totalBookCount, setTotalBookCount] = React.useState(0);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [sort, setSort] = React.useState("id_desc");
   const [order, setOrder] = React.useState<TableHeaderOrder>('desc');
   const [orderBy, setOrderBy] = React.useState<string>('id');
@@ -59,7 +61,7 @@ function BookTable({addedBook} : BookTableProps) {
         setBooks([]);
       });
     }), 
-    [sort, page, rowsPerPage, addedBook] 
+    [sort, page, addedBook] 
   );
 
   function handleChangePage(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {
@@ -95,10 +97,10 @@ function BookTable({addedBook} : BookTableProps) {
         </TableBody>
       </Table>
       <TablePagination
-        rowsPerPageOptions={[25]}
+        rowsPerPageOptions={[rowsPerPage || defaultRowsPerPage]}
         component="div"
         count={totalBookCount}
-        rowsPerPage={rowsPerPage}
+        rowsPerPage={rowsPerPage || defaultRowsPerPage}
         page={page}
         backIconButtonProps={{
           'aria-label': 'previous page',

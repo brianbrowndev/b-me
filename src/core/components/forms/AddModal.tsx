@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState, useRef, useEffect } from 'react';
+import React, { Fragment, useContext, useRef } from 'react';
 import  {EditModal, EditModalProps, EditModalRef } from './EditModal';
 import AddIcon from '@material-ui/icons/Add';
 import { Fab } from '@material-ui/core';
