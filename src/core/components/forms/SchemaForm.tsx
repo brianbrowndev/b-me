@@ -11,10 +11,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     form: {
+
+    },
+    formControls: {
       display: 'flex',
       flexDirection: 'column',
       padding: theme.spacing(2),
-
       "& > div": {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1)
@@ -88,18 +90,20 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
   const handleChange = (changeObj: {[key:string]:any}) => {
     setObject({ ...obj, ...changeObj});
   };
-  const handleSubmit = () => {
-      const failed = validate();
-      if (failed) return;
-      const saveObj = transform();
-      setIsSaving(true);
-      schema.save(saveObj).then(result => {
-        setAppMessage('Entity saved.')
-        onSaveSuccess(result || saveObj);
-      }).catch(err => {
-        console.error(err);
-        setAppMessage('Failed to save, unexpected error.')
-      })
+  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+    const passed = validate();
+    if (!passed) return;
+    const saveObj = transform();
+    setIsSaving(true);
+    schema.save(saveObj).then(result => {
+      setAppMessage('Entity saved.');
+      onSaveSuccess(result || saveObj);
+    }).catch(err => {
+      console.error(err);
+      setAppMessage('Failed to save, unexpected error.');
+    })
   }
 
   const validate = (): boolean => {
@@ -110,7 +114,7 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
       }
     });
     setError(errors);
-    return Object.keys(errors).length > 0;
+    return Object.keys(errors).length === 0;
   }
 
 
@@ -129,13 +133,15 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
   return (
     <Fragment>
       <div className={classes.root}>
-        <FormAppBar title={schema.title} onCancel={onCancel} isSaving={isSaving} onSubmit={handleSubmit} />
-        <form className={classes.form} onSubmit={handleSubmit}>
-          {
-            Object.entries(schema.properties).map(([k, v]) => 
-              <SchemaFormField property={k} obj={obj} schema={v} onChange={handleChange} key={k} error={error[k]}/>
-            )
-          }
+        <form className={classes.form} onSubmit={handleSubmit} noValidate={true}>
+          <FormAppBar title={schema.title} onCancel={onCancel} isSaving={isSaving}/>
+          <div className={classes.formControls}>
+            {
+              Object.entries(schema.properties).map(([k, v]) => 
+                <SchemaFormField property={k} obj={obj} schema={v} onChange={handleChange} key={k} error={error[k]}/>
+              )
+            }
+          </div>
         </form>
       </div>
       <AppSnackbar 
