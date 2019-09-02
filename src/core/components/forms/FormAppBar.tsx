@@ -18,24 +18,23 @@ const useStyles = makeStyles((theme: Theme) =>
 interface FormAppBarProps {
   title: string;
   onCancel():void;
-  onSubmit():void;
   isSaving: boolean;
 }
 
 
-export default function FormAppBar({ title, onCancel, isSaving, onSubmit }: FormAppBarProps) {
+export default function FormAppBar({ title, onCancel, isSaving }: FormAppBarProps) {
   const classes = useStyles();
   
   return (
     <AppBar position="static" color="secondary">
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={onCancel}>
+        <IconButton type="button" edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={onCancel}>
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
           {title}
         </Typography>
-        <Button color="inherit" disabled={isSaving} onClick={onSubmit}>Save</Button>
+        <Button type="submit" color="inherit" disabled={isSaving}>Save</Button>
       </Toolbar>
     </AppBar>
   );
