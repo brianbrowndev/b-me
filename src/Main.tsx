@@ -7,7 +7,7 @@ import Home from "./core/Home";
 import OrgContentRoute from "./org/OrgContentRoute";
 import Login from "./core/Login";
 import ScrollToTop from './core/components/ScrollToTop';
-import BookTable from './books/BookTable';
+import Books from './books/Books';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -43,7 +43,7 @@ function Main() {
             <ScrollToTop >
               <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgContentRoute} />
-              <Route exact path="/books" component={BookTable} />
+              <Route exact path="/books" component={Books} />
               <Route exact path="/login" component={Login} />
             </ ScrollToTop>
           </Box>

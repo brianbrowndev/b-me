@@ -29,8 +29,8 @@ function Home() {
       <Typography color="textSecondary" variant="h5" gutterBottom className={classes.title}>
         Dashboard
       </Typography>
-      <Grid container className={classes.container}>
-        <Grid item spacing={1}>
+      <Grid spacing={1} container className={classes.container}>
+        <Grid item>
           <RecentBooksCard></RecentBooksCard>
         </Grid>
       </Grid>
