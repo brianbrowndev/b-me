@@ -1,14 +1,14 @@
 import React, { Fragment, useContext, useState, useEffect } from 'react';
-import { BookSchemaContext, BookSchemaContextProvider } from './BookSchemaContext';
-import { Book } from '../common/client';
 import withProvider from '../core/components/withProvider';
 import SchemaTable, { PaginatedResult, PageConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
 import BookApi from '../common/client/BookApi';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
+import { BookAuthorSchemaContextProvider, BookAuthorSchemaContext } from './BookAuthorSchemaContext';
+import { BookAuthor } from '../common/client';
 
-function Books() {
-  const schemaContext = useContext(BookSchemaContext);
+function BookAuthors() {
+  const schemaContext = useContext(BookAuthorSchemaContext);
 
 
   const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get());
@@ -17,7 +17,7 @@ function Books() {
 
   useEffect(
     (() => {
-      BookApi.getBooks(config.sort, config.pageNumber + 1).then(result => setPage(result as PaginatedResult))
+      BookApi.getAuthorsPage(config.sort, config.pageNumber + 1).then(result => setPage(result as PaginatedResult))
     }), 
     [config] 
   );
@@ -27,7 +27,7 @@ function Books() {
     setSchema(schemaContext.get())
   }, [schemaContext])
 
-  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as Book);
+  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as BookAuthor);
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
   const handleOnPage = (pageConfig: PageConfig) => setConfig(pageConfig);
 
@@ -45,4 +45,4 @@ function Books() {
   );
 }
 
-export default withProvider(Books, BookSchemaContextProvider);
+export default withProvider(BookAuthors, BookAuthorSchemaContextProvider);

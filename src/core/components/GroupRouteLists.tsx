@@ -1,10 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import { List, ListItem, ListItemText, createStyles, makeStyles, Theme, Collapse } from '@material-ui/core';
-import { OrgGroup  } from './OrgContext';
-import ListItemLink from '../core/components/ListItemLink';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import * as H from 'history';
+import ListItemLink from './ListItemLink';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -17,16 +16,20 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
+export type RouteItem = {
+  path:string;
+  title:string;
+};
 
-export interface OrgGroupRouteListProps {
-  nested?: boolean;
-  orgGroup: OrgGroup;
+export interface GroupRouteListProps {
+  title: string;
+  items: RouteItem[];
   onClick?():void;
-  history: H.History
+  history: H.History;
+  nested?: boolean;
 }
 
-function OrgGroupRouteList(props:OrgGroupRouteListProps) {
-  const { orgGroup, nested, onClick, history } = props;
+function GroupRouteList({title, items, onClick, history, nested}:GroupRouteListProps) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -38,7 +41,7 @@ function OrgGroupRouteList(props:OrgGroupRouteListProps) {
   /* Expand/collapse based on route changes */
   useEffect(() => {
     const hasPathName = (pathName:string | undefined): boolean => {
-      return orgGroup.items.find(item => item.path === pathName) ? true : false;
+      return items.find(item => item.path === pathName) ? true : false;
 
     }
     if (hasPathName(history.location.pathname)) {
@@ -47,17 +50,17 @@ function OrgGroupRouteList(props:OrgGroupRouteListProps) {
     else {
       setOpen(false);
     }
-  }, [history.location.pathname, orgGroup.items]);
+  }, [history.location.pathname, items]);
 
   return (
     <List disablePadding component="div">
       <ListItem button onClick={handleClick}>
-        <ListItemText primary={orgGroup.title} classes={{primary: classes.listTitle}}/>
+        <ListItemText primary={title} classes={{primary: classes.listTitle}}/>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>       
       <Collapse in={open} timeout="auto" unmountOnExit>
-        {orgGroup.items.map(item => 
-          <Fragment key={item.title}>
+        {items.map(item => 
+          <Fragment key={item.path}>
             <ListItemLink path={item.path} name={item.title} onClick={onClick} nested={nested}/>
           </Fragment>
         )}
@@ -67,4 +70,5 @@ function OrgGroupRouteList(props:OrgGroupRouteListProps) {
 }
 
 
-export default OrgGroupRouteList;
+export default GroupRouteList;
+

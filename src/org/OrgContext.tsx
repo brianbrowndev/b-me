@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../core/Auth';
+import { RouteItem } from '../core/components/GroupRouteLists';
 
 export interface OrgItem {
     filePath: string;
@@ -9,10 +10,8 @@ export interface OrgItem {
     authenticate: boolean;
     type: 'item';
 }
-export interface OrgGroup {
-    title: string;
+export interface OrgGroup extends RouteItem{
     description: string,
-    path: string;
     items: OrgItem[];
     type: 'group';
 }

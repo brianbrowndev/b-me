@@ -1,6 +1,4 @@
 import React, { useContext, useState, Fragment } from 'react';
-
-
 import {AuthContext } from './Auth'
 
 import {
@@ -14,8 +12,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { OrgContext  } from '../org/OrgContext';
-import OrgGroupRouteList from '../org/OrgGroupRouteList';
 import AppLink from './components/AppLink';
+import GroupRouteList from './components/GroupRouteLists';
 
 
 const drawerWidth = 240;
@@ -117,15 +115,24 @@ function Header({ history }: RouteComponentProps) {
           </ListItem>
         </AppLink>
         {orgContext.routes().map(groupItem => 
-          <Fragment key={groupItem.title}>
-            <OrgGroupRouteList orgGroup={groupItem} onClick={handleDrawerClose} key={groupItem.title} nested={true} history={history}></OrgGroupRouteList>
-          </Fragment>
+          <GroupRouteList title={groupItem.title} items={groupItem.items} onClick={handleDrawerClose} key={groupItem.title} history={history} nested={true}/>
         )}
-        <AppLink to="/books" exact={true} onClick={handleDrawerClose}>
-          <ListItem button>
-              <ListItemText primary="Books" classes={{primary: classes.listTitle}}/>
-          </ListItem>
-        </AppLink>
+        { !authContext.authenticated && 
+          <AppLink to="/books" exact={true} onClick={handleDrawerClose}>
+            <ListItem button>
+                <ListItemText primary="Books" classes={{primary: classes.listTitle}}/>
+            </ListItem>
+          </AppLink>
+        }
+        { authContext.authenticated && 
+          <GroupRouteList 
+            title="Books" 
+            onClick={handleDrawerClose} 
+            history={history} 
+            items={[{path:"/books", title:"Reading List"}, {path:"/book-authors", title: "Authors"}, {path:"/book-categories", title: "Categories"}, {path:"/book-statuses", title: "Statuses"}]} 
+            nested={true}
+          />
+        }
       </List>
     </Fragment>
   );

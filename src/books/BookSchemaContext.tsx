@@ -5,16 +5,15 @@ import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
 import { AuthContext } from '../core/Auth';
 import getLookupName from '../core/components/forms/Lookup';
+import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 
-interface BookSchemaContextProps {
-  get(book?: Book):FormSchema
-}
-const BookSchemaContext = React.createContext({} as BookSchemaContextProps);
+
+const BookSchemaContext = React.createContext({} as EditSchemaContextProps<Book>);
 
 const propertyOf = (e: keyof Book) => e;
 const readYears = ["2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014"].map(year => ({value: year, label:year} as FormOptionType));
 
-function BookSchemaContextProvider  (props: any) {
+function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
     const authContext = useContext(AuthContext);
 
     const [authors, setAuthors] = useState<FormOptionType[]>([]);
@@ -105,11 +104,11 @@ function BookSchemaContextProvider  (props: any) {
         save: book ? save : add
       }
     },
-  } as BookSchemaContextProps;
+  } as EditSchemaContextProps<Book>;
 
   return (
     <BookSchemaContext.Provider value={{...bookEditProps}}>
-      {props.children}
+      {children}
     </BookSchemaContext.Provider>
   )
 }
