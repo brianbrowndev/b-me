@@ -8,31 +8,32 @@ interface AppSnackbarProps {
 };
 
 
-function AppSnackbar (props: AppSnackbarProps) {
+function AppSnackbar ({message, duration, onClose}: AppSnackbarProps) {
     const [open, setOpen] = React.useState(false);
 
 
     function handleClose(event: React.SyntheticEvent | React.MouseEvent, reason?: string) {
         setOpen(false);
-        if (props.onClose) {
-            props.onClose();
+        if (onClose) {
+            onClose();
         }
 
     }
 
-
     useEffect(() => {
-        if (props.message !== null && props.message !== "") setOpen(true);
-    }, [props.message]);
+        if (message !== null && message !== "") {
+            setOpen(true)
+        };
+    }, [message]);
 
     return  (
         <Snackbar
             anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
             open={open}
-            autoHideDuration={props.duration || 2000}
+            autoHideDuration={duration || 2000}
             onClose={handleClose}
             ContentProps={{'aria-describedby': 'message-id',}}
-            message={<span id="message-id">{props.message}</span>}
+            message={<span id="message-id">{message}</span>}
             action={[]}
         />
     );
