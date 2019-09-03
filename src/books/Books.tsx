@@ -1,32 +1,30 @@
-import React, { Fragment, useState, useContext, useEffect } from 'react';
-import BookTable from './BookTable';
+import React, { Fragment, useContext, useEffect, useState,  } from 'react';
 import { BookSchemaContext, BookSchemaContextProvider } from './BookSchemaContext';
-import { FormSchema } from '../core/components/forms/SchemaForm';
-import AddModal from '../core/components/forms/AddModal';
 import { Book } from '../common/client';
 import withProvider from '../core/components/withProvider';
+import SchemaTable, { PaginatedResult } from '../core/components/tables/SchemaTable';
+import BookApi from '../common/client/BookApi';
+import { FormSchema } from '../core/components/forms/SchemaForm';
 
 function Books() {
 
 
   const bookContext = useContext(BookSchemaContext);
 
-  const [schema, setSchema] = useState({} as FormSchema);
-  const [addedBook, setAddedBook] = useState({} as Book);
-
+  const [schema, setSchema] = useState<FormSchema>();
   useEffect(() => {
     setSchema(bookContext.get());
   }, [bookContext])
 
-
-  const handleSave = (book: Book) => {
-    setAddedBook(book);
-  }
+  const handleGetRows = (sort:string, page: number) => BookApi.getBooks(sort, page) as Promise<PaginatedResult>;
+  const handleGetEntitySchema = (book: Book) => bookContext.get(book);
+  const handleDeleteEntity  = (book: Book) => BookApi.deleteBook(book.id as number) as Promise<any>;
 
   return (
     <Fragment>
-      <BookTable addedBook={addedBook} />
-      <AddModal schema={schema} onSaveSuccess={handleSave} />
+      {schema && 
+      <SchemaTable schema={schema} getRows={handleGetRows} getEntitySchema={handleGetEntitySchema} deleteEntity={handleDeleteEntity}/>
+      }
     </Fragment>
   );
 }

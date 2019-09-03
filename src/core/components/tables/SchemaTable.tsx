@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext, Fragment, useRef } from 'react';
-import { Book } from '../common/client';
-import BookApi from '../common/client/BookApi';
 import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
-import CoreTableHead, { HeadRow, TableHeaderOrder } from '../core/components/tables/CoreTableHead';
-import { AuthContext } from '../core/Auth';
-import EditMenu from '../core/components/forms/EditMenu';
-import AppSnackbar from '../core/components/AppSnackbar';
-import { EditModalRef, EditModal } from '../core/components/forms/EditModal';
-import { BookSchemaContext } from './BookSchemaContext';
+import { FormSchema } from '../forms/SchemaForm';
+import CoreTableHead, { HeadRow, TableHeaderOrder } from './CoreTableHead';
+import { AuthContext } from '../../Auth';
+import { EditModalRef, EditModal } from '../forms/EditModal';
+import EditMenu from '../forms/EditMenu';
+import AppSnackbar from '../AppSnackbar';
+import AddModal from '../forms/AddModal';
+
+export type PaginatedResult = {count:number, items:{[key:string]:any}[]}
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -22,46 +23,48 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-const propertyOf = (e: keyof Book) => e;
-
-const defaultHeadRows: HeadRow[] = [
-  { id: propertyOf('name'), numeric: false, disablePadding: false, label: 'Book' },
-  { id: propertyOf('bookAuthor'), numeric: false, disablePadding: false, label: 'Author' },
-  { id: propertyOf('bookCategory'), numeric: false, disablePadding: false, label: 'Category' },
-  { id: propertyOf('readYear'), numeric: true, disablePadding: false, label: 'Year Book Read' },
-];
-
-interface BookTableProps {
-  addedBook?: Book;
+interface SchemaTableProps {
+  schema: FormSchema;
   rowsPerPage?: number;
+  columnSort?: string;
+  getRows(sort:string, page:number):Promise<PaginatedResult>
+  getEntitySchema(obj:{[key:string]:any}): FormSchema;
+  deleteEntity(obj:{[key:string]:any}): Promise<void>;
 }
 
 const defaultRowsPerPage = 25;
 
-function BookTable({addedBook, rowsPerPage} : BookTableProps) {
+function SchemaTable({schema, rowsPerPage, columnSort, getRows, getEntitySchema, deleteEntity} : SchemaTableProps) {
   const classes = useStyles();
 
-  const [books, setBooks] = useState<Array<Book>>([]);
+  const [rows, setRows] = useState<Array<{[key:string]:any}>>([]);
+  const [addedRow, setAddedRow] = useState<{[key:string]:any}>();
 
   // table
-  const [headRows, setHeadRows] = useState<HeadRow[]>(defaultHeadRows);
-  const [totalBookCount, setTotalBookCount] = React.useState(0);
+  const [headRows, setHeadRows] = useState<HeadRow[]>([]);
+  const [totalCount, setTotalCount] = React.useState(0);
   const [page, setPage] = React.useState(0);
-  const [sort, setSort] = React.useState("id_desc");
+  const [sort, setSort] = React.useState(columnSort || "id_desc");
   const [order, setOrder] = React.useState<TableHeaderOrder>('desc');
   const [orderBy, setOrderBy] = React.useState<string>('id');
 
+  useEffect(() => {
+    setHeadRows(Object.entries(schema.properties).map(([property, fieldSchema]) => (
+      {id: property, numeric:false, disablePadding: false, label: fieldSchema.title} as HeadRow
+    )));
+  }, [schema])
+
   useEffect(
     (() => {
-      BookApi.getBooks(sort, page + 1).then(result => {
-        setBooks((result.items as Book[]));
-        setTotalBookCount(result.count as number);
+      getRows(sort, page + 1).then(result => {
+        setRows(result.items);
+        setTotalCount(result.count);
       }).catch(err => {
-        setAppMessage('Failed to get books.');
-        setBooks([]);
+        setAppMessage('Unexpected error fetching rows.');
+        setRows([]);
       });
     }), 
-    [sort, page, addedBook] 
+    [sort, page, getRows, addedRow] 
   );
 
   function handleChangePage(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {
@@ -79,46 +82,51 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
 
   //editing
   const authContext = useContext(AuthContext);
-  const bookSchemaContext = useContext(BookSchemaContext);
   const modalRef = useRef<EditModalRef>(null);
   const [appMessage, setAppMessage] = React.useState('');
-  const [schema, setSchema] = React.useState();
+  const [editSchema, setEditSchema] = React.useState();
 
   useEffect(() => {
     if (authContext.authenticated)
-      setHeadRows([
-        ...defaultHeadRows,
+      setHeadRows(prevHeadRows => [
+        ...prevHeadRows,
         { id: 'actions', numeric: false, disablePadding: false, label: '' },
-      ])
-
-
+      ]);
+    else {
+      setHeadRows(prevHeadRows => [...prevHeadRows]);
+    }
   }, [authContext.authenticated])
 
-  function handleEdit(book: Book) {
-    setSchema(bookSchemaContext.get(book));
+  function handleEdit(row: {[key:string]:any}) {
+    setEditSchema(getEntitySchema(row));
     if (modalRef && modalRef.current) {
       modalRef.current.handleOpen();
     }
   }
 
-  function handleDelete(book: Book) {
-    BookApi.deleteBook(book.id as number).then(() => {
+  function handleDelete(row: {[key:string]:any}) {
+    deleteEntity(row).then(() => {
       setAppMessage('Entity deleted.')
-      setBooks(prevBooks => prevBooks.filter(b => b.id !== book.id));
+      setRows(prevRows  => prevRows.filter(b => b.id !== row.id));
     }).catch(err => {
       console.error(err);
-      setAppMessage('Failed to save, unexpected error.')
+      setAppMessage('Delete failed, unexpected error.')
     })
   }
 
-  function handleOnSaveSuccess(book: Book) {
+  function handleOnEditSaveSuccess(row: {[key:string]:any}) {
     setAppMessage('Entity saved.')
-    setBooks(prevBooks  => prevBooks.map(e => {
-        if (e.id === book.id) {
-            return book;
+    setRows(prevRows  => prevRows.map(e => {
+        if (e.id === row.id) {
+            return row;
         }
         return e;
     }));
+  }
+
+  function handleOnAddSuccess(row: {[key:string]:any}) {
+    setAppMessage('Entity added.')
+    setAddedRow(row);
   }
 
   return (
@@ -132,12 +140,11 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {books.map(row => (
+            {rows.map(row => (
               <TableRow key={row.id}>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.bookAuthor.name}</TableCell>
-                <TableCell>{row.bookCategory.name}</TableCell>
-                <TableCell align="right">{row.readYear}</TableCell>
+                {Object.entries(schema.properties).map(([property, fieldSchema]) => 
+                  <TableCell key={property}>{fieldSchema.get ? fieldSchema.get(row[property]) : row[property]}</TableCell>
+                )}
                 { authContext.authenticated && 
                   <TableCell>
                     <EditMenu onEdit={() => handleEdit(row)} onDelete={() => handleDelete(row)}/>
@@ -150,7 +157,7 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
         <TablePagination
           rowsPerPageOptions={[rowsPerPage || defaultRowsPerPage]}
           component="div"
-          count={totalBookCount}
+          count={totalCount}
           rowsPerPage={rowsPerPage || defaultRowsPerPage}
           page={page}
           backIconButtonProps={{
@@ -166,9 +173,10 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
           message={appMessage}
           onClose={() => setAppMessage('')}
       />
-      <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnSaveSuccess} />
+      <EditModal ref={modalRef} schema={editSchema} onSaveSuccess={handleOnEditSaveSuccess} />
+      <AddModal schema={schema} onSaveSuccess={handleOnAddSuccess} />
     </Fragment>
   );
 }
 
-export default BookTable;
+export default SchemaTable;

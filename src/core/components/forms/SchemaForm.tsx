@@ -45,6 +45,8 @@ export interface FieldSchema {
   type: FieldType
   required: boolean;
   error?: string;
+  // method to retrieve value
+  get?(value:any): any;
   // modify values on load/save
   load?(value:any): any; // optional set value on load
   transform?(changeObj: {[key:string]:any}): {[key:string]:any}; // optional transform value on submit
