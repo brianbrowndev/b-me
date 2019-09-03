@@ -8,7 +8,6 @@ const schemaTableReducer = <T extends ObjectEntity>() => (state:State<T>, action
   switch (action.type) {
     case 'LOAD':
       return {rows: action.page.items as T[], count:action.page.count};
-      break;
     case 'ADD':
       return {rows: [action.row, ...state.rows], count:state.count + 1};
     case 'EDIT':
