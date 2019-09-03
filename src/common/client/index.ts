@@ -72,18 +72,21 @@ export class BookClient extends ApiClientBase {
     protected processGetBooks(response: Response): Promise<PaginatedResultOfBook> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBook>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PaginatedResultOfBook>(<any>null);
     }
 
     getRecentBooks(): Promise<Book[]> {
@@ -107,18 +110,21 @@ export class BookClient extends ApiClientBase {
     protected processGetRecentBooks(response: Response): Promise<Book[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Book[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Book[]>(<any>null);
     }
 
     getBook(id: number): Promise<Book> {
@@ -145,21 +151,24 @@ export class BookClient extends ApiClientBase {
     protected processGetBook(response: Response): Promise<Book> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Book>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Book>(<any>null);
     }
 
-    updateBook(id: number, item: Book): Promise<FileResponse> {
+    updateBook(id: number, item: Book): Promise<void> {
         let url_ = this.baseUrl + "/Books/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -173,7 +182,6 @@ export class BookClient extends ApiClientBase {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
             }
         };
 
@@ -184,20 +192,26 @@ export class BookClient extends ApiClientBase {
         });
     }
 
-    protected processUpdateBook(response: Response): Promise<FileResponse> {
+    protected processUpdateBook(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
+        if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileResponse>(<any>null);
     }
 
     deleteBook(id: number): Promise<void> {
@@ -223,16 +237,23 @@ export class BookClient extends ApiClientBase {
     protected processDeleteBook(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             return;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
     }
 
     createBook(item: Book): Promise<Book> {
@@ -270,12 +291,11 @@ export class BookClient extends ApiClientBase {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Book>(<any>null);
     }
 
     getAuthors(): Promise<BookAuthor[]> {
@@ -299,18 +319,21 @@ export class BookClient extends ApiClientBase {
     protected processGetAuthors(response: Response): Promise<BookAuthor[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookAuthor[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookAuthor[]>(<any>null);
     }
 
     createAuthor(item: BookAuthor): Promise<BookAuthor> {
@@ -348,12 +371,11 @@ export class BookClient extends ApiClientBase {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookAuthor>(<any>null);
     }
 
     getAuthorsPage(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBookAuthor> {
@@ -387,18 +409,21 @@ export class BookClient extends ApiClientBase {
     protected processGetAuthorsPage(response: Response): Promise<PaginatedResultOfBookAuthor> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBookAuthor>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PaginatedResultOfBookAuthor>(<any>null);
     }
 
     getAuthor(id: number): Promise<BookAuthor> {
@@ -425,21 +450,24 @@ export class BookClient extends ApiClientBase {
     protected processGetAuthor(response: Response): Promise<BookAuthor> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookAuthor>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookAuthor>(<any>null);
     }
 
-    updateAuthor(id: number, item: BookAuthor): Promise<FileResponse> {
+    updateAuthor(id: number, item: BookAuthor): Promise<void> {
         let url_ = this.baseUrl + "/Books/Authors/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -453,7 +481,6 @@ export class BookClient extends ApiClientBase {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
             }
         };
 
@@ -464,20 +491,26 @@ export class BookClient extends ApiClientBase {
         });
     }
 
-    protected processUpdateAuthor(response: Response): Promise<FileResponse> {
+    protected processUpdateAuthor(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
+        if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileResponse>(<any>null);
     }
 
     deleteAuthor(id: number): Promise<void> {
@@ -503,16 +536,23 @@ export class BookClient extends ApiClientBase {
     protected processDeleteAuthor(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             return;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
     }
 
     getCategories(): Promise<BookCategory[]> {
@@ -536,18 +576,21 @@ export class BookClient extends ApiClientBase {
     protected processGetCategories(response: Response): Promise<BookCategory[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookCategory[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookCategory[]>(<any>null);
     }
 
     createCategory(item: BookCategory): Promise<BookCategory> {
@@ -585,12 +628,11 @@ export class BookClient extends ApiClientBase {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookCategory>(<any>null);
     }
 
     getCategoriesPage(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBookCategory> {
@@ -624,18 +666,21 @@ export class BookClient extends ApiClientBase {
     protected processGetCategoriesPage(response: Response): Promise<PaginatedResultOfBookCategory> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBookCategory>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PaginatedResultOfBookCategory>(<any>null);
     }
 
     getCategory(id: number): Promise<BookCategory> {
@@ -662,21 +707,24 @@ export class BookClient extends ApiClientBase {
     protected processGetCategory(response: Response): Promise<BookCategory> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookCategory>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookCategory>(<any>null);
     }
 
-    updateCategory(id: number, item: BookCategory): Promise<FileResponse> {
+    updateCategory(id: number, item: BookCategory): Promise<void> {
         let url_ = this.baseUrl + "/Books/Categories/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -690,7 +738,6 @@ export class BookClient extends ApiClientBase {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
             }
         };
 
@@ -701,20 +748,26 @@ export class BookClient extends ApiClientBase {
         });
     }
 
-    protected processUpdateCategory(response: Response): Promise<FileResponse> {
+    protected processUpdateCategory(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
+        if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileResponse>(<any>null);
     }
 
     deleteCategory(id: number): Promise<void> {
@@ -740,16 +793,23 @@ export class BookClient extends ApiClientBase {
     protected processDeleteCategory(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             return;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
     }
 
     getStatuses(): Promise<BookStatus[]> {
@@ -773,18 +833,21 @@ export class BookClient extends ApiClientBase {
     protected processGetStatuses(response: Response): Promise<BookStatus[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookStatus[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookStatus[]>(<any>null);
     }
 
     createStatus(item: BookStatus): Promise<BookStatus> {
@@ -822,12 +885,11 @@ export class BookClient extends ApiClientBase {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookStatus>(<any>null);
     }
 
     getStatusesPage(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBookStatus> {
@@ -861,18 +923,21 @@ export class BookClient extends ApiClientBase {
     protected processGetStatusesPage(response: Response): Promise<PaginatedResultOfBookStatus> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBookStatus>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<PaginatedResultOfBookStatus>(<any>null);
     }
 
     getStatus(id: number): Promise<BookStatus> {
@@ -899,21 +964,24 @@ export class BookClient extends ApiClientBase {
     protected processGetStatus(response: Response): Promise<BookStatus> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookStatus>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<BookStatus>(<any>null);
     }
 
-    updateStatus(id: number, item: BookStatus): Promise<FileResponse> {
+    updateStatus(id: number, item: BookStatus): Promise<void> {
         let url_ = this.baseUrl + "/Books/Statuses/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -927,7 +995,6 @@ export class BookClient extends ApiClientBase {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
             }
         };
 
@@ -938,20 +1005,26 @@ export class BookClient extends ApiClientBase {
         });
     }
 
-    protected processUpdateStatus(response: Response): Promise<FileResponse> {
+    protected processUpdateStatus(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
+        if (status === 404) {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileResponse>(<any>null);
     }
 
     deleteStatus(id: number): Promise<void> {
@@ -977,16 +1050,23 @@ export class BookClient extends ApiClientBase {
     protected processDeleteStatus(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
             return response.text().then((_responseText) => {
             return;
             });
-        } else if (status !== 200 && status !== 204) {
+        } else {
             return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
     }
 }
 

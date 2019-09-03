@@ -28,7 +28,7 @@ function BookAuthors() {
   }, [schemaContext])
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as BookAuthor);
-  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
+  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteAuthor(obj.id);
   const handleOnPage = (pageConfig: PageConfig) => setConfig(pageConfig);
 
   return (

@@ -28,7 +28,7 @@ function BookCategories() {
   }, [schemaContext])
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as BookCategory);
-  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
+  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteCategory(obj.id);
   const handleOnPage = (pageConfig: PageConfig) => setConfig(pageConfig);
 
   return (
