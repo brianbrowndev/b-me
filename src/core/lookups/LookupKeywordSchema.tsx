@@ -11,6 +11,11 @@ export const lookupKeywordSchema = {
         type: "text",
         required: true
     } as TextFieldSchema,
+    [propertyOf('keyword')]: {
+        title: "Keyword",
+        type: "text",
+        required: true
+    } as TextFieldSchema,
   },
   object: {}
 } as FormSchema;

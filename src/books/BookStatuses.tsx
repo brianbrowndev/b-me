@@ -13,7 +13,7 @@ function BookStatuses() {
 
   const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get());
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
-  const [config, setConfig] = React.useState<PageConfig>(schemaTableConfig);
+  const [config, setConfig] = React.useState<PageConfig>({...schemaTableConfig, sort:'id_asc', order:'asc'});
 
   useEffect(
     (() => {
@@ -28,7 +28,7 @@ function BookStatuses() {
   }, [schemaContext])
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as BookStatus);
-  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
+  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteStatus(obj.id);
   const handleOnPage = (pageConfig: PageConfig) => setConfig(pageConfig);
 
   return (

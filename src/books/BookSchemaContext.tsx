@@ -75,7 +75,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
               get: getLookupName
           } as SelectFieldSchema,
           [propertyOf('readYear')]: {
-              title: "Year Book Read",
+              title: "Year Read",
               type: "select",
               options: readYears,
               required: true,
