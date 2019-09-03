@@ -13,7 +13,7 @@ function BookAuthors() {
 
   const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get());
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
-  const [config, setConfig] = React.useState<PageConfig>(schemaTableConfig);
+  const [config, setConfig] = React.useState<PageConfig>({...schemaTableConfig, sort:'name_asc', orderBy:'name', order:'asc'});
 
   useEffect(
     (() => {
