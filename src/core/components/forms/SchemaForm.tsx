@@ -98,7 +98,6 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
     const saveObj = transform();
     setIsSaving(true);
     schema.save(saveObj).then(result => {
-      setAppMessage('Entity saved.');
       onSaveSuccess(result || saveObj);
     }).catch(err => {
       console.error(err);

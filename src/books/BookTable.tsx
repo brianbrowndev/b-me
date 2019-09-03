@@ -103,6 +103,7 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
 
   function handleDelete(book: Book) {
     BookApi.deleteBook(book.id as number).then(() => {
+      setAppMessage('Entity deleted.')
       setBooks(prevBooks => prevBooks.filter(b => b.id !== book.id));
     }).catch(err => {
       console.error(err);
@@ -111,6 +112,7 @@ function BookTable({addedBook, rowsPerPage} : BookTableProps) {
   }
 
   function handleOnSaveSuccess(book: Book) {
+    setAppMessage('Entity saved.')
     setBooks(prevBooks  => prevBooks.map(e => {
         if (e.id === book.id) {
             return book;
