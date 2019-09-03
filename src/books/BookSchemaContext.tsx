@@ -4,6 +4,7 @@ import FormOptionType from '../core/components/forms/FormOptionType';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
 import { AuthContext } from '../core/Auth';
+import getLookupName from '../core/components/forms/Lookup';
 
 interface BookSchemaContextProps {
   get(book?: Book):FormSchema
@@ -57,19 +58,22 @@ function BookSchemaContextProvider  (props: any) {
               title: "Author",
               type: "select",
               options: authors,
-              required: true
+              required: true,
+              get: getLookupName
           } as SelectFieldSchema,
           [propertyOf('bookCategory')]: {
               title: "Category",
               type: "select",
               options: categories,
-              required: true
+              required: true,
+              get: getLookupName
           } as SelectFieldSchema,
           [propertyOf('bookStatus')]: {
               title: "Status",
               type: "select",
               options: statuses,
-              required: true
+              required: true,
+              get: getLookupName
           } as SelectFieldSchema,
           [propertyOf('readYear')]: {
               title: "Year Book Read",
