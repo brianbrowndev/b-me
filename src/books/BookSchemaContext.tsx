@@ -32,7 +32,7 @@ function BookSchemaContextProvider  (props: any) {
           // TODO - error handling for user
           console.error(err);
         });
-        BookApi.getBookCategories().then(
+        BookApi.getCategories().then(
           result => setCategories(result.map(r => setOption(r.name, r.id))) 
         ).catch(err => {
           console.error(err);
@@ -81,7 +81,7 @@ function BookSchemaContextProvider  (props: any) {
               options: readYears,
               required: true,
               load: (value:string | undefined) => {
-                const readYear = props.obj  ? props.obj.readYear : `${new Date().getFullYear()}`;
+                const readYear = value || `${new Date().getFullYear()}`;
                 const readYearObj = {id: readYear, name: readYear}
                 return readYearObj;
               },

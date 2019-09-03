@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, Fragment, useRef } from 'react';
+import React, { useState, useEffect, useContext, Fragment, useRef, useReducer}  from 'react';
 import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
 import { FormSchema } from '../forms/SchemaForm';
 import CoreTableHead, { HeadRow, TableHeaderOrder } from './CoreTableHead';
@@ -7,8 +7,19 @@ import { EditModalRef, EditModal } from '../forms/EditModal';
 import EditMenu from '../forms/EditMenu';
 import AppSnackbar from '../AppSnackbar';
 import AddModal from '../forms/AddModal';
+import { ObjectEntity } from '../forms/ObjectEntityType';
+import schemaTableReducer from './SchemaTableReducer';
 
-export type PaginatedResult = {count:number, items:{[key:string]:any}[]}
+export type PaginatedResult = {count:number, items:ObjectEntity[]};
+export type PageConfig =  {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number};
+
+export const schemaTableConfig = {
+  pageNumber:0,
+  sort: 'id_desc',
+  orderBy: 'id',
+  order: 'desc',
+  rowsPerPage: 25
+} as PageConfig
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -23,60 +34,43 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-interface SchemaTableProps {
+interface SchemaTableProps<T> {
   schema: FormSchema;
-  rowsPerPage?: number;
-  columnSort?: string;
-  getRows(sort:string, page:number):Promise<PaginatedResult>
-  getEntitySchema(obj:{[key:string]:any}): FormSchema;
-  deleteEntity(obj:{[key:string]:any}): Promise<void>;
+  page: PaginatedResult;
+  onPage:(config: PageConfig) => void;
+  config:PageConfig;
+  getEntitySchema(obj:T): FormSchema;
+  deleteEntity(obj:T): Promise<void>;
 }
 
-const defaultRowsPerPage = 25;
-
-function SchemaTable({schema, rowsPerPage, columnSort, getRows, getEntitySchema, deleteEntity} : SchemaTableProps) {
+function SchemaTable <T extends ObjectEntity>({schema, onPage, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
   const classes = useStyles();
 
-  const [rows, setRows] = useState<Array<{[key:string]:any}>>([]);
-  const [addedRow, setAddedRow] = useState<{[key:string]:any}>();
+  const reducer = schemaTableReducer<T>();
+  const [state, dispatch] = useReducer(reducer, {rows:[], count:0});
 
   // table
-  const [headRows, setHeadRows] = useState<HeadRow[]>([]);
-  const [totalCount, setTotalCount] = React.useState(0);
-  const [page, setPage] = React.useState(0);
-  const [sort, setSort] = React.useState(columnSort || "id_desc");
-  const [order, setOrder] = React.useState<TableHeaderOrder>('desc');
-  const [orderBy, setOrderBy] = React.useState<string>('id');
+  const [headRows, setHeadRows] = useState<HeadRow[]>(() => createHeadRows());
 
-  useEffect(() => {
-    setHeadRows(Object.entries(schema.properties).map(([property, fieldSchema]) => (
+  function createHeadRows () {
+    return Object.entries(schema.properties).map(([property, fieldSchema]) => (
       {id: property, numeric:false, disablePadding: false, label: fieldSchema.title} as HeadRow
-    )));
-  }, [schema])
+    ));
+  }
 
   useEffect(
-    (() => {
-      getRows(sort, page + 1).then(result => {
-        setRows(result.items);
-        setTotalCount(result.count);
-      }).catch(err => {
-        setAppMessage('Unexpected error fetching rows.');
-        setRows([]);
-      });
-    }), 
-    [sort, page, getRows, addedRow] 
+    (() => dispatch({type:'LOAD', page:page})), 
+    [page] 
   );
 
   function handleChangePage(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {
-    setPage(newPage);
+    onPage({...config, pageNumber:newPage});
   }
 
   function handleRequestSort(event: React.MouseEvent<unknown>, property:string) {
-    const isDesc = orderBy === property && order === 'desc';
+    const isDesc = config.orderBy === property && config.order === 'desc';
     const newOrder = isDesc ? 'asc' : 'desc';
-    setOrder(newOrder);
-    setOrderBy(property);
-    setSort(`${property}_${newOrder}`);
+    onPage({...config, order:newOrder, orderBy:property, sort:`${property}_${newOrder}`, pageNumber:0})
   }
 
 
@@ -97,36 +91,31 @@ function SchemaTable({schema, rowsPerPage, columnSort, getRows, getEntitySchema,
     }
   }, [authContext.authenticated])
 
-  function handleEdit(row: {[key:string]:any}) {
+  function handleEdit(row: T) {
     setEditSchema(getEntitySchema(row));
     if (modalRef && modalRef.current) {
       modalRef.current.handleOpen();
     }
   }
 
-  function handleDelete(row: {[key:string]:any}) {
+  function handleDelete(row: T) {
     deleteEntity(row).then(() => {
       setAppMessage('Entity deleted.')
-      setRows(prevRows  => prevRows.filter(b => b.id !== row.id));
+      dispatch({type:'DELETE', row:row});
     }).catch(err => {
       console.error(err);
       setAppMessage('Delete failed, unexpected error.')
     })
   }
 
-  function handleOnEditSaveSuccess(row: {[key:string]:any}) {
+  function handleOnEditSaveSuccess(row: T) {
     setAppMessage('Entity saved.')
-    setRows(prevRows  => prevRows.map(e => {
-        if (e.id === row.id) {
-            return row;
-        }
-        return e;
-    }));
+      dispatch({type:'EDIT', row:row});
   }
 
-  function handleOnAddSuccess(row: {[key:string]:any}) {
+  function handleOnAddSuccess(row: T) {
     setAppMessage('Entity added.')
-    setAddedRow(row);
+    dispatch({type:'ADD', row:row});
   }
 
   return (
@@ -135,12 +124,12 @@ function SchemaTable({schema, rowsPerPage, columnSort, getRows, getEntitySchema,
         <Table className={classes.table}>
           <CoreTableHead
             headRows={headRows}
-            order={order}
-            orderBy={orderBy}
+            order={config.order}
+            orderBy={config.orderBy}
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {rows.map(row => (
+            {state.rows.map(row => (
               <TableRow key={row.id}>
                 {Object.entries(schema.properties).map(([property, fieldSchema]) => 
                   <TableCell key={property}>{fieldSchema.get ? fieldSchema.get(row[property]) : row[property]}</TableCell>
@@ -155,11 +144,11 @@ function SchemaTable({schema, rowsPerPage, columnSort, getRows, getEntitySchema,
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[rowsPerPage || defaultRowsPerPage]}
+          rowsPerPageOptions={[config.rowsPerPage]}
           component="div"
-          count={totalCount}
-          rowsPerPage={rowsPerPage || defaultRowsPerPage}
-          page={page}
+          count={state.count}
+          rowsPerPage={config.rowsPerPage}
+          page={config.pageNumber}
           backIconButtonProps={{
             'aria-label': 'previous page',
           }}
