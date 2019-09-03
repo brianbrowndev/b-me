@@ -8,6 +8,10 @@ import OrgContentRoute from "./org/OrgContentRoute";
 import Login from "./core/Login";
 import ScrollToTop from './core/components/ScrollToTop';
 import Books from './books/Books';
+import BookAuthors from './books/BookAuthors';
+import BookCategories from './books/BookCategories';
+import BookStatuses from './books/BookStatuses';
+import { PrivateRoute } from './core/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -45,7 +49,12 @@ function Main() {
             <ScrollToTop >
               <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgContentRoute} />
+
               <Route exact path="/books" component={Books} />
+              <PrivateRoute exact path="/book-authors" component={BookAuthors} />
+              <PrivateRoute exact path="/book-categories" component={BookCategories} />
+              <PrivateRoute exact path="/book-statuses" component={BookStatuses} />
+
               <Route exact path="/login" component={Login} />
             </ ScrollToTop>
           </Box>

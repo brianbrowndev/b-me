@@ -3,8 +3,8 @@ import {  Card, CardContent, Typography, makeStyles, CardActions, Collapse, Icon
 import {  OrgGroup } from '../org/OrgContext';
 import clsx from 'clsx';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import OrgGroupRouteList from './OrgGroupRouteList';
 import * as H from 'history';
+import GroupRouteList from '../core/components/GroupRouteLists';
 
 const useStyles = makeStyles({
   expand: {
@@ -57,7 +57,7 @@ function OrgGroupCard(props: OrgGroupCardProps) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <OrgGroupRouteList orgGroup={orgGroup} history={history}></OrgGroupRouteList>
+          <GroupRouteList title={orgGroup.title} items={orgGroup.items} onClick={()=>null} history={history} nested={true}/>
         </CardContent>
       </Collapse>
     </Card>

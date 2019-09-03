@@ -830,7 +830,7 @@ export class BookClient extends ApiClientBase {
         return Promise.resolve<BookStatus>(<any>null);
     }
 
-    getStausesPage(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBookStatus> {
+    getStatusesPage(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBookStatus> {
         let url_ = this.baseUrl + "/Books/Statuses/Page?";
         if (sortName !== undefined)
             url_ += "sortName=" + encodeURIComponent("" + sortName) + "&"; 
@@ -854,11 +854,11 @@ export class BookClient extends ApiClientBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetStausesPage(_response);
+            return this.processGetStatusesPage(_response);
         });
     }
 
-    protected processGetStausesPage(response: Response): Promise<PaginatedResultOfBookStatus> {
+    protected processGetStatusesPage(response: Response): Promise<PaginatedResultOfBookStatus> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
