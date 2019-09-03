@@ -11,7 +11,7 @@ import { ObjectEntity } from '../forms/ObjectEntityType';
 import schemaTableReducer from './SchemaTableReducer';
 
 export type PaginatedResult = {count:number, items:ObjectEntity[]};
-export type PageConfig =  {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number};
+export type SchemaTableConfig =  {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number};
 
 export const schemaTableConfig = {
   pageNumber:0,
@@ -19,7 +19,7 @@ export const schemaTableConfig = {
   orderBy: 'id',
   order: 'desc',
   rowsPerPage: 25
-} as PageConfig
+} as SchemaTableConfig
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) => {
 interface SchemaTableProps<T> {
   schema: FormSchema;
   page: PaginatedResult;
-  onPage:(config: PageConfig) => void;
-  config:PageConfig;
+  onPage:(config: SchemaTableConfig) => void;
+  config:SchemaTableConfig;
   getEntitySchema(obj:T): FormSchema;
   deleteEntity(obj:T): Promise<void>;
 }
