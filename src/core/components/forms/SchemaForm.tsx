@@ -93,17 +93,21 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
     setObject({ ...obj, ...changeObj});
   };
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+    setIsSaving(true);
     evt.stopPropagation();
     evt.preventDefault();
     const passed = validate();
-    if (!passed) return;
+    if (!passed) {
+      setIsSaving(false);
+      return
+    };
     const saveObj = transform();
-    setIsSaving(true);
     schema.save(saveObj).then(result => {
       onSaveSuccess(result || saveObj);
     }).catch(err => {
       console.error(err);
       setAppMessage('Failed to save, unexpected error.');
+      setIsSaving(false);
     })
   }
 
