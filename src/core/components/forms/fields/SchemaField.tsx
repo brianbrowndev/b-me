@@ -1,5 +1,5 @@
 import React  from 'react';
-import { TextFieldSchema, SelectFieldSchema, FieldSchema } from './SchemaForm';
+import { TextFieldSchema, SelectFieldSchema, FieldSchema } from '../SchemaForm';
 import SchemaFormSelect from './SchemaFormSelect';
 import SchemaFormText from './SchemaFormText';
 
@@ -16,6 +16,7 @@ export default function SchemaFormField(props: SchemaFieldProps<TextFieldSchema 
     case 'text':
       return <SchemaFormText  {...(props as SchemaFieldProps<TextFieldSchema>)} />
     case 'select':
+    case 'multiselect':
       return <SchemaFormSelect {...(props as SchemaFieldProps<SelectFieldSchema>)} />
   }
 }

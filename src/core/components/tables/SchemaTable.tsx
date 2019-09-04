@@ -9,6 +9,7 @@ import AppSnackbar from '../AppSnackbar';
 import AddModal from '../forms/AddModal';
 import { ObjectEntity } from '../forms/ObjectEntityType';
 import schemaTableReducer from './SchemaTableReducer';
+import CoreTableToolbar from './CoreTableToolbar';
 
 export type PaginatedResult = {count:number, items:ObjectEntity[]};
 export type SchemaTableConfig =  {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number};
@@ -18,7 +19,7 @@ export const schemaTableConfig = {
   sort: 'id_desc',
   orderBy: 'id',
   order: 'desc',
-  rowsPerPage: 25
+  rowsPerPage: 15
 } as SchemaTableConfig
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -37,13 +38,14 @@ const useStyles = makeStyles((theme: Theme) => {
 interface SchemaTableProps<T> {
   schema: FormSchema;
   page: PaginatedResult;
+  title: string;
   onPage:(config: SchemaTableConfig) => void;
   config:SchemaTableConfig;
   getEntitySchema(obj:T): FormSchema;
   deleteEntity(obj:T): Promise<void>;
 }
 
-function SchemaTable <T extends ObjectEntity>({schema, onPage, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
+function SchemaTable <T extends ObjectEntity>({schema, onPage, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
   const classes = useStyles();
 
   const reducer = schemaTableReducer<T>();
@@ -121,7 +123,8 @@ function SchemaTable <T extends ObjectEntity>({schema, onPage, getEntitySchema, 
   return (
     <Fragment>
       <Paper className={classes.root}>
-        <Table className={classes.table}>
+        <CoreTableToolbar title={title} />
+        <Table className={classes.table} stickyHeader>
           <CoreTableHead
             headRows={headRows}
             order={config.order}

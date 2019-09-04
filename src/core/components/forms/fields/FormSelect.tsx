@@ -1,7 +1,7 @@
 import React, { useState, useEffect, CSSProperties, HTMLAttributes } from 'react';
 import { makeStyles, Theme, createStyles, useTheme } from '@material-ui/core/styles';
 import Select from 'react-select';
-import FormOptionType from './FormOptionType';
+import FormOptionType from '../FormOptionType';
 import { Paper, Typography, MenuItem } from '@material-ui/core';
 import { ValueContainerProps } from 'react-select/src/components/containers';
 import { ControlProps } from 'react-select/src/components/Control';
@@ -173,11 +173,12 @@ interface SelectProps {
   labelProperty: string;
   required: boolean;
   error: string;
+  type: 'select' | 'multiselect';
   onChange(obj:{[key:string]:any}): void;
 }
 
 
-export default function FormSelect({label, id, options, obj, valueProperty, labelProperty, required, onChange, error}: SelectProps) {
+export default function FormSelect({label, id, options, obj, valueProperty, labelProperty, required, onChange, error, type}: SelectProps) {
   const classes = useStyles();
   const theme = useTheme();
 

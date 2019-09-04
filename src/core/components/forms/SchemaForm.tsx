@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import FormAppBar from './FormAppBar';
 import FormOptionType from './FormOptionType';
-import SchemaFormField from './SchemaField';
+import SchemaFormField from './fields/SchemaField';
 import AppSnackbar from '../AppSnackbar';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,7 +38,7 @@ export interface FormSchema {
   save(obj:{[key:string]:any}): Promise<any>; 
 }
 
-type FieldType = 'text' | 'select';
+type FieldType = 'text' | 'select' | 'multiselect';
 
 export interface FieldSchema {
   title: string;
@@ -61,13 +61,21 @@ export interface SelectFieldSchema extends FieldSchema {
   options: FormOptionType[];
 }
 
+export interface MultiSelectFieldSchema extends FieldSchema {
+  type: 'multiselect';
+  options: FormOptionType[];
+}
+
+
+
 interface SchemaFormProps {
   schema: FormSchema;
   onCancel(): void;
   onSaveSuccess(obj:{[key:string]:any}): void;
+  saveText?: string;
 }
 
-export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFormProps) {
+export default function SchemaForm({ schema, onCancel, onSaveSuccess, saveText}: SchemaFormProps) {
   const classes = useStyles();
   
   const [obj, setObject] = useState<{[key:string]:any}>({});
@@ -139,7 +147,7 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess}: SchemaFor
     <Fragment>
       <div className={classes.root}>
         <form className={classes.form} onSubmit={handleSubmit} noValidate={true}>
-          <FormAppBar title={schema.title} onCancel={onCancel} isSaving={isSaving}/>
+          <FormAppBar title={schema.title} onCancel={onCancel} isSaving={isSaving} saveText={saveText}/>
           <div className={classes.formControls}>
             {
               Object.entries(schema.properties).map(([k, v]) => 

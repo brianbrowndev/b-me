@@ -96,12 +96,22 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
 
 
   const bookEditProps = {
-    get: (book?:Book) => {
-      return {
-        ...schema, 
-        object: book || {}, 
-        title: book ? 'Edit Book' : 'New Book',
-        save: book ? save : add
+    get: action => {
+      switch (action.type) {
+        case 'ADD':
+          return {
+            ...schema, 
+            object: {}, 
+            title: 'New Book',
+            save: add
+          }
+        case 'EDIT':
+          return {
+            ...schema, 
+            object: action.obj, 
+            title: 'Edit Book',
+            save: save
+          }
       }
     },
   } as EditSchemaContextProps<Book>;

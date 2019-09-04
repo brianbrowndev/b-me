@@ -12,12 +12,22 @@ function BookCategorySchemaContextProvider({children}: {children:JSX.Element}) {
   const save = (o: BookCategory) => BookApi.updateCategory(o.id as number, o);
 
   const bookEditProps = {
-    get: (o?:BookCategory) => {
-      return {
-        ...lookupSchema, 
-        object: o || {}, 
-        title: o ? 'Edit Book Category' : 'New Book Category',
-        save: o ? save : add
+    get: action => {
+      switch (action.type) {
+        case 'ADD':
+          return {
+            ...lookupSchema, 
+            object: {}, 
+            title: 'New Book Category',
+            save: add
+          }
+        case 'EDIT':
+          return {
+            ...lookupSchema, 
+            object: action.obj, 
+            title: 'Edit Book Category',
+            save: save
+          }
       }
     },
   } as EditSchemaContextProps<BookCategory>;
