@@ -11,23 +11,18 @@ function BookStatuses() {
   const schemaContext = useContext(BookStatusSchemaContext);
 
 
-  const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get());
+  const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get({type:'ADD'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>({...schemaTableConfig, sort:'id_asc', order:'asc'});
 
   useEffect(
     (() => {
-      BookApi.getStatusesPage(config.sort, config.pageNumber + 1).then(result => setPage(result as PaginatedResult))
+      BookApi.getStatusesPage(config.sort, config.pageNumber + 1, config.rowsPerPage).then(result => setPage(result as PaginatedResult))
     }), 
     [config] 
   );
 
-  // the use effect will 
-  useEffect(() => {
-    setSchema(schemaContext.get())
-  }, [schemaContext])
-
-  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as BookStatus);
+  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({type:'EDIT', obj:obj as BookStatus});
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteStatus(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
 
@@ -40,6 +35,7 @@ function BookStatuses() {
         page={page}
         onPage={handleOnPage}
         config={config}
+        title="Book Statuses"
       />
     </Fragment>
   );

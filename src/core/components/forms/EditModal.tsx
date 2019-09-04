@@ -21,13 +21,14 @@ const useStyles = makeStyles((theme: Theme) =>
 export interface EditModalProps {
   schema: FormSchema;
   onSaveSuccess(obj:{[key:string]:any}):void;
+  saveText?: string;
 }
 
 export interface EditModalRef {
   handleOpen (): void
 }
 
-const EditModal = forwardRef(({schema, onSaveSuccess}:EditModalProps, ref) => {
+const EditModal = forwardRef(({schema, onSaveSuccess, saveText}:EditModalProps, ref) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState({});
@@ -54,7 +55,7 @@ const EditModal = forwardRef(({schema, onSaveSuccess}:EditModalProps, ref) => {
       >
         <div style={modalStyle} className={classes.paper}>
         {/* <div className={classes.paper}> */}
-          <SchemaForm schema={schema} onCancel={handleClose} onSaveSuccess={handleSave}/>
+          <SchemaForm schema={schema} onCancel={handleClose} onSaveSuccess={handleSave} saveText={saveText}/>
         </div>
       </Modal>
   );

@@ -12,12 +12,22 @@ function BookAuthorSchemaContextProvider ({children}: {children:JSX.Element}) {
   const save = (o: BookAuthor) => BookApi.updateAuthor(o.id as number, o);
 
   const contextProps = {
-    get: (o?:BookAuthor) => {
-      return {
-        ...lookupSchema, 
-        object: o || {}, 
-        title: o ? 'Edit Book Author' : 'New Book Author',
-        save: o ? save : add
+    get: action => {
+      switch (action.type) {
+        case 'ADD':
+          return {
+            ...lookupSchema, 
+            object: {}, 
+            title: 'New Book Author',
+            save: add
+          }
+        case 'EDIT':
+          return {
+            ...lookupSchema, 
+            object: action.obj, 
+            title: 'Edit Book Author',
+            save: save
+          }
       }
     },
   } as EditSchemaContextProps<BookAuthor>;

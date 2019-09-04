@@ -10,23 +10,18 @@ import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 function Books() {
   const schemaContext = useContext(BookSchemaContext);
 
-  const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get());
+  const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get({type:'ADD'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
 
   useEffect(
     (() => {
-      BookApi.getBooks(config.sort, config.pageNumber + 1).then(result => setPage(result as PaginatedResult))
+      BookApi.getBooks(config.sort, config.pageNumber + 1, config.rowsPerPage).then(result => setPage(result as PaginatedResult))
     }), 
     [config] 
   );
 
-  // the use effect will 
-  useEffect(() => {
-    setSchema(schemaContext.get())
-  }, [schemaContext])
-
-  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get(obj as Book);
+  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({type:'EDIT', obj:obj as Book});
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
 
@@ -39,6 +34,7 @@ function Books() {
         page={page}
         onPage={handleOnPage}
         config={config}
+        title="Books"
       />
     </Fragment>
   );
