@@ -10,7 +10,8 @@ import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 function Books() {
   const schemaContext = useContext(BookSchemaContext);
 
-  const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get({type:'ADD'}));
+  const [schema] = useState<FormSchema>(() => schemaContext.get({type:'ADD'}));
+  const [filterSchema] = useState<FormSchema>(() => schemaContext.get({type:'FILTER'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
 
@@ -29,6 +30,7 @@ function Books() {
     <Fragment>
       <SchemaTable 
         schema={schema} 
+        filterSchema={filterSchema} 
         getEntitySchema={handleGetEntitySchema} 
         deleteEntity={handleDeleteEntity} 
         page={page}

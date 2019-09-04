@@ -1,8 +1,8 @@
-import React, { useState, useEffect, CSSProperties, HTMLAttributes } from 'react';
-import { makeStyles, Theme, createStyles, useTheme } from '@material-ui/core/styles';
+import React, { useState, useEffect, CSSProperties, HTMLAttributes, Fragment } from 'react';
+import { makeStyles, Theme, createStyles, useTheme, emphasize } from '@material-ui/core/styles';
 import Select from 'react-select';
 import FormOptionType from '../FormOptionType';
-import { Paper, Typography, MenuItem } from '@material-ui/core';
+import { Paper, Typography, MenuItem, Chip } from '@material-ui/core';
 import { ValueContainerProps } from 'react-select/src/components/containers';
 import { ControlProps } from 'react-select/src/components/Control';
 import { MenuProps, NoticeProps } from 'react-select/src/components/Menu';
@@ -11,6 +11,9 @@ import { PlaceholderProps } from 'react-select/src/components/Placeholder';
 import { SingleValueProps } from 'react-select/src/components/SingleValue';
 import { Omit } from '@material-ui/types';
 import TextField, { BaseTextFieldProps } from '@material-ui/core/TextField';
+import { MultiValueProps } from 'react-select/src/components/MultiValue';
+import CancelIcon from '@material-ui/icons/Cancel';
+import clsx from 'clsx';
 
 // Pulled from: https://material-ui.com/components/autocomplete/
 // TODO - understand component override of select to use MUI components
@@ -27,8 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     input: {
       display: 'flex',
-      // padding: 0,
-      // height: 'auto',
     },
     valueContainer: {
       display: 'flex',
@@ -36,6 +37,15 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       alignItems: 'center',
       overflow: 'hidden',
+    },
+    chip: {
+      margin: theme.spacing(0.5, 0.25),
+    },
+    chipFocused: {
+      backgroundColor: emphasize(
+        theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
+        0.08,
+      ),
     },
     noOptionsMessage: {
       padding: theme.spacing(1, 2),
@@ -144,6 +154,21 @@ function ValueContainer(props: ValueContainerProps<FormOptionType>) {
   return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
 }
 
+function MultiValue(props: MultiValueProps<FormOptionType>) {
+  return (
+    <Chip
+      tabIndex={-1}
+      label={props.children}
+      className={clsx(props.selectProps.classes.chip, {
+        [props.selectProps.classes.chipFocused]: props.isFocused,
+      })}
+      onDelete={props.removeProps.onClick}
+      deleteIcon={<CancelIcon {...props.removeProps} />}
+    />
+  );
+}
+
+
 function Menu(props: MenuProps<FormOptionType>) {
   return (
     <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
@@ -160,6 +185,7 @@ const components = {
   Placeholder,
   SingleValue,
   ValueContainer,
+  MultiValue
 };
 
 
@@ -209,6 +235,8 @@ export default function FormSelect({label, id, options, obj, valueProperty, labe
   }
 
   return (
+    <Fragment>
+      { type === 'select' && 
         <Select
           classes={classes}
           styles={selectStyles}
@@ -230,5 +258,32 @@ export default function FormSelect({label, id, options, obj, valueProperty, labe
           onChange={handleChange}
           required={required}
         />
- );
+      }
+      { type === 'multiselect' && 
+        <Select
+          classes={classes}
+          styles={selectStyles}
+          inputId={id}
+          TextFieldProps={{
+            label: label,
+            variant: 'filled',
+            error: !!error,
+            helperText:error,
+            InputLabelProps: {
+              htmlFor: id,
+              shrink: true,
+            },
+          }}
+          placeholder={label}
+          options={options}
+          components={components}
+          value={option}
+          onChange={handleChange}
+          required={required}
+          isMulti
+        />
+      }
+
+    </Fragment>
+);
 }

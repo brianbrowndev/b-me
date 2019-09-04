@@ -1,7 +1,8 @@
 import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/styles';
-import { Theme, Toolbar, Typography, Tooltip, IconButton } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import { Theme, Toolbar, Typography } from '@material-ui/core';
+import { FormSchema } from '../forms/SchemaForm';
+import CoreTableFilter from './CoreTableFilter';
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,9 +24,10 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 interface CoreTableToolbarProps {
   title: string;
+  filterSchema?: FormSchema;
 }
 
-export default function CoreTableToolbar ({ title }: CoreTableToolbarProps) {
+export default function CoreTableToolbar ({ title, filterSchema }: CoreTableToolbarProps) {
   const classes = useToolbarStyles();
   return (
     <Toolbar
@@ -38,11 +40,9 @@ export default function CoreTableToolbar ({ title }: CoreTableToolbarProps) {
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        { filterSchema && 
+          <CoreTableFilter schema={filterSchema} />
+        }
       </div>
     </Toolbar>
   );

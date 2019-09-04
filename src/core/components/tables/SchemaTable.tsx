@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 interface SchemaTableProps<T> {
   schema: FormSchema;
+  filterSchema?: FormSchema;
   page: PaginatedResult;
   title: string;
   onPage:(config: SchemaTableConfig) => void;
@@ -45,7 +46,7 @@ interface SchemaTableProps<T> {
   deleteEntity(obj:T): Promise<void>;
 }
 
-function SchemaTable <T extends ObjectEntity>({schema, onPage, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
+function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onPage, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
   const classes = useStyles();
 
   const reducer = schemaTableReducer<T>();
@@ -123,7 +124,7 @@ function SchemaTable <T extends ObjectEntity>({schema, onPage, title, getEntityS
   return (
     <Fragment>
       <Paper className={classes.root}>
-        <CoreTableToolbar title={title} />
+        <CoreTableToolbar title={title} filterSchema={filterSchema} />
         <Table className={classes.table} stickyHeader>
           <CoreTableHead
             headRows={headRows}
