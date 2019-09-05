@@ -3,6 +3,7 @@ import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme, Toolbar, Typography } from '@material-ui/core';
 import { FormSchema } from '../forms/SchemaForm';
 import CoreTableFilter from './CoreTableFilter';
+import { ObjectEntity } from '../forms/ObjectEntityType';
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,12 +23,13 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface CoreTableToolbarProps {
+interface CoreTableToolbarProps<T> {
   title: string;
-  filterSchema?: FormSchema;
+  filterSchema?: FormSchema<T>;
+  onFilter?: (obj: T) => void
 }
 
-export default function CoreTableToolbar ({ title, filterSchema }: CoreTableToolbarProps) {
+export default function CoreTableToolbar <T extends ObjectEntity>({ title, filterSchema, onFilter }: CoreTableToolbarProps<T>) {
   const classes = useToolbarStyles();
   return (
     <Toolbar
@@ -40,8 +42,8 @@ export default function CoreTableToolbar ({ title, filterSchema }: CoreTableTool
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
-        { filterSchema && 
-          <CoreTableFilter schema={filterSchema} />
+        { (filterSchema && onFilter) && 
+          <CoreTableFilter schema={filterSchema} onFilter={onFilter} />
         }
       </div>
     </Toolbar>

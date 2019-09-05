@@ -11,7 +11,7 @@ function BookAuthors() {
   const schemaContext = useContext(BookAuthorSchemaContext);
 
 
-  const [schema] = useState<FormSchema>(() => schemaContext.get({type: 'ADD'}));
+  const [schema] = useState<FormSchema<BookAuthor>>(() => schemaContext.get({type: 'ADD'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>({...schemaTableConfig, sort:'name_asc', orderBy:'name', order:'asc'});
 
@@ -22,14 +22,14 @@ function BookAuthors() {
     [config] 
   );
 
-  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({ type:'EDIT', obj:obj as BookAuthor});
+  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({ type:'EDIT', obj:obj as BookAuthor}) as FormSchema<ObjectEntity>;
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteAuthor(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
 
   return (
     <Fragment>
       <SchemaTable 
-        schema={schema} 
+        schema={schema as FormSchema<ObjectEntity>} 
         getEntitySchema={handleGetEntitySchema} 
         deleteEntity={handleDeleteEntity} 
         page={page}

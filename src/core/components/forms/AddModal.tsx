@@ -4,6 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { Fab } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AuthContext } from '../../Auth';
+import { ObjectEntity } from './ObjectEntityType';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function AddModal(props:EditModalProps) {
+export default function AddModal<T extends ObjectEntity>(props:EditModalProps<T>) {
   const classes = useStyles();
   const authContext = useContext(AuthContext);
   const modalRef = useRef<EditModalRef>(null);

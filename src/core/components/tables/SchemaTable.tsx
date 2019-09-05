@@ -36,17 +36,18 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 interface SchemaTableProps<T> {
-  schema: FormSchema;
-  filterSchema?: FormSchema;
+  schema: FormSchema<T>;
+  filterSchema?: FormSchema<T>;
   page: PaginatedResult;
   title: string;
   onPage:(config: SchemaTableConfig) => void;
+  onFilter?:(obj:T) => void;
   config:SchemaTableConfig;
-  getEntitySchema(obj:T): FormSchema;
+  getEntitySchema(obj:T): FormSchema<T>;
   deleteEntity(obj:T): Promise<void>;
 }
 
-function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onPage, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
+function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, onPage, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
   const classes = useStyles();
 
   const reducer = schemaTableReducer<T>();
@@ -113,7 +114,7 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onPage, tit
 
   function handleOnEditSaveSuccess(row: T) {
     setAppMessage('Entity saved.')
-      dispatch({type:'EDIT', row:row});
+    dispatch({type:'EDIT', row:row});
   }
 
   function handleOnAddSuccess(row: T) {
@@ -124,7 +125,7 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onPage, tit
   return (
     <Fragment>
       <Paper className={classes.root}>
-        <CoreTableToolbar title={title} filterSchema={filterSchema} />
+        <CoreTableToolbar title={title} filterSchema={filterSchema} onFilter={onFilter} />
         <Table className={classes.table}>
           <CoreTableHead
             headRows={headRows}

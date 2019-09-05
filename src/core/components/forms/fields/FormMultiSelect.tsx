@@ -32,7 +32,7 @@ export default function FormMultiSelect({label, id, options, items, valuePropert
   const classes = useSelectStyles();
   const theme = useTheme();
 
-  const [values, setValues] = useState<ValueType<FormOptionType>>(null);
+  const [values, setValues] = useState<ValueType<FormOptionType>>([]);
   const selectStyles = {
     input: (base: CSSProperties) => ({
       ...base,
@@ -50,7 +50,7 @@ export default function FormMultiSelect({label, id, options, items, valuePropert
   }, [items, valueProperty, labelProperty])
 
   function handleChange(selected: ValueType<FormOptionType>): void {
-    selected = (selected as FormOptionType[])
+    selected = (selected as FormOptionType[]) || [];
     const values = selected.map<{[key:string]:any}>(item => ({[labelProperty]:item.label, [valueProperty]:item.value}))
     onChange(values);
   }

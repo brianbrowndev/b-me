@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
 import FormOptionType from '../core/components/forms/FormOptionType';
-import { Book } from '../common/client';
+import { Book, BookAuthor, BookStatus, BookCategory } from '../common/client';
 import BookApi from '../common/client/BookApi';
 import getLookupName from '../core/components/forms/Lookup';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
+import { Omit } from '@material-ui/types';
+
+export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCategory'|'readYear'> {
+  bookAuthor: BookAuthor[];
+  bookStatus: BookStatus[];
+  bookCategory: BookCategory[];
+  readYear: string[];
+} 
 
 
 const BookSchemaContext = React.createContext({} as EditSchemaContextProps<Book>);
@@ -77,8 +85,8 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         transform: (obj:{[key:string]:any}) => obj.id
     } as SelectFieldSchema,
     },
-    object: {}
-  } as FormSchema;
+    object: {} as Book
+  } as FormSchema<Book>;
 
   const filterSchema = {
     title: 'Filter Books',
@@ -87,27 +95,24 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         title: "Author",
         type: "multiselect",
         options: authors,
-        required: true,
         get: getLookupName
       } as MultiSelectFieldSchema,
       [propertyOf('bookCategory')]: {
         title: "Category",
         type: "multiselect",
         options: categories,
-        required: true,
         get: getLookupName
       } as MultiSelectFieldSchema,
       [propertyOf('bookStatus')]: {
         title: "Status",
         type: "multiselect",
         options: statuses,
-        required: true,
         get: getLookupName
       } as MultiSelectFieldSchema
     },
-    object: {},
+    object: {name:'', readYear:[], bookAuthor:[], bookCategory:[], bookStatus:[]} as BookFilter,
     save: (book: Book) => Promise.resolve(null)
-  } as FormSchema;
+  } as FormSchema<BookFilter>;
 
   const add = (book: Book) => BookApi.createBook(book);
   const save = (book: Book) => BookApi.updateBook(book.id as number, book);
@@ -132,7 +137,6 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         case 'FILTER':
           return {
             ...filterSchema, 
-            object: {}, 
             title: 'Filter Books',
           }
       }

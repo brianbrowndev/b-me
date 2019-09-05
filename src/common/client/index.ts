@@ -41,10 +41,16 @@ export class BookClient extends ApiClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    getBooks(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBook> {
+    getBooks(sortName?: string | null | undefined, bookAuthors?: number[] | null | undefined, bookCategories?: number[] | null | undefined, bookStatuses?: number[] | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Promise<PaginatedResultOfBook> {
         let url_ = this.baseUrl + "/Books/Page?";
         if (sortName !== undefined)
             url_ += "sortName=" + encodeURIComponent("" + sortName) + "&"; 
+        if (bookAuthors !== undefined)
+            bookAuthors && bookAuthors.forEach(item => { url_ += "bookAuthors=" + encodeURIComponent("" + item) + "&"; });
+        if (bookCategories !== undefined)
+            bookCategories && bookCategories.forEach(item => { url_ += "bookCategories=" + encodeURIComponent("" + item) + "&"; });
+        if (bookStatuses !== undefined)
+            bookStatuses && bookStatuses.forEach(item => { url_ += "bookStatuses=" + encodeURIComponent("" + item) + "&"; });
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
