@@ -1,18 +1,18 @@
 import React  from 'react';
 import { SchemaFieldProps } from './SchemaField';
-import FormSelect from './FormSelect';
 import { SelectFieldSchema, MultiSelectFieldSchema } from '../SchemaForm';
+import FormMultiSelect from './FormMultiSelect';
 
-export default function SchemaFormSelect({property, schema, obj, onChange, error}: SchemaFieldProps<SelectFieldSchema | MultiSelectFieldSchema>) {
+export default function SchemaFormMultiSelect({property, schema, obj, onChange, error}: SchemaFieldProps<SelectFieldSchema | MultiSelectFieldSchema>) {
   
   const handleChange = (selectObj: any) => onChange({[property]:selectObj});
-  return <FormSelect
+  return <FormMultiSelect
       label={schema.title}
       error={error}
       required={schema.required}
       id={property}
       options={schema.options}
-      obj={obj[property]}
+      items={obj[property]}
       valueProperty='id'
       labelProperty='name'
       onChange={handleChange}

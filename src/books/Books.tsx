@@ -10,8 +10,8 @@ import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 function Books() {
   const schemaContext = useContext(BookSchemaContext);
 
-  const [schema] = useState<FormSchema>(() => schemaContext.get({type:'ADD'}));
-  const [filterSchema] = useState<FormSchema>(() => schemaContext.get({type:'FILTER'}));
+  const [schema, setSchema] = useState<FormSchema>(() => schemaContext.get({type:'ADD'}));
+  const [filterSchema, setFilterSchema] = useState<FormSchema>(() => schemaContext.get({type:'FILTER'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
 
@@ -21,6 +21,13 @@ function Books() {
     }), 
     [config] 
   );
+
+
+  // the use effect will catch async lookups that need to be bound to the schema
+  useEffect(() => {
+    setSchema(schemaContext.get({type:'ADD'}));
+    setFilterSchema(schemaContext.get({type:'FILTER'}));
+  }, [schemaContext]);
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({type:'EDIT', obj:obj as Book});
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
