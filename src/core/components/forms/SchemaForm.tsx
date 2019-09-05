@@ -4,6 +4,7 @@ import FormAppBar from './FormAppBar';
 import FormOptionType from './FormOptionType';
 import SchemaFormField from './fields/SchemaField';
 import AppSnackbar from '../AppSnackbar';
+import { ObjectEntity } from './ObjectEntityType';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,10 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-export interface FormSchema {
+export interface FormSchema<T> {
   title: string;
   properties: {[key:string]:FieldSchema};
-  object: {[key:string]:any};
+  object: T;
   save(obj:{[key:string]:any}): Promise<any>; 
 }
 
@@ -68,14 +69,14 @@ export interface MultiSelectFieldSchema extends FieldSchema {
 
 
 
-interface SchemaFormProps {
-  schema: FormSchema;
+interface SchemaFormProps<T> {
+  schema: FormSchema<T>;
   onCancel(): void;
   onSaveSuccess(obj:{[key:string]:any}): void;
   saveText?: string;
 }
 
-export default function SchemaForm({ schema, onCancel, onSaveSuccess, saveText}: SchemaFormProps) {
+export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, onSaveSuccess, saveText}: SchemaFormProps<T>) {
   const classes = useStyles();
   
   const [obj, setObject] = useState<{[key:string]:any}>({});
@@ -85,11 +86,11 @@ export default function SchemaForm({ schema, onCancel, onSaveSuccess, saveText}:
 
   useEffect(() => {
     // Modify value on load, if needed
-    const load = (): {[key:string]:any} => {
+    const load = (): T => {
       let result = {...schema.object};
       Object.entries(schema.properties).forEach(([prop, fieldSchema]) =>  {
         if (fieldSchema.load) {
-          result[prop] = fieldSchema.load(schema.object[prop]);
+          (result as ObjectEntity)[prop] = fieldSchema.load(schema.object[prop]);
         }
       });
       return result;

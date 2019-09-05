@@ -2,6 +2,7 @@ import React, { useImperativeHandle, forwardRef } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import SchemaForm, { FormSchema } from './SchemaForm';
+import { ObjectEntity } from './ObjectEntityType';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -18,8 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export interface EditModalProps {
-  schema: FormSchema;
+export interface EditModalProps<T> {
+  schema: FormSchema<T>;
   onSaveSuccess(obj:{[key:string]:any}):void;
   saveText?: string;
 }
@@ -28,7 +29,7 @@ export interface EditModalRef {
   handleOpen (): void
 }
 
-const EditModal = forwardRef(({schema, onSaveSuccess, saveText}:EditModalProps, ref) => {
+const EditModal = forwardRef(<T extends ObjectEntity>({schema, onSaveSuccess, saveText}:EditModalProps<T>, ref:any) => {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState({});

@@ -24,25 +24,20 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface CoreTableToolbarProps {
-  schema: FormSchema;
+interface CoreTableFilterProps<T> {
+  schema: FormSchema<T>;
+  onFilter: (obj: T) => void;
 }
 
-export default function CoreTableFilter ({ schema }: CoreTableToolbarProps) {
+export default function CoreTableFilter <T extends ObjectEntity>({ schema, onFilter }: CoreTableFilterProps<T>) {
   const classes = useToolbarStyles();
   const modalRef = useRef<EditModalRef>(null);
-
-  const handleOnEditSaveSuccess = (obj: ObjectEntity) => {
-    console.log(obj)
-  }
 
   function handleFilter() {
     if (modalRef && modalRef.current) {
       modalRef.current.handleOpen();
     }
   }
-
-
 
   return (
     <Fragment>
@@ -51,7 +46,7 @@ export default function CoreTableFilter ({ schema }: CoreTableToolbarProps) {
           <FilterListIcon />
         </IconButton>
       </Tooltip>
-      <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnEditSaveSuccess} saveText="Apply"/>
+      <EditModal ref={modalRef} schema={schema} onSaveSuccess={onFilter} saveText="Apply"/>
     </Fragment>
   );
 }

@@ -1,4 +1,5 @@
 import { TextFieldSchema, FormSchema } from "../components/forms/SchemaForm";
+import { ObjectEntity } from "../components/forms/ObjectEntityType";
 
 type LookupKeyword = {id?:number | undefined, name:string, keyword:string};
 const propertyOf = (e: keyof LookupKeyword) => e;
@@ -18,4 +19,4 @@ export const lookupKeywordSchema = {
     } as TextFieldSchema,
   },
   object: {}
-} as FormSchema;
+} as FormSchema<ObjectEntity>;
