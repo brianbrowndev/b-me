@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
 import FormOptionType from '../core/components/forms/FormOptionType';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import { AuthContext } from '../core/Auth';
 import getLookupName from '../core/components/forms/Lookup';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 
@@ -14,7 +13,6 @@ const propertyOf = (e: keyof Book) => e;
 const readYears = ["2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014"].map(year => ({value: year, label:year} as FormOptionType));
 
 function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
-  const authContext = useContext(AuthContext);
 
   const [authors, setAuthors] = useState<FormOptionType[]>([]);
   const [categories, setCategories] = useState<FormOptionType[]>([]);
@@ -23,26 +21,18 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
 
   useEffect(
     (() => {
-      if (!authContext.authenticated) return
-      const setOption = (label:string, value: string | number | undefined) => ({label:label, value:value} as FormOptionType);
-      BookApi.getAuthors().then(
-        result => setAuthors(result.map(r => setOption(r.name, r.id))) 
+      const setOption = (obj:any, label:string, value: string | number | undefined) => ({...obj, label:label, value:value} as FormOptionType);
+      Promise.all([BookApi.getAuthors(), BookApi.getCategories(), BookApi.getStatuses()]).then(
+        ([authors, categories, statuses]) => {
+          setAuthors(authors.map(r => setOption(r, r.name, r.id)));
+          setCategories(categories.map(r => setOption(r, r.name, r.id))) 
+          setStatuses(statuses.map(r => setOption(r, r.name, r.id))) 
+        }
       ).catch(err => {
         // TODO - error handling for user
-        console.error(err);
-      });
-      BookApi.getCategories().then(
-        result => setCategories(result.map(r => setOption(r.name, r.id))) 
-      ).catch(err => {
-        console.error(err);
-      });
-      BookApi.getStatuses().then(
-        result => setStatuses(result.map(r => setOption(r.name, r.id))) 
-      ).catch(err => {
-        console.error(err);
-      });
-    }), 
-    [authContext.authenticated] 
+        console.log(err);
+      })
+    }), []
   );
 
   const schema = {
@@ -93,20 +83,20 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
   const filterSchema = {
     title: 'Filter Books',
     properties: {
-      // [propertyOf('bookAuthor')]: {
-      //   title: "Author",
-      //   type: "multiselect",
-      //   options: authors,
-      //   required: true,
-      //   get: getLookupName
-      // } as MultiSelectFieldSchema,
-      // [propertyOf('bookCategory')]: {
-      //   title: "Category",
-      //   type: "multiselect",
-      //   options: categories,
-      //   required: true,
-      //   get: getLookupName
-      // } as MultiSelectFieldSchema,
+      [propertyOf('bookAuthor')]: {
+        title: "Author",
+        type: "multiselect",
+        options: authors,
+        required: true,
+        get: getLookupName
+      } as MultiSelectFieldSchema,
+      [propertyOf('bookCategory')]: {
+        title: "Category",
+        type: "multiselect",
+        options: categories,
+        required: true,
+        get: getLookupName
+      } as MultiSelectFieldSchema,
       [propertyOf('bookStatus')]: {
         title: "Status",
         type: "multiselect",
@@ -144,7 +134,6 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
             ...filterSchema, 
             object: {}, 
             title: 'Filter Books',
-            save: save
           }
       }
     },

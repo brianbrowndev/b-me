@@ -51,7 +51,7 @@ export default function CoreTableFilter ({ schema }: CoreTableToolbarProps) {
           <FilterListIcon />
         </IconButton>
       </Tooltip>
-      <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnEditSaveSuccess} />
+      <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnEditSaveSuccess} saveText="Apply"/>
     </Fragment>
   );
 }

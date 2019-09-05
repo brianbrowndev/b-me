@@ -125,7 +125,7 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onPage, tit
     <Fragment>
       <Paper className={classes.root}>
         <CoreTableToolbar title={title} filterSchema={filterSchema} />
-        <Table className={classes.table} stickyHeader>
+        <Table className={classes.table}>
           <CoreTableHead
             headRows={headRows}
             order={config.order}
