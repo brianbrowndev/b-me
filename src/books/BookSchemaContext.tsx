@@ -3,10 +3,11 @@ import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema 
 import FormOptionType from '../core/components/forms/FormOptionType';
 import { Book, BookAuthor, BookStatus, BookCategory } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import getLookupName, { LookupEntity } from '../core/components/forms/Lookup';
+import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.interface';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 import { Omit } from '@material-ui/types';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
+import getLookupName from '../core/components/forms/lookups/getLookupName';
 
 export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCategory'|'readYear'> {
   bookAuthor: BookAuthor[];
@@ -126,7 +127,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
 
     },
     object: {name:'', readYear:[], bookAuthor:[], bookCategory:[], bookStatus:[]} as BookFilter,
-    save: (book: Book) => Promise.resolve(null)
+    save: (book: Book) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<BookFilter>;
 
   const add = (book: Book) => BookApi.createBook(book);

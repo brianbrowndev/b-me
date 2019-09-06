@@ -12,9 +12,9 @@ function Books() {
 
   const [schema, setSchema] = useState<FormSchema<Book>>(() => schemaContext.get({type:'ADD'}));
   const [filterSchema, setFilterSchema] = useState<FormSchema<BookFilter>>(() => schemaContext.get({type:'FILTER'}));
+  const [filterObj, setFilterObj] = useState<BookFilter>(() => schemaContext.get<BookFilter>({type:'FILTER'}).object);
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
-  const [filterObj, setFilterObj] = useState<BookFilter>(() => schemaContext.get<BookFilter>({type:'FILTER'}).object);
 
   useEffect(
     (() => {

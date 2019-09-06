@@ -1,4 +1,4 @@
-import React, { useRef, Fragment, useState } from 'react';
+import React, { useRef, Fragment, useState, useEffect } from 'react';
 import { Tooltip, IconButton } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { FormSchema } from '../forms/SchemaForm';
@@ -21,37 +21,35 @@ export default function CoreTableFilter <T extends ObjectEntity>({ schema, onFil
     }
   }
 
-  function handleOnFilter(obj: T) {
-    setIsActive(hasFilterApplied(obj));
-    onFilter(obj);
-  }
-
-  /**
-   * Check if the obj returned from the form has a value in a property
-   * Since clearing all properties in the form can apply an empty filter
-   * Need a way to check whether the user is clearing the filter or applying a value
-   * @param obj 
-   */
-  const hasFilterApplied = (obj: T) => {
-    let values = Object.values(obj)
-    for (let v of values) {
-      if (v !== null && v !== undefined) {
-        if (typeof v === 'string' && v !== '') {
-          return true;
-        } 
-        if (typeof v === 'number' || typeof v === 'boolean') {
-          return true;
-        } 
-        if (v instanceof Array && v.length > 0) {
-          return true;
-        } 
-        if (Object.entries(obj).length > 0 && obj.constructor === Object) {
-          return true;
+  useEffect(() => {
+    /**
+     * Two states can be derived - Whether the filter is clear (no values) or a filter is applied (there is a value)
+     * This function analyzes the object to determine the state 
+     * @param obj 
+     */
+    const filterHasValue = (obj: T) => {
+      let values = Object.values(obj)
+      for (let v of values) {
+        if (v !== null && v !== undefined) {
+          if (typeof v === 'string' && v !== '') {
+            return true;
+          } 
+          else if (typeof v === 'number' || typeof v === 'boolean') {
+            return true;
+          } 
+          else if (v instanceof Array && v.length > 0) {
+            return true;
+          } 
+          else if (Object.entries(v).length > 0 && v.constructor === Object) {
+            return true;
+          }
         }
-      }
-    };
-    return false;
-  }
+      };
+      return false;
+    }
+    setIsActive(filterHasValue(schema.object));
+  }, 
+  [schema.object])
 
   return (
     <Fragment>
@@ -60,7 +58,7 @@ export default function CoreTableFilter <T extends ObjectEntity>({ schema, onFil
           <FilterListIcon />
         </IconButton>
       </Tooltip>
-      <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnFilter} saveText="Apply"/>
+      <EditModal ref={modalRef} schema={schema} onSaveSuccess={onFilter} saveText="Apply"/>
     </Fragment>
   );
 }
