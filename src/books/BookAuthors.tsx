@@ -6,30 +6,44 @@ import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 import { BookAuthorSchemaContextProvider, BookAuthorSchemaContext } from './BookAuthorSchemaContext';
 import { BookAuthor } from '../common/client';
+import { LookupEntityFilter } from '../core/components/forms/lookups/LookupEntity.interface';
 
 function BookAuthors() {
   const schemaContext = useContext(BookAuthorSchemaContext);
 
 
   const [schema] = useState<FormSchema<BookAuthor>>(() => schemaContext.get({type: 'ADD'}));
+  const [filterSchema, setFilterSchema] = useState<FormSchema<LookupEntityFilter>>(() => schemaContext.get({type:'FILTER'}));
+  const [filterObj, setFilterObj] = useState<LookupEntityFilter>(() => schemaContext.get<LookupEntityFilter>({type:'FILTER'}).object);
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>({...schemaTableConfig, sort:'name_asc', orderBy:'name', order:'asc'});
 
   useEffect(
     (() => {
-      BookApi.getAuthorsPage(config.sort, config.pageNumber + 1, config.rowsPerPage).then(result => setPage(result as PaginatedResult))
+      BookApi.getAuthorsPage(
+        config.sort, 
+        config.pageNumber + 1, 
+        config.rowsPerPage,
+        filterObj.name
+      ).then(result => setPage(result as PaginatedResult))
     }), 
-    [config] 
+    [config, filterObj] 
   );
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({ type:'EDIT', obj:obj as BookAuthor}) as FormSchema<ObjectEntity>;
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteAuthor(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
+  const handleOnFilter = (obj: ObjectEntity) => {
+    setFilterObj({...obj as LookupEntityFilter});
+    setFilterSchema({...filterSchema, object:obj as LookupEntityFilter});
+  };
 
   return (
     <Fragment>
       <SchemaTable 
         schema={schema as FormSchema<ObjectEntity>} 
+        filterSchema={filterSchema as FormSchema<ObjectEntity>}
+        onFilter={handleOnFilter}
         getEntitySchema={handleGetEntitySchema} 
         deleteEntity={handleDeleteEntity} 
         page={page}

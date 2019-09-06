@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookCategory } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import { lookupSchema } from '../core/lookups/LookupSchema';
+import { lookupSchema } from '../core/components/forms/lookups/LookupSchema';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 
 

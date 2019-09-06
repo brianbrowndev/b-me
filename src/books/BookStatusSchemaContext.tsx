@@ -2,7 +2,7 @@ import React from 'react';
 import { BookStatus } from '../common/client';
 import BookApi from '../common/client/BookApi';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
-import { lookupKeywordSchema } from '../core/lookups/LookupKeywordSchema';
+import { lookupKeywordSchema } from '../core/components/forms/lookups/LookupKeywordSchema';
 
 
 const BookStatusSchemaContext = React.createContext({} as EditSchemaContextProps<BookStatus>);

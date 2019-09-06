@@ -1,6 +1,6 @@
-import { TextFieldSchema, FormSchema } from "../components/forms/SchemaForm";
-import { ObjectEntity } from "../components/forms/ObjectEntityType";
-import { LookupEntity } from "../components/forms/Lookup";
+import { TextFieldSchema, FormSchema } from "../SchemaForm";
+import { ObjectEntity } from "../ObjectEntityType";
+import { LookupEntity } from "./LookupEntity.interface";
 
 const propertyOf = (e: keyof LookupEntity) => e;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookAuthor } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import { lookupSchema } from '../core/lookups/LookupSchema';
+import { lookupSchema, lookupFilterSchema } from '../core/components/forms/lookups/LookupSchema';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 
 
@@ -27,6 +27,11 @@ function BookAuthorSchemaContextProvider ({children}: {children:JSX.Element}) {
             object: action.obj, 
             title: 'Edit Book Author',
             save: save
+          }
+        case 'FILTER':
+          return {
+            ...lookupFilterSchema, 
+            title: 'Filter Books',
           }
       }
     },
