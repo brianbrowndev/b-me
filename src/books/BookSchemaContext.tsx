@@ -3,19 +3,20 @@ import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema 
 import FormOptionType from '../core/components/forms/FormOptionType';
 import { Book, BookAuthor, BookStatus, BookCategory } from '../common/client';
 import BookApi from '../common/client/BookApi';
-import getLookupName from '../core/components/forms/Lookup';
+import getLookupName, { LookupEntity } from '../core/components/forms/Lookup';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 import { Omit } from '@material-ui/types';
+import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 
 export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCategory'|'readYear'> {
   bookAuthor: BookAuthor[];
   bookStatus: BookStatus[];
   bookCategory: BookCategory[];
-  readYear: string[];
+  readYear: LookupEntity[];
 } 
 
 
-const BookSchemaContext = React.createContext({} as EditSchemaContextProps<Book>);
+const BookSchemaContext = React.createContext({} as EditSchemaContextProps<Book | BookFilter>);
 
 const propertyOf = (e: keyof Book) => e;
 const readYears = ["2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014"].map(year => ({value: year, label:year} as FormOptionType));
@@ -56,21 +57,21 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         type: "select",
         options: authors,
         required: true,
-        get: getLookupName
+        getVal: getLookupName
       } as SelectFieldSchema,
       [propertyOf('bookCategory')]: {
         title: "Category",
         type: "select",
         options: categories,
         required: true,
-        get: getLookupName
+        getVal: getLookupName
       } as SelectFieldSchema,
       [propertyOf('bookStatus')]: {
         title: "Status",
         type: "select",
         options: statuses,
         required: true,
-        get: getLookupName
+        getVal: getLookupName
       } as SelectFieldSchema,
       [propertyOf('readYear')]: {
         title: "Year Read",
@@ -82,8 +83,8 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
           const readYearObj = {id: readYear, name: readYear}
           return readYearObj;
         },
-        transform: (obj:{[key:string]:any}) => obj.id
-    } as SelectFieldSchema,
+        transform: (obj: ObjectEntity) => obj.id
+      } as SelectFieldSchema,
     },
     object: {} as Book
   } as FormSchema<Book>;
@@ -91,24 +92,38 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
   const filterSchema = {
     title: 'Filter Books',
     properties: {
+      [propertyOf('name')]: {
+        title: "Name",
+        type: "text",
+      } as TextFieldSchema,
       [propertyOf('bookAuthor')]: {
         title: "Author",
         type: "multiselect",
         options: authors,
-        get: getLookupName
+        required: false,
+        getVal: getLookupName,
       } as MultiSelectFieldSchema,
       [propertyOf('bookCategory')]: {
         title: "Category",
         type: "multiselect",
         options: categories,
-        get: getLookupName
+        required: false,
+        getVal: getLookupName,
       } as MultiSelectFieldSchema,
       [propertyOf('bookStatus')]: {
         title: "Status",
         type: "multiselect",
         options: statuses,
-        get: getLookupName
+        required: false,
+        getVal: getLookupName,
+      } as MultiSelectFieldSchema,
+      [propertyOf('readYear')]: {
+        title: "Year Read",
+        type: "multiselect",
+        required: false,
+        options: readYears,
       } as MultiSelectFieldSchema
+
     },
     object: {name:'', readYear:[], bookAuthor:[], bookCategory:[], bookStatus:[]} as BookFilter,
     save: (book: Book) => Promise.resolve(null)
@@ -126,22 +141,22 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
             object: {}, 
             title: 'New Book',
             save: add
-          }
+          } as FormSchema<Book>
         case 'EDIT':
           return {
             ...schema, 
-            object: action.obj, 
+            object: action.obj as any, 
             title: 'Edit Book',
             save: save
-          }
+          }as FormSchema<Book>
         case 'FILTER':
           return {
             ...filterSchema, 
             title: 'Filter Books',
-          }
+          } as FormSchema<BookFilter>
       }
     },
-  } as EditSchemaContextProps<Book>;
+  } as EditSchemaContextProps<Book | BookFilter>;
 
   return (
     <BookSchemaContext.Provider value={{...bookEditProps}}>

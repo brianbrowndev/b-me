@@ -14,19 +14,22 @@ function Books() {
   const [filterSchema, setFilterSchema] = useState<FormSchema<BookFilter>>(() => schemaContext.get({type:'FILTER'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
+  const [filterObj, setFilterObj] = useState<BookFilter>(() => schemaContext.get<BookFilter>({type:'FILTER'}).object);
 
   useEffect(
     (() => {
       BookApi.getBooks(
         config.sort, 
-        filterSchema.object.bookAuthor.map(b => b.id as number),
-        filterSchema.object.bookCategory.map(b => b.id as number),
-        filterSchema.object.bookStatus.map(b => b.id as number),
         config.pageNumber + 1, 
-        config.rowsPerPage
+        config.rowsPerPage,
+        filterObj.name,
+        filterObj.bookAuthor.map(b => b.id as number),
+        filterObj.bookCategory.map(b => b.id as number),
+        filterObj.bookStatus.map(b => b.id as number),
+        filterObj.readYear.map(b => b.id as string)
       ).then(result => setPage(result as PaginatedResult))
     }), 
-    [config, filterSchema.object] 
+    [config, filterObj]
   );
 
 
@@ -41,6 +44,7 @@ function Books() {
   const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteBook(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
   const handleOnFilter = (obj: ObjectEntity) => {
+    setFilterObj({...obj as BookFilter});
     setFilterSchema({...filterSchema, object:obj as BookFilter});
   };
 

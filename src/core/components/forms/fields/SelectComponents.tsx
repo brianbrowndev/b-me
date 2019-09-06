@@ -18,6 +18,7 @@ const useSelectStyles = makeStyles((theme: Theme) =>
   createStyles({
     input: {
       display: 'flex',
+      height: 'auto',
     },
     valueContainer: {
       display: 'flex',

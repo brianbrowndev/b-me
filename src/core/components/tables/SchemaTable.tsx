@@ -137,7 +137,7 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, o
             {state.rows.map(row => (
               <TableRow key={row.id}>
                 {Object.entries(schema.properties).map(([property, fieldSchema]) => 
-                  <TableCell key={property}>{fieldSchema.get ? fieldSchema.get(row[property]) : row[property]}</TableCell>
+                  <TableCell key={property}>{fieldSchema.getVal ? fieldSchema.getVal(row[property]) : row[property]}</TableCell>
                 )}
                 { authContext.authenticated && 
                   <TableCell>
