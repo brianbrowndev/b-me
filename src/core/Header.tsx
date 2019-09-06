@@ -14,6 +14,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { OrgContext  } from '../org/OrgContext';
 import AppLink from './components/AppLink';
 import GroupRouteList from './components/GroupRouteLists';
+import ThemeToggleButton from './components/ThemeToggleButton';
 
 
 const drawerWidth = 240;
@@ -103,6 +104,7 @@ function Header({ history }: RouteComponentProps) {
   const handleDrawerClose = () => setOpen(false);
 
 
+
   const drawer = (
     <Fragment>
       <Toolbar />
@@ -156,13 +158,13 @@ function Header({ history }: RouteComponentProps) {
                 <span className={classes.logo}>ME</span>
               </AppLink>
             </Typography>
+            <ThemeToggleButton />
             { authContext.authenticated ?
             (
                 <IconButton
                   onClick={logout}
                   color="inherit"
-                  aria-label="logout"
-                  edge="start">
+                  aria-label="logout">
                   <ExitToAppIcon />
                 </IconButton> 
             ) : (

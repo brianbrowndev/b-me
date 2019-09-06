@@ -4,17 +4,15 @@ import { BrowserRouter as Router } from "react-router-dom";
 import {AuthProvider} from './core/Auth';
 
 
-import { ThemeProvider } from '@material-ui/styles';
-
-import theme from './theme/theme';
 import { OrgProvider } from './org/OrgContext';
 import {  CssBaseline } from '@material-ui/core';
 import Main from './Main';
+import { AppThemeContextProvider } from './theme/AppThemeContext';
 
 
 function App () {
   return (
-  <ThemeProvider theme={theme}>
+  <AppThemeContextProvider>
     <Router>
       <CssBaseline />
       <AuthProvider>
@@ -23,7 +21,7 @@ function App () {
       </OrgProvider>
       </AuthProvider>
     </Router>
-  </ThemeProvider>
+  </AppThemeContextProvider>
   );
 }
 
