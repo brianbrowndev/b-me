@@ -1,8 +1,8 @@
 import { TextFieldSchema, FormSchema } from "../components/forms/SchemaForm";
 import { ObjectEntity } from "../components/forms/ObjectEntityType";
+import { LookupEntity } from "../components/forms/Lookup";
 
-type LookupKeyword = {id?:number | undefined, name:string, keyword:string};
-const propertyOf = (e: keyof LookupKeyword) => e;
+const propertyOf = (e: keyof LookupEntity) => e;
 
 export const lookupKeywordSchema = {
   title: '',

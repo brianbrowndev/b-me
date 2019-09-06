@@ -47,10 +47,10 @@ export interface FieldSchema {
   required: boolean;
   error?: string;
   // method to retrieve value
-  get?(value:any): any;
+  getVal?(value:any): any;
   // modify values on load/save
   load?(value:any): any; // optional set value on load
-  transform?(changeObj: {[key:string]:any}): {[key:string]:any}; // optional transform value on submit
+  transform?(changeObj: ObjectEntity | ObjectEntity[]): string | number | string[] | number[];  // optional transform value on submit
 }
 
 export interface TextFieldSchema extends FieldSchema {
@@ -79,7 +79,7 @@ interface SchemaFormProps<T> {
 export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, onSaveSuccess, saveText}: SchemaFormProps<T>) {
   const classes = useStyles();
   
-  const [obj, setObject] = useState<{[key:string]:any}>({});
+  const [obj, setObject] = useState<T>({} as T);
   const [error, setError] = useState<{[key:string]:string}>({});
   const [isSaving, setIsSaving] = useState(false);
   const [appMessage, setAppMessage] = React.useState('');
@@ -133,11 +133,11 @@ export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, o
 
 
   // Modify value on submit, if needed
-  const transform = (): {[key:string]:any} => {
+  const transform = (): T => {
     let result = {...obj};
     Object.entries(schema.properties).forEach(([prop, fieldSchema]) =>  {
       if (fieldSchema.transform) {
-        result[prop] = fieldSchema.transform(obj[prop]);
+        (result as ObjectEntity)[prop] = fieldSchema.transform(obj[prop]);
       }
     });
     return result;
