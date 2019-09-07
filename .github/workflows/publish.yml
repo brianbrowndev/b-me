@@ -19,14 +19,8 @@ jobs:
         version: 10.x
     - run: npm install
     - run: npm run build
-    - name: test 1
-      run: ls -lrt ${{ github.workspace }}
-    - name: test 2
-      run: ls -lrt /
-    - name: test 3
-      run: ls -lrt /github
-    - name: test 3
-      run: ls -lrt /github/workspace
+    - name: Make workspace
+      run: mkdir --parents /github/workspace
     - name: Move Files
       run: mv -v ${{ github.workspace }}/build /github/workspace/
     - name: Deploy with rsync
