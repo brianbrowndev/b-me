@@ -28,5 +28,5 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
         SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
       with: 
-        args: ${{ github.workspace }}/ bgeo@$HOST_NAME:/var/www/me/
+        args: /home/runner/work/b-me/b-me/build/ bgeo@$HOST_NAME:/var/www/me/
 
