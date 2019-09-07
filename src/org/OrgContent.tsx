@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         subtitle: {
             fontSize: "18px",
-            borderBottom: `4px double ${theme.palette.primary.dark}`,
+            borderBottom: `4px double ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)': 'rgba(255,255,255,0.12)'}`,
             marginBottom: theme.spacing(2),
             paddingBottom: theme.spacing(1),
             fontWeight: theme.typography.fontWeightRegular,

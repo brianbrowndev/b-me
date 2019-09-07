@@ -15,8 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
         textDecoration:'none',
       },
       linkActive: {
-        color:theme.palette.secondary.dark,
-        fontWeight: 500,
+        color:theme.palette.secondary.main,
       }
     });
   },
