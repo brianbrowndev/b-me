@@ -19,6 +19,8 @@ jobs:
         version: 10.x
     - run: npm install
     - run: npm run build
+    - name: List build
+      run: ls -lrt ${{ github.workspace }}
     - name: Deploy with rsync
       uses: maxheld83/rsync@v0.1.1
       env:
