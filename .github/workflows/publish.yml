@@ -20,7 +20,7 @@ jobs:
     - run: npm install
     - run: npm run build
     - name: Move Files
-      run: mv -v ${{ github.workspace }}/build /github/workspace
+      run: mv -v ${{ github.workspace }}/build /github/workspace/
     - name: Deploy with rsync
       uses: maxheld83/rsync@v0.1.1
       env:
