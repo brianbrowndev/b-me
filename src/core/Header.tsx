@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
         [theme.breakpoints.up('sm')]: {
           width: `calc(100% - ${drawerWidth}px)`,
         },
-        borderBottom: `1px solid rgba(0,0,0,0.12)`
+        borderBottom: `1px solid ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)': 'rgba(255,255,255,0.12)'}`
       },
       drawer: {
         [theme.breakpoints.up('sm')]: {

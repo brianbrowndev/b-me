@@ -27,7 +27,7 @@ export default function FormAppBar({ title, onCancel, isSaving, saveText }: Form
   const classes = useStyles();
   
   return (
-    <AppBar position="static" color="secondary">
+    <AppBar position="static"  color="secondary">
       <Toolbar>
         <IconButton type="button" edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={onCancel}>
           <CloseIcon />
