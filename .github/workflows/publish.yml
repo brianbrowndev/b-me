@@ -19,10 +19,12 @@ jobs:
         version: 10.x
     - run: npm install
     - run: npm run build
-    - name: Make workspace
-      run: mkdir --parents /github/workspace
+    - name: list workspace
+      run: ls -lrt /workspace
     - name: Move Files
-      run: mv -v ${{ github.workspace }}/build /github/workspace/
+      run: mv -v ${{ github.workspace }}/build /workspace/
+    - name: list workspace 2
+      run: ls -lrt /workspace
     - name: Deploy with rsync
       uses: maxheld83/rsync@v0.1.1
       env:
