@@ -24,6 +24,9 @@ jobs:
     needs: build
     name: Publish
 
+
+    runs-on: ubuntu-latest
+
     steps:
     - name: Deploy with rsync
       uses: maxheld83/rsync@v0.1.1
