@@ -82,15 +82,15 @@ export class BookClient extends ApiClientBase {
     protected processGetBooks(response: Response): Promise<PaginatedResultOfBook> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBook>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -120,15 +120,15 @@ export class BookClient extends ApiClientBase {
     protected processGetRecentBooks(response: Response): Promise<Book[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Book[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -161,15 +161,15 @@ export class BookClient extends ApiClientBase {
     protected processGetBook(response: Response): Promise<Book> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Book>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -205,17 +205,17 @@ export class BookClient extends ApiClientBase {
     protected processUpdateBook(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -247,17 +247,17 @@ export class BookClient extends ApiClientBase {
     protected processDeleteBook(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -329,15 +329,15 @@ export class BookClient extends ApiClientBase {
     protected processGetAuthors(response: Response): Promise<BookAuthor[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookAuthor[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -421,15 +421,15 @@ export class BookClient extends ApiClientBase {
     protected processGetAuthorsPage(response: Response): Promise<PaginatedResultOfBookAuthor> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBookAuthor>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -462,15 +462,15 @@ export class BookClient extends ApiClientBase {
     protected processGetAuthor(response: Response): Promise<BookAuthor> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookAuthor>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -506,17 +506,17 @@ export class BookClient extends ApiClientBase {
     protected processUpdateAuthor(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -548,17 +548,17 @@ export class BookClient extends ApiClientBase {
     protected processDeleteAuthor(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -588,15 +588,15 @@ export class BookClient extends ApiClientBase {
     protected processGetCategories(response: Response): Promise<BookCategory[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookCategory[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -678,15 +678,15 @@ export class BookClient extends ApiClientBase {
     protected processGetCategoriesPage(response: Response): Promise<PaginatedResultOfBookCategory> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBookCategory>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -719,15 +719,15 @@ export class BookClient extends ApiClientBase {
     protected processGetCategory(response: Response): Promise<BookCategory> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookCategory>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -763,17 +763,17 @@ export class BookClient extends ApiClientBase {
     protected processUpdateCategory(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -805,17 +805,17 @@ export class BookClient extends ApiClientBase {
     protected processDeleteCategory(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -845,15 +845,15 @@ export class BookClient extends ApiClientBase {
     protected processGetStatuses(response: Response): Promise<BookStatus[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookStatus[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -935,15 +935,15 @@ export class BookClient extends ApiClientBase {
     protected processGetStatusesPage(response: Response): Promise<PaginatedResultOfBookStatus> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <PaginatedResultOfBookStatus>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -976,15 +976,15 @@ export class BookClient extends ApiClientBase {
     protected processGetStatus(response: Response): Promise<BookStatus> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <BookStatus>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1020,17 +1020,17 @@ export class BookClient extends ApiClientBase {
     protected processUpdateStatus(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1062,17 +1062,17 @@ export class BookClient extends ApiClientBase {
     protected processDeleteStatus(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1194,15 +1194,15 @@ export class EventClient extends ApiClientBase {
     protected processGetEvents(response: Response): Promise<Event[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Event[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1274,15 +1274,15 @@ export class EventClient extends ApiClientBase {
     protected processGetReoccuringTypes(response: Response): Promise<ReoccuringType[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <ReoccuringType[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1315,15 +1315,15 @@ export class EventClient extends ApiClientBase {
     protected processGetEvent(response: Response): Promise<Event> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
-            return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <Event>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1359,17 +1359,17 @@ export class EventClient extends ApiClientBase {
     protected processUpdateEvent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 400) {
+        if (status === 204) {
             return response.text().then((_responseText) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
+            return;
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
-        } else if (status === 204) {
+        } else if (status === 400) {
             return response.text().then((_responseText) => {
-            return;
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else {
             return response.text().then((_responseText) => {
@@ -1401,17 +1401,17 @@ export class EventClient extends ApiClientBase {
     protected processDeleteEvent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 404) {
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             return throwException("A server side error occurred.", status, _responseText, _headers);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
             });
         } else {
             return response.text().then((_responseText) => {
@@ -4252,6 +4252,64 @@ export class FoodPublicClient extends ApiClientBase {
     }
 }
 
+export class WeatherClient extends ApiClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    getForecast(x?: number | undefined, y?: number | undefined): Promise<DarkSkyResponse> {
+        let url_ = this.baseUrl + "/Weather/Forecast?";
+        if (x === null)
+            throw new Error("The parameter 'x' cannot be null.");
+        else if (x !== undefined)
+            url_ += "x=" + encodeURIComponent("" + x) + "&"; 
+        if (y === null)
+            throw new Error("The parameter 'y' cannot be null.");
+        else if (y !== undefined)
+            url_ += "y=" + encodeURIComponent("" + y) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetForecast(_response);
+        });
+    }
+
+    protected processGetForecast(response: Response): Promise<DarkSkyResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <DarkSkyResponse>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        }
+    }
+}
+
 export interface PaginatedResultOfBook {
     items?: Book[] | undefined;
     count?: number;
@@ -4401,6 +4459,318 @@ export interface RecipeIngredient {
     cost?: number;
     costOrganic?: number;
     costSeasonal?: number;
+}
+
+/** A wapper around the actual Dark Sky response as well as useful properties for interacting with the response. */
+export interface DarkSkyResponse {
+    /** You agree that any application or service which incorporates data obtained from the
+Service shall prominently display the message in this property in a legible manner near
+the data or any information derived from any data from the Service.
+
+This message must, if possible, open a link to  when clicked or touched.
+
+You may not display or invoke the Service or Dark Sky name or logo in any manner that
+implies a relationship or affiliation with, sponsorship, promotion, or endorsement by
+Dark Sky, except as authorized by these Terms of Service. */
+    attributionLine?: string | undefined;
+    /** The link to use during data source attribution. */
+    dataSource?: string | undefined;
+    /** The ResponseHeaders for the API request. */
+    headers?: ResponseHeaders | undefined;
+    /** The response from the Dark Sky API is a success status. */
+    isSuccessStatus?: boolean;
+    /** The API Forecast response. */
+    response?: Forecast | undefined;
+    /** Dark Sky response ReasonPhrase. */
+    responseReasonPhrase?: string | undefined;
+}
+
+/** The API will set the following HTTP response headers to values useful to developers. */
+export interface ResponseHeaders {
+    /** The number of API requests made by the given API key for today. */
+    apiCalls?: number | undefined;
+    /** Set to a conservative value for data caching purposes based on the data present in
+the response body. */
+    cacheControl?: CacheControlHeaderValue | undefined;
+    /** Set to a conservative value for data caching purposes based on the data present in
+the response body. */
+    expires?: Date | undefined;
+    /** The server-side response time of the request. */
+    responseTime?: string | undefined;
+}
+
+export interface CacheControlHeaderValue {
+    noCache?: boolean;
+    noCacheHeaders?: string[] | undefined;
+    noStore?: boolean;
+    maxAge?: string | undefined;
+    sharedMaxAge?: string | undefined;
+    maxStale?: boolean;
+    maxStaleLimit?: string | undefined;
+    minFresh?: string | undefined;
+    noTransform?: boolean;
+    onlyIfCached?: boolean;
+    public?: boolean;
+    private?: boolean;
+    privateHeaders?: string[] | undefined;
+    mustRevalidate?: boolean;
+    proxyRevalidate?: boolean;
+    extensions?: NameValueHeaderValue[] | undefined;
+}
+
+export interface NameValueHeaderValue {
+    name?: string | undefined;
+    value?: string | undefined;
+}
+
+/** API responses consist of a UTF-8-encoded, JSON-formatted object that this class wraps. */
+export interface Forecast {
+    /** An Alert list, which, if present, contains any severe weather alerts
+pertinent to the requested location. */
+    alerts?: Alert[] | undefined;
+    /** A DataPoint containing the current weather conditions at the requested location. */
+    currently?: DataPoint | undefined;
+    /** A DataBlock containing the weather conditions day-by-day for the next week. */
+    daily?: DataBlock | undefined;
+    /** A Flags containing miscellaneous metadata about the request. */
+    flags?: Flags | undefined;
+    /** A DataBlock containing the weather conditions hour-by-hour for the next two days. */
+    hourly?: DataBlock | undefined;
+    /** The requested latitude. */
+    latitude?: number;
+    /** The requested longitude. */
+    longitude?: number;
+    /** A DataBlock containing the weather conditions minute-by-minute for the next hour. */
+    minutely?: DataBlock | undefined;
+    /** The current timezone offset in hours. (Use of this property will almost certainly result
+in Daylight Saving Time bugs. Please use TimeZone, instead). */
+    offset?: string | undefined;
+    /** The IANA timezone name for the requested location. This is used for text summaries and
+for determining when Hourly and DailyDataBlock
+objects begin. */
+    timezone?: string | undefined;
+}
+
+/** The alerts array contains objects representing the severe weather warnings issued for the requested location by a governmental authority (please see our data sources page for a list of sources). */
+export interface Alert {
+    /** The time at which the alert was issued. */
+    dateTime?: Date;
+    /** A detailed description of the alert. */
+    description?: string | undefined;
+    /** The time at which the alert will expire. (Some alerts sources, unfortunately, do not
+define expiration time, and in these cases this parameter will not be defined). */
+    expiresDateTime?: Date;
+    /** A List`1 of strings representing the names of the regions covered by this
+weather alert. */
+    regions?: string[] | undefined;
+    /** The severity of the weather alert. Will take one of the following values: "advisory" (an
+individual should be aware of potentially severe weather), "watch" (an individual should
+prepare for potentially severe weather), or "warning" (an individual should take
+immediate action to protect themselves and others from potentially severe weather). */
+    severity?: string | undefined;
+    /** A brief description of the alert. */
+    title?: string | undefined;
+    /** An HTTP(S) URI that one may refer to for detailed information about the alert. */
+    uri?: string | undefined;
+    /** The UNIX time at which the alert will expire. (Some alerts sources, unfortunately, do not
+define expiration time, and in these cases this parameter will not be defined). */
+    expires?: number;
+    /** The UNIX time at which the alert was issued. */
+    time?: number;
+}
+
+/** A data point object contains various properties, each representing the average (unless otherwise specified) of a particular weather phenomenon occurring during a period of time: an instant in the case of Currently, a minute for Minutely, an hour for Hourly, and a day for Daily. */
+export interface DataPoint {
+    /** The apparent (or “feels like”) temperature in degrees Fahrenheit. */
+    apparentTemperature?: number | undefined;
+    /** The daytime high apparent temperature. */
+    apparentTemperatureHigh?: number | undefined;
+    /** The time of when ApparentTemperatureHigh occurs during a given day. */
+    apparentTemperatureHighDateTime?: Date | undefined;
+    /** The overnight low apparent temperature. */
+    apparentTemperatureLow?: number | undefined;
+    /** The time of when ApparentTemperatureLow occurs during a given day. */
+    apparentTemperatureLowDateTime?: Date | undefined;
+    /** The maximum value of ApparentTemperature during a given day. */
+    apparentTemperatureMax?: number | undefined;
+    /** The time of when ApparentTemperatureMax occurs during a given day. */
+    apparentTemperatureMaxDateTime?: Date | undefined;
+    /** The minimum value of ApparentTemperature during a given day. */
+    apparentTemperatureMin?: number | undefined;
+    /** The time of when ApparentTemperatureMin occurs during a given day. */
+    apparentTemperatureMinDateTime?: Date | undefined;
+    /** The percentage of sky occluded by clouds, between 0 and 1, inclusive. */
+    cloudCover?: number | undefined;
+    /** The time at which this data point begins. minutely data point are always aligned to the
+top of the minute, hourly data point objects to the top of the hour, and daily data point
+objects to midnight of the day, all according to the local time zone. */
+    dateTime?: Date;
+    /** The dew point in degrees Fahrenheit. */
+    dewPoint?: number | undefined;
+    /** The relative humidity, between 0 and 1, inclusive. */
+    humidity?: number | undefined;
+    /** A machine-readable text summary of this data point, suitable for selecting an icon for display. */
+    icon?: Icon;
+    /** The fractional part of the lunation number during the given day: a value of 0 corresponds
+to a new moon, 0.25 to a first quarter moon, 0.5 to a full moon, and 0.75 to a last
+quarter moon.
+
+(The ranges in between these represent waxing crescent, waxing gibbous, waning gibbous,
+and waning crescent moons, respectively). */
+    moonPhase?: number | undefined;
+    /** The approximate direction of the nearest storm in degrees, with true north at 0° and
+progressing clockwise.
+(If  is zero, then this value will not be defined). */
+    nearestStormBearing?: number | undefined;
+    /** The approximate distance to the nearest storm in miles.
+
+(A storm distance of 0 doesn’t necessarily refer to a storm at the requested location,
+but rather a storm in the vicinity of that location). */
+    nearestStormDistance?: number | undefined;
+    /** The columnar density of total atmospheric ozone at the given time in Dobson units. */
+    ozone?: number | undefined;
+    /** The amount of snowfall accumulation expected to occur, in inches.
+(If no snowfall is expected, this property will not be defined). */
+    precipAccumulation?: number | undefined;
+    /** The intensity (in inches of liquid water per hour) of precipitation occurring at the
+given time. This value is conditional on probability (that is, assuming any precipitation
+occurs at all) for minutely data points, and unconditional otherwise. */
+    precipIntensity?: number | undefined;
+    /** Undocumented, presumably was a value representing the potential error in the PrecipIntensity. */
+    precipIntensityError?: number | undefined;
+    /** The maximum value of PrecipIntensity during a given day. */
+    precipIntensityMax?: number | undefined;
+    /** The time of when PrecipIntensityMax occurs during a given day. */
+    precipIntensityMaxDateTime?: Date | undefined;
+    /** The probability of precipitation occurring, between 0 and 1, inclusive. */
+    precipProbability?: number | undefined;
+    /** The type of precipitation occurring at the given time.
+(If precipIntensity is zero, then this property will not be defined). */
+    precipType?: PrecipitationType;
+    /** The sea-level air pressure in millibars. */
+    pressure?: number | undefined;
+    /** A human-readable text summary of this data point.
+
+(This property has millions of possible values, so don’t use it for automated purposes:
+use the  property, instead!). */
+    summary?: string | undefined;
+    /** The time of when the sun will rise during a given day. */
+    sunriseDateTime?: Date | undefined;
+    /** The time of when the sun will set during a given day. */
+    sunsetDateTime?: Date | undefined;
+    /** The air temperature in degrees Fahrenheit. */
+    temperature?: number | undefined;
+    /** The daytime high temperature. */
+    temperatureHigh?: number | undefined;
+    /** The time of when TemperatureHigh occurs during a given day. */
+    temperatureHighDateTime?: Date | undefined;
+    /** The overnight low temperature. */
+    temperatureLow?: number | undefined;
+    /** The time of when TemperatureLow occurs during a given day. */
+    temperatureLowDateTime?: Date | undefined;
+    /** The maximum value of Temperature during a given day. */
+    temperatureMax?: number | undefined;
+    /** The time of when TemperatureMax occurs during a given day. */
+    temperatureMaxDateTime?: Date | undefined;
+    /** The minimum value of Temperature during a given day. */
+    temperatureMin?: number | undefined;
+    /** The time of when TemperatureMin occurs during a given day. */
+    temperatureMinDateTime?: Date | undefined;
+    /** The UV index. */
+    uvIndex?: number | undefined;
+    /** The time of when the maximum UvIndex occurs during a given day. */
+    uvIndexDateTime?: Date | undefined;
+    /** The average visibility in miles, capped at 10 miles. */
+    visibility?: number | undefined;
+    /** The direction that the wind is coming from in degrees, with true north at 0° and
+progressing clockwise.
+(If  is zero, then this value will not be defined). */
+    windBearing?: number | undefined;
+    /** The wind gust speed in miles per hour. */
+    windGust?: number | undefined;
+    /** The time of when the maximum WindGust occurs during a given day. */
+    windGustDateTime?: Date | undefined;
+    /** The wind speed in miles per hour. */
+    windSpeed?: number | undefined;
+    /** The UNIX time of when ApparentTemperatureHigh occurs during a given day. */
+    apparentTemperatureHighTime?: number | undefined;
+    /** The UNIX time of when ApparentTemperatureLow occurs during a given day. */
+    apparentTemperatureLowTime?: number | undefined;
+    /** The UNIX time of when ApparentTemperatureMax occurs during a given day. */
+    apparentTemperatureMaxTime?: number | undefined;
+    /** The UNIX time of when ApparentTemperatureMin occurs during a given day. */
+    apparentTemperatureMinTime?: number | undefined;
+    /** The UNIX time of when PrecipIntensityMax occurs during a given day. */
+    precipIntensityMaxTime?: number | undefined;
+    /** The UNIX time of when the sun will rise during a given day. */
+    sunriseTime?: number | undefined;
+    /** The UNIX time of when the sun will set during a given day. */
+    sunsetTime?: number | undefined;
+    /** The UNIX time of when TemperatureHigh occurs during a given day. */
+    temperatureHighTime?: number | undefined;
+    /** The UNIX time of when TemperatureLow occurs during a given day. */
+    temperatureLowTime?: number | undefined;
+    /** The UNIX time of when TemperatureMax occurs during a given day. */
+    temperatureMaxTime?: number | undefined;
+    /** The UNIX time of when TemperatureMin occurs during a given day. */
+    temperatureMinTime?: number | undefined;
+    /** The UNIX time at which this data point begins. minutely data point are always aligned to
+the top of the minute, hourly data point objects to the top of the hour, and daily data
+point objects to midnight of the day, all according to the local time zone. */
+    time?: number;
+    /** The UNIX time of when the maximum UvIndex occurs during a given day. */
+    uvIndexTime?: number | undefined;
+    /** The UNIX time of when the maximum WindGust occurs during a given day. */
+    windGustTime?: number | undefined;
+}
+
+/** A machine-readable text summary of this data point, suitable for selecting an icon for display. (Developers should ensure that a sensible default is defined, as additional values, such as hail, thunderstorm, or tornado, may be defined in the future). */
+export enum Icon {
+    None = <any>"None",
+    ClearDay = <any>"clear-day",
+    ClearNight = <any>"clear-night",
+    Rain = <any>"rain",
+    Snow = <any>"snow",
+    Sleet = <any>"sleet",
+    Wind = <any>"wind",
+    Fog = <any>"fog",
+    Cloudy = <any>"cloudy",
+    PartlyCloudyDay = <any>"partly-cloudy-day",
+    PartlyCloudyNight = <any>"partly-cloudy-night",
+}
+
+/** Types of precipitation Dark Sky API can return. */
+export enum PrecipitationType {
+    None = <any>"None",
+    Rain = <any>"rain",
+    Snow = <any>"snow",
+    Sleet = <any>"sleet",
+}
+
+/** A data block object represents the various weather phenomena occurring over a period of time. */
+export interface DataBlock {
+    /** An List of DataPoint, ordered by time, which together describe the weather
+conditions at the requested location over time. */
+    data?: DataPoint[] | undefined;
+    /** A machine-readable text summary of this data block.
+(May take on the same values as the  property of data points). */
+    icon?: string | undefined;
+    /** A human-readable summary of this data block. */
+    summary?: string | undefined;
+}
+
+/** The flags object contains various metadata information related to the request. */
+export interface Flags {
+    /** The presence of this property indicates that the Dark Sky data source supports the given
+location, but a temporary error (such as a radar station being down for maintenance) has
+made the data unavailable. */
+    "darksky-unavailable"?: string | undefined;
+    /** Undocumented. */
+    "nearest-station"?: number | undefined;
+    /** This property contains an array of IDs for each data source utilized in servicing this request. */
+    sources?: string[] | undefined;
+    /** Indicates the units which were used for the data in this request. */
+    units?: string | undefined;
 }
 
 export interface FileResponse {
