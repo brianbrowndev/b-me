@@ -13,20 +13,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
+
     - name: Use Node.js 10.x
       uses: actions/setup-node@master
       with:
         version: 10.x
     - run: npm install
     - run: npm run build
+
     - name: Deploy with rsync
-      uses: maxheld83/rsync@v0.1.1
+      uses: maxheld83/rsync@master
       env:
-        HOST_FINGERPRINT: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7wO8TAGXLeRtqzK5rjffurXAXJX7hcEbkvtQNiGd+WdmOePhP1W91t7TgLgvy5XEGAZX40NzcWZVk2R0v0PHLFcD1J/mGCcYJG8vcVVzMm2cAYUoixoMpsxytWcrsJnYwJc4w8Sm3fOp7VFJJxjjlbTgf5nznhQZvNDVuskDzSXy+o7Q6XUH1Oe2fl2g5o3gidwS5tni5Le2GgdCStTpH8dDlZR7/b0TUfDwRxqtHk4kvOpEXdyNd6K9RaHg02ftxHrvECeD2ip+ti4RJMukADRdbt7vtOIjdkGI+VBQYUQ+fip7n2AWRbeIM6Z0xZJN6/04y2Pw7m7uk8MP0OnGD
-        HOST_IP: 159.203.127.52
-        HOST_NAME: brianbrown.dev
+        HOST_FINGERPRINT: ${{ secrets.HOST_FINGERPRINT }}
+        HOST_IP: ${{ secrets.HOST_IP }}
+        HOST_NAME: ${{ secrets.HOST_NAME }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
         SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
       with: 
-        args: $GITHUB_WORKSPACE/build/ jenkins@$HOST_NAME:/var/www/me/
+        args: $GITHUB_WORKSPACE/build/ ${{ secrets.HOST_USER }}@$HOST_NAME:${{ secrets.DEPLOY_PATH }}
 
