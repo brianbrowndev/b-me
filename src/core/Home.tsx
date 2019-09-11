@@ -3,6 +3,7 @@ import {  Grid, Typography, createStyles, makeStyles, Theme, } from '@material-u
 import { OrgContext, OrgItem } from '../org/OrgContext';
 import OrgItemCard from '../org/OrgItemCard';
 import RecentBooksCard from '../books/RecentBooksCard';
+import WeatherCard from '../weather/WeatherCard';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -31,7 +32,10 @@ function Home() {
       </Typography>
       <Grid spacing={1} container className={classes.container}>
         <Grid item>
-          <RecentBooksCard></RecentBooksCard>
+          <RecentBooksCard />
+        </Grid>
+        <Grid item>
+          <WeatherCard />
         </Grid>
       </Grid>
       <Typography color="textSecondary" variant="h5" gutterBottom className={classes.title}>
