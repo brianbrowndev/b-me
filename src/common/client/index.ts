@@ -3763,6 +3763,64 @@ export class RecipeClient extends ApiClientBase {
     }
 }
 
+export class GeocodeClient extends ApiClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    reverse(latitude?: number | undefined, longitude?: number | undefined): Promise<BingAddress[]> {
+        let url_ = this.baseUrl + "/Geocode/Reverse?";
+        if (latitude === null)
+            throw new Error("The parameter 'latitude' cannot be null.");
+        else if (latitude !== undefined)
+            url_ += "latitude=" + encodeURIComponent("" + latitude) + "&"; 
+        if (longitude === null)
+            throw new Error("The parameter 'longitude' cannot be null.");
+        else if (longitude !== undefined)
+            url_ += "longitude=" + encodeURIComponent("" + longitude) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processReverse(_response);
+        });
+    }
+
+    protected processReverse(response: Response): Promise<BingAddress[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <BingAddress[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            });
+        }
+    }
+}
+
 export class OrgClient extends ApiClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -4459,6 +4517,231 @@ export interface RecipeIngredient {
     cost?: number;
     costOrganic?: number;
     costSeasonal?: number;
+}
+
+export interface Address {
+    formattedAddress?: string | undefined;
+    coordinates?: Location | undefined;
+    provider?: string | undefined;
+}
+
+export interface BingAddress extends Address {
+    addressLine?: string | undefined;
+    adminDistrict?: string | undefined;
+    adminDistrict2?: string | undefined;
+    countryRegion?: string | undefined;
+    locality?: string | undefined;
+    neighborhood?: string | undefined;
+    postalCode?: string | undefined;
+    type?: EntityType;
+    confidence?: ConfidenceLevel;
+}
+
+export enum EntityType {
+    Address = 0,
+    AdminDivision1 = 1,
+    AdminDivision2 = 2,
+    AdminDivision3 = 3,
+    AdministrativeBuilding = 4,
+    AdministrativeDivision = 5,
+    AgriculturalStructure = 6,
+    Airport = 7,
+    AirportRunway = 8,
+    AmusementPark = 9,
+    AncientSite = 10,
+    Aquarium = 11,
+    Archipelago = 12,
+    Autorail = 13,
+    Basin = 14,
+    Battlefield = 15,
+    Bay = 16,
+    Beach = 17,
+    BorderPost = 18,
+    Bridge = 19,
+    BusinessCategory = 20,
+    BusinessCenter = 21,
+    BusinessName = 22,
+    BusinessStructure = 23,
+    BusStation = 24,
+    Camp = 25,
+    Canal = 26,
+    Cave = 27,
+    CelestialFeature = 28,
+    Cemetery = 29,
+    Census1 = 30,
+    Census2 = 31,
+    CensusDistrict = 32,
+    Channel = 33,
+    Church = 34,
+    CityHall = 35,
+    Cliff = 36,
+    ClimateRegion = 37,
+    Coast = 38,
+    CommunityCenter = 39,
+    Continent = 40,
+    ConventionCenter = 41,
+    CountryRegion = 42,
+    Courthouse = 43,
+    Crater = 44,
+    CulturalRegion = 45,
+    Current = 46,
+    Dam = 47,
+    Delta = 48,
+    Dependent = 49,
+    Desert = 50,
+    DisputedArea = 51,
+    DrainageBasin = 52,
+    Dune = 53,
+    EarthquakeEpicenter = 54,
+    Ecoregion = 55,
+    EducationalStructure = 56,
+    ElevationZone = 57,
+    Factory = 58,
+    FerryRoute = 59,
+    FerryTerminal = 60,
+    FishHatchery = 61,
+    Forest = 62,
+    FormerAdministrativeDivision = 63,
+    FormerPoliticalUnit = 64,
+    FormerSovereign = 65,
+    Fort = 66,
+    Garden = 67,
+    GeodeticFeature = 68,
+    GeoEntity = 69,
+    GeographicPole = 70,
+    Geyser = 71,
+    Glacier = 72,
+    GolfCourse = 73,
+    GovernmentStructure = 74,
+    Heliport = 75,
+    Hemisphere = 76,
+    HigherEducationFacility = 77,
+    HistoricalSite = 78,
+    Hospital = 79,
+    HotSpring = 80,
+    Ice = 81,
+    IndigenousPeoplesReserve = 82,
+    IndustrialStructure = 83,
+    InformationCenter = 84,
+    InternationalDateline = 85,
+    InternationalOrganization = 86,
+    Island = 87,
+    Isthmus = 88,
+    Junction = 89,
+    Lake = 90,
+    LandArea = 91,
+    Landform = 92,
+    LandmarkBuilding = 93,
+    LatitudeLine = 94,
+    Library = 95,
+    Lighthouse = 96,
+    LinguisticRegion = 97,
+    LongitudeLine = 98,
+    MagneticPole = 99,
+    Marina = 100,
+    Market = 101,
+    MedicalStructure = 102,
+    MetroStation = 103,
+    MilitaryBase = 104,
+    Mine = 105,
+    Mission = 106,
+    Monument = 107,
+    Mosque = 108,
+    Mountain = 109,
+    MountainRange = 110,
+    Museum = 111,
+    NauticalStructure = 112,
+    NavigationalStructure = 113,
+    Neighborhood = 114,
+    Oasis = 115,
+    ObservationPoint = 116,
+    Ocean = 117,
+    OfficeBuilding = 118,
+    Park = 119,
+    ParkAndRide = 120,
+    Pass = 121,
+    Peninsula = 122,
+    Plain = 123,
+    Planet = 124,
+    Plate = 125,
+    Plateau = 126,
+    PlayingField = 127,
+    Pole = 128,
+    PoliceStation = 129,
+    PoliticalUnit = 130,
+    PopulatedPlace = 131,
+    Postcode = 132,
+    Postcode1 = 133,
+    Postcode2 = 134,
+    Postcode3 = 135,
+    Postcode4 = 136,
+    PostOffice = 137,
+    PowerStation = 138,
+    Prison = 139,
+    Promontory = 140,
+    RaceTrack = 141,
+    Railway = 142,
+    RailwayStation = 143,
+    RecreationalStructure = 144,
+    Reef = 145,
+    Region = 146,
+    ReligiousRegion = 147,
+    ReligiousStructure = 148,
+    ResearchStructure = 149,
+    Reserve = 150,
+    ResidentialStructure = 151,
+    RestArea = 152,
+    River = 153,
+    Road = 154,
+    RoadBlock = 155,
+    RoadIntersection = 156,
+    Ruin = 157,
+    Satellite = 158,
+    School = 159,
+    ScientificResearchBase = 160,
+    Sea = 161,
+    SeaplaneLandingArea = 162,
+    ShipWreck = 163,
+    ShoppingCenter = 164,
+    Shrine = 165,
+    Site = 166,
+    SkiArea = 167,
+    Sovereign = 168,
+    SpotElevation = 169,
+    Spring = 170,
+    Stadium = 171,
+    StatisticalDistrict = 172,
+    Structure = 173,
+    TectonicBoundary = 174,
+    TectonicFeature = 175,
+    Temple = 176,
+    TimeZone = 177,
+    TouristStructure = 178,
+    Trail = 179,
+    TransportationStructure = 180,
+    Tunnel = 181,
+    UnderwaterFeature = 182,
+    UrbanRegion = 183,
+    Valley = 184,
+    Volcano = 185,
+    Wall = 186,
+    Waterfall = 187,
+    WaterFeature = 188,
+    Well = 189,
+    Wetland = 190,
+    Zoo = 191,
+}
+
+export enum ConfidenceLevel {
+    High = 0,
+    Medium = 1,
+    Low = 2,
+    Unknown = 3,
+}
+
+export interface Location {
+    lat?: number;
+    lng?: number;
 }
 
 /** A wapper around the actual Dark Sky response as well as useful properties for interacting with the response. */

@@ -1,22 +1,29 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, List, ListItemText, ListItem, ListItemIcon, CardActions, Button, Divider } from '@material-ui/core';
-import AppLink from '../core/components/AppLink';
+import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, CardActions, Button, Divider, Grid } from '@material-ui/core';
 import WeatherApi from '../common/client/WeatherApi';
 import AppSpinner from '../core/components/AppSpinner';
-import { DarkSkyResponse } from '../common/client';
+import { DarkSkyResponse, BingAddress } from '../common/client';
+import GeocodeApi from '../common/client/GeocodeApi';
+import WeatherCurrent from './WeatherCurrent';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     card: {
         width:'300px',
+    },
+    title: {
+      fontSize: 14,
+      float:'right'
     }
   })
 });
 
+const defaultLocation:[number, number] = [37.533333, -77.466667];
 function WeatherCard() {
   const classes = useStyles();
 
   const [weather, setWeather] = useState<DarkSkyResponse | null>(null);
+  const [location, setLocation] = useState<BingAddress | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
@@ -24,8 +31,12 @@ function WeatherCard() {
       (() => {
 
         const getForecast = (latitude: number, longitude:number) => {
-            WeatherApi.getForecast(latitude, longitude).then(weather => {
+          Promise.all([
+            WeatherApi.getForecast(latitude, longitude),
+            GeocodeApi.reverse(latitude, longitude)
+          ]).then(([weather, addresses]) => {
               setWeather(weather);
+              setLocation(addresses[0]);
               setIsLoading(false);
           }).catch(err => {
               setError(`Error getting weather: ${err.message}`)
@@ -34,13 +45,14 @@ function WeatherCard() {
         }
 
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(position => {
-            getForecast(position.coords.latitude, position.coords.longitude);
-          });
+          navigator.geolocation.getCurrentPosition(
+            position => getForecast(position.coords.latitude, position.coords.longitude), 
+            err => getForecast(...defaultLocation)
+          );
         }
         else {
           // default to Richmond
-          getForecast(37.533333, -77.466667);
+          getForecast(...defaultLocation);
         }
       }), 
       [] 
@@ -49,52 +61,29 @@ function WeatherCard() {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography variant="h5" component="h2" gutterBottom> 
+        { location &&
+        <Typography className={classes.title} color="textSecondary">
+          {location.adminDistrict2 }
+        </Typography>
+        }
+        <Typography variant="h5" component="h2"> 
           Weather
         </Typography>
-        { isLoading ?  (<AppSpinner /> ) 
+       { isLoading ?  (<AppSpinner /> ) 
         : (
-          <List disablePadding component="div" dense>
-              { error && 
-                <Typography color="error" variant="overline">{error}</Typography>
-              }
-              { weather && 
-                <Fragment>
-                  <Typography variant="h6">
-                    {weather.response!.currently!.temperature!.toFixed(0)}&#176;
-                  </Typography>
-                  <List>
-                    {weather.response!.daily!.data!.map(dataPoint => 
-                      <ListItem key={dataPoint.time}>
-                        <Divider />
-                        {/* <ListItemText
-                        <Typography variant="h6">
-                          {dataPoint!.temperatureHigh!.toFixed(0)}&#176; | {dataPoint!.temperatureLow!.toFixed(0)}&#176;
-                        </Typography> */}
-                      </ListItem>
-                    )}
-                  </List>
-                </Fragment>
-              }
-             {/* {books.map(book => 
-                <ListItem key={book.id}>
-                  { (book.bookStatus && book.bookStatus.keyword === 'STARTED') && 
-                  <ListItemIcon>
-                    <BookIcon color="secondary" />
-                  </ListItemIcon>
-                  }
-                  <ListItemText primary={book.name} secondary={book.bookAuthor ? book.bookAuthor.name : null}/>
-                </ListItem> */}
-              {/* )} */}
-          </List>
+          <Fragment>
+           { (weather && weather.response && weather.response.currently && weather.response.daily && weather.response.daily.data) 
+           && <WeatherCurrent current={weather.response.currently} day={weather.response.daily.data[0]} />
+           }
+
+          </Fragment>
         ) }
       </CardContent>
+      <Divider />
       <CardActions>
-        {/* <AppLink to="/books" exact={true}>
-          <Button size="small" color="secondary">
-            View More
-          </Button>
-        </AppLink> */}
+        <Button size="small" color="secondary">
+          Expand
+        </Button>
       </CardActions>
     </Card>
   );

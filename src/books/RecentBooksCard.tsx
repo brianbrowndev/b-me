@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, List, ListItemText, ListItem, ListItemIcon, CardActions, Button } from '@material-ui/core';
+import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, List, ListItemText, ListItem, ListItemIcon, CardActions, Button, Divider } from '@material-ui/core';
 import AppLink from '../core/components/AppLink';
 import { Book } from '../common/client';
 import BookApi from '../common/client/BookApi';
@@ -60,6 +60,7 @@ function RecentBooksCard() {
           </List>
         ) }
       </CardContent>
+      <Divider />
       <CardActions>
         <AppLink to="/books" exact={true}>
           <Button size="small" color="secondary">
