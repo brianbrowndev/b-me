@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, CardActions, Button, Divider, Grid } from '@material-ui/core';
+import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, CardActions, Button, Divider  } from '@material-ui/core';
 import WeatherApi from '../common/client/WeatherApi';
 import AppSpinner from '../core/components/AppSpinner';
-import { DarkSkyResponse, BingAddress } from '../common/client';
+import { DarkSkyResponse, BingAddress  } from '../common/client';
 import GeocodeApi from '../common/client/GeocodeApi';
 import WeatherCurrent from './WeatherCurrent';
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-const defaultLocation:[number, number] = [37.533333, -77.466667];
+const defaultLocation:[number, number] = [37.533333, -77.466667]; // default to Richmond
 function WeatherCard() {
   const classes = useStyles();
 
@@ -62,29 +62,25 @@ function WeatherCard() {
     <Card className={classes.card}>
       <CardContent>
         { location &&
-        <Typography className={classes.title} color="textSecondary">
-          {location.adminDistrict2 }
-        </Typography>
+          <Typography variant="h5" component="h2"> 
+            {location.adminDistrict2 }
+          </Typography>
         }
-        <Typography variant="h5" component="h2"> 
-          Weather
-        </Typography>
        { isLoading ?  (<AppSpinner /> ) 
         : (
           <Fragment>
            { (weather && weather.response && weather.response.currently && weather.response.daily && weather.response.daily.data) 
            && <WeatherCurrent current={weather.response.currently} day={weather.response.daily.data[0]} />
            }
-
-          </Fragment>
+         </Fragment>
         ) }
       </CardContent>
-      <Divider />
+      {/* <Divider />
       <CardActions>
         <Button size="small" color="secondary">
           Expand
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 }

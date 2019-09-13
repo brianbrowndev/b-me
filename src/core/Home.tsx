@@ -32,12 +32,15 @@ function Home() {
       </Typography>
       <Grid spacing={3} container className={classes.container}>
         <Grid item>
-          <RecentBooksCard />
-        </Grid>
-        <Grid item>
           <WeatherCard />
         </Grid>
+        <Grid item>
+          <RecentBooksCard />
+        </Grid>
       </Grid>
+      <Typography color="textSecondary" variant="h5" gutterBottom className={classes.title}>
+        Org
+      </Typography>
       <Grid container spacing={3} className={classes.container}>
         {orgContext.routes().reduce((a, b) => a.concat(b.items), ([] as OrgItem[])).map(item => 
           <Grid item xs={12} sm key={item.title}>

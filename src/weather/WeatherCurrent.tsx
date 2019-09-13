@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Typography, makeStyles, Theme, createStyles, Grid } from '@material-ui/core';
 import {  DataPoint } from '../common/client';
+import WeatherIcon from './WeatherIcon';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -10,6 +11,9 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     description: {
       display:'inline-block'
+    },
+    weatherIcon: {
+      flex:'1'
     }
   })
 });
@@ -26,53 +30,71 @@ function WeatherCurrent({current, day}: WeatherCurrentProps) {
   return (
     <Fragment>
       <Typography color="textSecondary" gutterBottom>
-        {current.summary}
+        {current.temperature && current.temperature.toFixed(0)}&#176; {current.summary}
       </Typography>
-      <Grid
-        container
-        direction="row"
-        justify="space-around"
-        spacing={1}
-      >
-        <Grid item>
-          <Typography className={classes.label} variant="body2">
-            Feels Like:&nbsp;
-          </Typography>
-          <Typography className={classes.description} variant="body2">
-            {current.apparentTemperature && current.apparentTemperature.toFixed(0)}&#176;
-          </Typography>
+
+      <Grid container direction="row" justify="space-around" alignItems="center" spacing={1}>
+
+        <Grid item  className={classes.weatherIcon}>
+          <Grid container direction="row"  justify="center">
+            <Grid item>
+              <WeatherIcon type={current.icon!}/>
+            </Grid>
+          </Grid>
         </Grid>
+
         <Grid item>
-          <Typography className={classes.label} variant="body2">
-            Low:&nbsp;
-          </Typography>
-          <Typography className={classes.description} variant="body2">
-            {day.apparentTemperatureLow && day.apparentTemperatureLow.toFixed(0)}&#176;
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography className={classes.label} variant="body2">
-            High:&nbsp;
-          </Typography>
-          <Typography className={classes.description} variant="body2">
-            {day.apparentTemperatureHigh && day.apparentTemperatureHigh.toFixed(0)}&#176;
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography className={classes.label} variant="body2">
-            Humidity:&nbsp;
-          </Typography>
-          <Typography className={classes.description} variant="body2">
-            {current.humidity && (current.humidity * 100).toFixed(0)}%
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography className={classes.label} variant="body2">
-            Wind:&nbsp;
-          </Typography>
-          <Typography className={classes.description} variant="body2">
-            {current.windSpeed && current.windSpeed.toFixed(0)} mph
-          </Typography>
+          <Grid container direction="column" alignItems="flex-end" spacing={0}>
+
+            <Grid item>
+              <Typography className={classes.label} variant="body2">
+                Fees Like:&nbsp;
+              </Typography>
+              <Typography className={classes.description} variant="body2">
+                {current.apparentTemperature && current.apparentTemperature.toFixed(0)}&#176;
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.label} variant="body2">
+                Temp:&nbsp;
+              </Typography>
+              <Typography className={classes.description} variant="body2">
+                {day.apparentTemperatureLow && day.apparentTemperatureLow.toFixed(0)}&#176;
+              </Typography>
+              &nbsp;|&nbsp;
+              <Typography className={classes.description} variant="body2">
+                {day.apparentTemperatureHigh && day.apparentTemperatureHigh.toFixed(0)}&#176;
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <Typography className={classes.label} variant="body2">
+                Humidity:&nbsp;
+              </Typography>
+              <Typography className={classes.description} variant="body2">
+                {current.humidity && (current.humidity * 100).toFixed(0)}%
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <Typography className={classes.label} variant="body2">
+                Wind:&nbsp;
+              </Typography>
+              <Typography className={classes.description} variant="body2">
+                {current.windSpeed && current.windSpeed.toFixed(0)} mph
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <Typography className={classes.label} variant="body2">
+                Rain:&nbsp;
+              </Typography>
+              <Typography className={classes.description} variant="body2">
+                {day.precipProbability && day.precipProbability.toFixed(0)}%
+              </Typography>
+            </Grid>
+
+          </Grid>
         </Grid>
       </Grid>
     </Fragment>
