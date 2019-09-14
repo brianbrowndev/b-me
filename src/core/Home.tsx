@@ -30,7 +30,7 @@ function Home() {
       <Typography color="textSecondary" variant="h5" gutterBottom className={classes.title}>
         Dashboard
       </Typography>
-      <Grid spacing={3} container className={classes.container}>
+      <Grid spacing={3} container className={classes.container} justify="center">
         <Grid item>
           <WeatherCard />
         </Grid>

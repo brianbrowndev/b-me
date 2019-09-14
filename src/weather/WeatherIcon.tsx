@@ -5,7 +5,7 @@ import { Icon } from '../common/client';
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     icon: {
-      fontFamily: 'Apple Color Emoji,Segoe UI,Segoe UI Emoji,Segoe UI Symbol',
+      fontFamily: 'apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol',
       fontSize: theme.typography.h2.fontSize,
       fontStyle: 'normal',
       fontWeight: theme.typography.fontWeightRegular,
@@ -18,21 +18,38 @@ interface WeatherIconProps {
   type: Icon;
 }
 
+const getWeatherIcon = (type: Icon):string=> {
+  switch(type) {
+    case Icon.ClearDay:
+    case Icon.None:
+      return "\u2600\ufe0f";
+    case Icon.ClearNight:
+      return "\ud83c\udf11";
+    case Icon.Cloudy:
+    case Icon.PartlyCloudyNight:
+      return "\u2601\ufe0f";
+    case Icon.PartlyCloudyDay:
+      return "\u26c5";
+    case Icon.Rain:
+      return "\ud83c\udf27\ufe0f"
+    case Icon.Snow:
+    case Icon.Sleet: 
+      return "\ud83c\udf28\ufe0f"
+    case Icon.Fog:
+      return "\ud83c\udf2b\ufe0f"
+    case Icon.Wind: 
+      return  "\ud83d\udca8"
+    default:
+      return "\u2600\ufe0f";
+  }
+}
+
 // I know, this is as cheap as a solution as you can get - emojis.
 export default function WeatherIcon({type}:WeatherIconProps) {
   const classes = useStyles();
   return (
     <div className={classes.icon}>
-      { type === Icon.ClearDay && <span role="img" aria-label="sun">☀</span>}
-      { type === Icon.ClearNight && <span role="img" aria-label="night">🌑</span>}
-      { type === Icon.Rain && <span role="img" aria-label="rain">🌧</span>}
-      { type === Icon.Snow && <span role="img" aria-label="snow">🌨️</span>}
-      { type === Icon.Sleet && <span role="img" aria-label="sleet">🌨️</span>}
-      { type === Icon.Wind && <span role="img" aria-label="wind">💨</span>}
-      { type === Icon.Fog && <span role="img" aria-label="fog">🌫️</span>}
-      { type === Icon.Cloudy && <span role="img" aria-label="cloud">☁</span>}
-      { type === Icon.PartlyCloudyDay && <span role="img" aria-label="cloudy-day">🌥</span>}
-      { type === Icon.PartlyCloudyNight && <span role="img" aria-label="cloudy-night">🌑</span>}
+      <span role="img" aria-label="weather">{getWeatherIcon(type)}</span>
     </div>
   )
 
