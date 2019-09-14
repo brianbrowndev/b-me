@@ -5,6 +5,7 @@ import AppSpinner from '../core/components/AppSpinner';
 import { DarkSkyResponse, BingAddress  } from '../common/client';
 import GeocodeApi from '../common/client/GeocodeApi';
 import WeatherCurrent from './WeatherCurrent';
+import { resolve } from 'dns';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -31,9 +32,10 @@ function WeatherCard() {
       (() => {
 
         const getForecast = (latitude: number, longitude:number) => {
+          const createDevLocationPromise: () => Promise<BingAddress[]> = () => new Promise<BingAddress[]>((resolve)=>resolve([{"addressLine":"E Grace St","adminDistrict":"VA","adminDistrict2":"Richmond City","countryRegion":"United States","locality":"Chimborazo","neighborhood":"","postalCode":"23223","type":0,"confidence":1,"formattedAddress":"E Grace St, Richmond, VA 23223","coordinates":{"lat":37.5251146,"lng":-77.4128081},"provider":"Bing"}]));
           Promise.all([
             WeatherApi.getForecast(latitude, longitude),
-            GeocodeApi.reverse(latitude, longitude)
+            process.env.NODE_ENV === 'production'? GeocodeApi.reverse(latitude, longitude) : createDevLocationPromise()
           ]).then(([weather, addresses]) => {
               setWeather(weather);
               setLocation(addresses[0]);
@@ -61,6 +63,9 @@ function WeatherCard() {
   return (
     <Card className={classes.card}>
       <CardContent>
+        { error && 
+          <Typography color="error" variant="overline">{error}</Typography>
+        }
         { location &&
           <Typography variant="h5" component="h2"> 
             {location.adminDistrict2 }
