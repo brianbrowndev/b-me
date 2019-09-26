@@ -38,7 +38,7 @@ function WeatherCurrent({current, day}: WeatherCurrentProps) {
         <Grid item  className={classes.weatherIcon}>
           <Grid container direction="row"  justify="center">
             <Grid item>
-              <WeatherIcon type={current.icon!}/>
+              <WeatherIcon type={current.icon!} size="large"/>
             </Grid>
           </Grid>
         </Grid>
@@ -82,7 +82,7 @@ function WeatherCurrent({current, day}: WeatherCurrentProps) {
                   Rain:&nbsp;
                 </Typography>
                 <Typography className={classes.description} variant="body2">
-                  {day.precipProbability && day.precipProbability.toFixed(0)}%
+                  {day.precipProbability && (day.precipProbability * 100).toFixed(0)}%
                 </Typography>
               </Grid>
 

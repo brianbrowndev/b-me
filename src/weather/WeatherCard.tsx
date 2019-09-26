@@ -1,11 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, CardActions, Button, Divider  } from '@material-ui/core';
+import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, CardActions, Button, Divider, List, Collapse  } from '@material-ui/core';
 import WeatherApi from '../common/client/WeatherApi';
 import AppSpinner from '../core/components/AppSpinner';
 import { DarkSkyResponse, BingAddress  } from '../common/client';
 import GeocodeApi from '../common/client/GeocodeApi';
 import WeatherCurrent from './WeatherCurrent';
-import { resolve } from 'dns';
+import WeatherListDay from './WeatherListDay';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -15,7 +15,17 @@ const useStyles = makeStyles((theme: Theme) => {
     title: {
       fontSize: 14,
       float:'right'
-    }
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
   })
 });
 
@@ -27,6 +37,11 @@ function WeatherCard() {
   const [location, setLocation] = useState<BingAddress | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   useEffect(
       (() => {
@@ -74,18 +89,32 @@ function WeatherCard() {
        { isLoading ?  (<AppSpinner /> ) 
         : (
           <Fragment>
-           { (weather && weather.response && weather.response.currently && weather.response.daily && weather.response.daily.data) 
-           && <WeatherCurrent current={weather.response.currently} day={weather.response.daily.data[0]} />
-           }
+            { (weather && weather.response && weather.response.currently && weather.response.daily && weather.response.daily.data) 
+              && <WeatherCurrent current={weather.response.currently} day={weather.response.daily.data[0]} />
+            }
          </Fragment>
         ) }
       </CardContent>
-      {/* <Divider />
+      <Divider/>
       <CardActions>
-        <Button size="small" color="secondary">
-          Expand
+        <Button size="small" color="secondary"
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          {expanded ? 'Hide Forecast' : 'View Forecast'}
         </Button>
-      </CardActions> */}
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        { (weather && weather.response && weather.response.daily && weather.response.daily.data)
+          &&
+          <Fragment>
+            <List component="ul" dense>
+              {weather.response.daily.data.map((day,idx) => <WeatherListDay key={idx} day={day}/>)}
+            </List>
+          </Fragment>
+        }
+      </Collapse>
     </Card>
   );
 }
