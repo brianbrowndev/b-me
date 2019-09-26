@@ -1,6 +1,6 @@
 {
   "name": "b-me",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.4.0",
@@ -8,12 +8,13 @@
     "@material-ui/styles": "^4.3.3",
     "auth0-js": "^9.11.3",
     "clsx": "^1.0.4",
-    "dompurify": "^1.0.11",
+    "dompurify": "^2.0.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
-    "react-select": "3.0.4"
+    "react-select": "3.0.4",
+    "moment": "2.24.0"
   },
   "scripts": {
     "start": "react-scripts start",
