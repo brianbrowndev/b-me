@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useState, useEffect } from 'react';
 import { BookStatus } from '../common/client';
 import withProvider from '../core/components/withProvider';
 import SchemaTable, { PaginatedResult, SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
-import BookApi from '../common/client/BookApi';
+import {BookStatusApi} from '../common/client/BookApi';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 import { BookStatusSchemaContextProvider, BookStatusSchemaContext } from './BookStatusSchemaContext';
@@ -17,13 +17,13 @@ function BookStatuses() {
 
   useEffect(
     (() => {
-      BookApi.getStatusesPage(config.sort, config.pageNumber + 1, config.rowsPerPage).then(result => setPage(result as PaginatedResult))
+      BookStatusApi.getStatusesPage(config.sort, config.pageNumber + 1, config.rowsPerPage).then(result => setPage(result as PaginatedResult))
     }), 
     [config] 
   );
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({type:'EDIT', obj:obj as BookStatus}) as FormSchema<ObjectEntity>;
-  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteStatus(obj.id);
+  const handleDeleteEntity = (obj: ObjectEntity) => BookStatusApi.deleteStatus(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
 
   return (

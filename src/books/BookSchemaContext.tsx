@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
 import FormOptionType from '../core/components/forms/FormOptionType';
 import { Book, BookAuthor, BookStatus, BookCategory } from '../common/client';
-import BookApi from '../common/client/BookApi';
+import {BookApi, BookAuthorApi, BookStatusApi,BookCategoryApi} from '../common/client/BookApi';
 import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.interface';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 import { Omit } from '@material-ui/types';
@@ -32,11 +32,11 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
   useEffect(
     (() => {
       const setOption = (obj:any, label:string, value: string | number | undefined) => ({...obj, label:label, value:value} as FormOptionType);
-      Promise.all([BookApi.getAuthors(), BookApi.getCategories(), BookApi.getStatuses()]).then(
+      Promise.all([BookAuthorApi.getAuthors(), BookCategoryApi.getCategories(), BookStatusApi.getStatuses()]).then(
         ([authors, categories, statuses]) => {
-          setAuthors(authors.map(r => setOption(r, r.name, r.id)));
-          setCategories(categories.map(r => setOption(r, r.name, r.id))) 
-          setStatuses(statuses.map(r => setOption(r, r.name, r.id))) 
+          setAuthors(authors.map(r => setOption(r, r.name as string, r.id)));
+          setCategories(categories.map(r => setOption(r, r.name as string, r.id))) 
+          setStatuses(statuses.map(r => setOption(r, r.name as string, r.id))) 
         }
       ).catch(err => {
         // TODO - error handling for user

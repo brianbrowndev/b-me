@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useState, useEffect } from 'react';
 import withProvider from '../core/components/withProvider';
 import SchemaTable, { PaginatedResult, SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
-import BookApi from '../common/client/BookApi';
+import {BookAuthorApi} from '../common/client/BookApi';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 import { BookAuthorSchemaContextProvider, BookAuthorSchemaContext } from './BookAuthorSchemaContext';
@@ -20,7 +20,7 @@ function BookAuthors() {
 
   useEffect(
     (() => {
-      BookApi.getAuthorsPage(
+      BookAuthorApi.getAuthorsPage(
         config.sort, 
         config.pageNumber + 1, 
         config.rowsPerPage,
@@ -31,7 +31,7 @@ function BookAuthors() {
   );
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({ type:'EDIT', obj:obj as BookAuthor}) as FormSchema<ObjectEntity>;
-  const handleDeleteEntity = (obj: ObjectEntity) => BookApi.deleteAuthor(obj.id);
+  const handleDeleteEntity = (obj: ObjectEntity) => BookAuthorApi.deleteAuthor(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
   const handleOnFilter = (obj: ObjectEntity) => {
     setFilterObj({...obj as LookupEntityFilter});

@@ -3,7 +3,7 @@ import { BookSchemaContext, BookSchemaContextProvider, BookFilter } from './Book
 import { Book } from '../common/client';
 import withProvider from '../core/components/withProvider';
 import SchemaTable, { PaginatedResult, SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
-import BookApi from '../common/client/BookApi';
+import {BookApi} from '../common/client/BookApi';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 
@@ -18,7 +18,7 @@ function Books() {
 
   useEffect(
     (() => {
-      BookApi.getBooks(
+      BookApi.getBookPage(
         config.sort, 
         config.pageNumber + 1, 
         config.rowsPerPage,

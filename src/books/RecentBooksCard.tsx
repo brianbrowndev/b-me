@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {  Card, CardContent, Typography, makeStyles, Theme, createStyles, List, ListItemText, ListItem, ListItemIcon, CardActions, Button, Divider } from '@material-ui/core';
 import AppLink from '../core/components/AppLink';
 import { Book } from '../common/client';
-import BookApi from '../common/client/BookApi';
+import {BookApi} from '../common/client/BookApi';
 import BookIcon from '@material-ui/icons/Book';
 import AppSpinner from '../core/components/AppSpinner';
 
@@ -23,7 +23,7 @@ function RecentBooksCard() {
 
   useEffect(
       (() => {
-          BookApi.getRecentBooks().then(books => {
+          BookApi.getBooks(5).then(books => {
               setBooks(books)
               setIsLoading(false);
           }).catch(err => {

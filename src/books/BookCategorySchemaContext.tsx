@@ -1,6 +1,6 @@
 import React from 'react';
 import { BookCategory } from '../common/client';
-import BookApi from '../common/client/BookApi';
+import {BookCategoryApi} from '../common/client/BookApi';
 import { lookupSchema } from '../core/components/forms/lookups/LookupSchema';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 
@@ -8,8 +8,8 @@ import EditSchemaContextProps from '../core/components/forms/EditSchemaContextPr
 const BookCategorySchemaContext = React.createContext({} as EditSchemaContextProps<BookCategory>);
 
 function BookCategorySchemaContextProvider({children}: {children:JSX.Element}) {
-  const add = (o: BookCategory) => BookApi.createCategory(o);
-  const save = (o: BookCategory) => BookApi.updateCategory(o.id as number, o);
+  const add = (o: BookCategory) => BookCategoryApi.createCategory(o);
+  const save = (o: BookCategory) => BookCategoryApi.updateCategory(o.id as number, o);
 
   const bookEditProps = {
     get: action => {
