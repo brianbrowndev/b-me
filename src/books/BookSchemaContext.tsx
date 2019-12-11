@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
+import { FormSchema, SelectFieldSchema, TextFieldSchema, MultiSelectFieldSchema, DateFieldSchema } from '../core/components/forms/SchemaForm';
 import FormOptionType from '../core/components/forms/FormOptionType';
 import { Book, BookAuthor, BookStatus, BookCategory } from '../common/client';
 import {BookApi, BookAuthorApi, BookStatusApi,BookCategoryApi} from '../common/client/BookApi';
 import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.interface';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 import { Omit } from '@material-ui/types';
-import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 import getLookupName from '../core/components/forms/lookups/getLookupName';
 
 export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCategory'|'readYear'> {
@@ -74,18 +73,11 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         required: true,
         getVal: getLookupName
       } as SelectFieldSchema,
-      [propertyOf('readYear')]: {
-        title: "Year Read",
-        type: "select",
-        options: readYears,
-        required: true,
-        load: (value:string | undefined) => {
-          const readYear = value || `${new Date().getFullYear()}`;
-          const readYearObj = {id: readYear, name: readYear}
-          return readYearObj;
-        },
-        transform: (obj: ObjectEntity) => obj.id
-      } as SelectFieldSchema,
+      [propertyOf('readDate')]: {
+        title: "Read Date",
+        type: "date",
+        required: true
+      } as DateFieldSchema,
     },
     object: {} as Book
   } as FormSchema<Book>;
@@ -118,7 +110,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         required: false,
         getVal: getLookupName,
       } as MultiSelectFieldSchema,
-      [propertyOf('readYear')]: {
+      readYear: {
         title: "Year Read",
         type: "multiselect",
         required: false,
