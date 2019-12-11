@@ -39,7 +39,7 @@ export interface FormSchema<T> {
   save(obj:{[key:string]:any}): Promise<any>; 
 }
 
-type FieldType = 'text' | 'select' | 'multiselect';
+type FieldType = 'text' | 'select' | 'multiselect' | 'date';
 
 export interface FieldSchema {
   title: string;
@@ -55,6 +55,10 @@ export interface FieldSchema {
 
 export interface TextFieldSchema extends FieldSchema {
   type: 'text';
+}
+
+export interface DateFieldSchema extends FieldSchema {
+  type: 'date';
 }
 
 export interface SelectFieldSchema extends FieldSchema {
@@ -163,6 +167,5 @@ export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, o
           onClose={() => setAppMessage('')}
       />
     </Fragment>
-
   );
 }
