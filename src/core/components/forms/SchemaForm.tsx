@@ -39,7 +39,7 @@ export interface FormSchema<T> {
   save(obj:{[key:string]:any}): Promise<any>; 
 }
 
-type FieldType = 'text' | 'select' | 'multiselect' | 'date';
+type FieldType = 'text' | 'select' | 'multiselect' | 'date' | 'currency';
 
 export interface FieldSchema {
   title: string;
@@ -56,6 +56,12 @@ export interface FieldSchema {
 export interface TextFieldSchema extends FieldSchema {
   type: 'text';
 }
+
+export interface CurrencyFieldSchema extends FieldSchema {
+  type: 'currency';
+}
+
+
 
 export interface DateFieldSchema extends FieldSchema {
   type: 'date';
@@ -129,6 +135,9 @@ export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, o
     Object.entries(schema.properties).forEach(([prop, fieldSchema]) =>  {
       if (fieldSchema.required && (obj[prop] === undefined || obj[prop] === null || obj[prop] === '')) {
         errors[prop] = `${fieldSchema.title} is required.`;
+      }
+      else if (fieldSchema.type === 'currency' && !(!isNaN(obj[prop] - parseFloat(obj[prop])))) {
+        errors[prop] = `${fieldSchema.title} must be a number.`;
       }
     });
     setError(errors);
