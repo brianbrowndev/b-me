@@ -7,6 +7,7 @@ import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.inte
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 import { Omit } from '@material-ui/types';
 import getLookupName from '../core/components/forms/lookups/getLookupName';
+import FormYearOptions from '../core/components/forms/FormYearOptions';
 
 export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCategory'|'readYear'> {
   bookAuthor: BookAuthor[];
@@ -19,7 +20,6 @@ export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCa
 const BookSchemaContext = React.createContext({} as EditSchemaContextProps<Book | BookFilter>);
 
 const propertyOf = (e: keyof Book) => e;
-const readYears = ["2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014"].map(year => ({value: year, label:year} as FormOptionType));
 
 function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
 
@@ -114,7 +114,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
         title: "Year Read",
         type: "multiselect",
         required: false,
-        options: readYears,
+        options: FormYearOptions,
       } as MultiSelectFieldSchema
 
     },

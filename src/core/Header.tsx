@@ -119,19 +119,29 @@ function Header({ history }: RouteComponentProps) {
         {orgContext.routes().map(groupItem => 
           <GroupRouteList title={groupItem.title} items={groupItem.items} onClick={handleDrawerClose} key={groupItem.title} history={history} nested={true}/>
         )}
+        { authContext.authenticated && 
+          <GroupRouteList 
+            title="Finance" 
+            onClick={handleDrawerClose} 
+            history={history} 
+            items={[{path:"/finance/dashboard", title: "Dashboard"},{path:"/finance/transactions", title:"Transactions"}]} 
+            nested={true}
+          />
+
+        }
         { !authContext.authenticated && 
-          <AppLink to="/books" exact={true} onClick={handleDrawerClose}>
+          <AppLink to="/reading/books" exact={true} onClick={handleDrawerClose}>
             <ListItem button>
-                <ListItemText primary="Books" classes={{primary: classes.listTitle}}/>
+                <ListItemText primary="Reading List" classes={{primary: classes.listTitle}}/>
             </ListItem>
           </AppLink>
         }
         { authContext.authenticated && 
           <GroupRouteList 
-            title="Books" 
+            title="Reading" 
             onClick={handleDrawerClose} 
             history={history} 
-            items={[{path:"/books", title:"Reading List"}, {path:"/book-authors", title: "Authors"}, {path:"/book-categories", title: "Categories"}, {path:"/book-statuses", title: "Statuses"}]} 
+            items={[{path:"/reading/books", title:"Books"}, {path:"/reading/authors", title: "Authors"}, {path:"/reading/categories", title: "Categories"}, {path:"/reading/statuses", title: "Statuses"}]} 
             nested={true}
           />
         }
