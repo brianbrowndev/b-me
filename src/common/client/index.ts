@@ -3583,11 +3583,10 @@ export class FinanceClient extends ApiClientBase {
         }
     }
 
-    getTransactionCategoryTotals(year: string | null): Promise<TransactionCategoryTotal[]> {
-        let url_ = this.baseUrl + "/v1/finance/spending-categories/{year}";
-        if (year === undefined || year === null)
-            throw new Error("The parameter 'year' must be defined.");
-        url_ = url_.replace("{year}", encodeURIComponent("" + year)); 
+    getTransactionCategoryTotals(year?: string | null | undefined): Promise<TransactionCategoryTotal[]> {
+        let url_ = this.baseUrl + "/v1/finance/spending-categories?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -3611,6 +3610,98 @@ export class FinanceClient extends ApiClientBase {
             return response.text().then((_responseText) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : <TransactionCategoryTotal[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    getExpenses(year?: string | null | undefined, month?: string | null | undefined): Promise<Expense[]> {
+        let url_ = this.baseUrl + "/v1/finance/expenses?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
+        if (month !== undefined)
+            url_ += "month=" + encodeURIComponent("" + month) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetExpenses(_response);
+        });
+    }
+
+    protected processGetExpenses(response: Response): Promise<Expense[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <Expense[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    getExpenseSummary(year?: string | null | undefined, month?: string | null | undefined): Promise<ExpenseSummary> {
+        let url_ = this.baseUrl + "/v1/finance/expense-summary?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
+        if (month !== undefined)
+            url_ += "month=" + encodeURIComponent("" + month) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetExpenseSummary(_response);
+        });
+    }
+
+    protected processGetExpenseSummary(response: Response): Promise<ExpenseSummary> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <ExpenseSummary>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status === 404) {
@@ -5766,9 +5857,9 @@ export interface TransactionCategory {
 
 export interface YearlyPlannedExpense {
     id?: number;
-    year?: string | undefined;
+    date?: string | undefined;
     categoryId?: number;
-    amount?: number | undefined;
+    amount?: number;
     category?: TransactionCategory | undefined;
 }
 
@@ -5840,6 +5931,21 @@ export interface Debt {
 export interface TransactionCategoryTotal {
     name?: string | undefined;
     amount?: number;
+}
+
+export interface Expense {
+    date?: string | undefined;
+    category?: TransactionCategory | undefined;
+    plannedAmount?: number;
+    actualAmount?: number;
+    remainder?: number;
+}
+
+export interface ExpenseSummary {
+    expenses?: Expense[] | undefined;
+    plannedAmount?: number;
+    totalActualAmount?: number;
+    remainder?: number;
 }
 
 export interface PaginatedResultOfTransactionRecord {

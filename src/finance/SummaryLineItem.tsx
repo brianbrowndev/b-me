@@ -25,7 +25,7 @@ function FinancialSummaryLineItem ({title, amount, children}:FinancialSummaryLin
   return (
     <Fragment>
       <TextListItem onClick={handleClick}
-        button={true}
+        button
         content={
         <Typography variant="subtitle2" color="textPrimary">
           <Grid container direction="row" justify="space-between" spacing={0}>

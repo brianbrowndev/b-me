@@ -14,6 +14,7 @@ import BookStatuses from './books/BookStatuses';
 import { PrivateRoute } from './core/Auth';
 import Transactions from './finance/Transactions';
 import FinanceDashboard from './finance/Dashboard';
+import FinanceExpenses from './finance/Expenses';
 
 const useStyles = makeStyles((theme: Theme) =>
   {
@@ -52,8 +53,9 @@ function Main() {
               <Route exact path="/" component={Home} />
               <Route exact path="/org/*" component={OrgContentRoute} />
 
-              <Route exact path="/finance/dashboard" component={FinanceDashboard} />
-              <Route exact path="/finance/transactions" component={Transactions} />
+              <PrivateRoute exact path="/finance/dashboard" component={FinanceDashboard} />
+              <PrivateRoute exact path="/finance/transactions" component={Transactions} />
+              <PrivateRoute exact path="/finance/expenses" component={FinanceExpenses} />
 
               <Route exact path="/reading/books" component={Books} />
               <PrivateRoute exact path="/reading/authors" component={BookAuthors} />
