@@ -124,7 +124,7 @@ function Header({ history }: RouteComponentProps) {
             title="Finance" 
             onClick={handleDrawerClose} 
             history={history} 
-            items={[{path:"/finance/dashboard", title: "Dashboard"},{path:"/finance/transactions", title:"Transactions"}]} 
+            items={[{path:"/finance/dashboard", title: "Dashboard"},{path:"/finance/transactions", title:"Transactions"}, {path:"/finance/expenses", title:"Expenses"}]} 
             nested={true}
           />
 
