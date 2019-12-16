@@ -1,15 +1,19 @@
-import React from 'react';
-import { FormSchema,  TextFieldSchema, DateFieldSchema, CurrencyFieldSchema, SelectFieldSchema } from '../core/components/forms/SchemaForm';
-import { TransactionRecord, Expense } from '../common/client';
+import React, { useState, useEffect } from 'react';
+import { FormSchema,  TextFieldSchema, DateFieldSchema, CurrencyFieldSchema, SelectFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
+import { TransactionRecord, Expense, TransactionCategory } from '../common/client';
 import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.interface';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
 import FormYearOptions from '../core/components/forms/FormYearOptions';
 import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 import FormMonthOptions from '../core/components/forms/FormMonthOptions.tsx';
+import FormOptionType from '../core/components/forms/FormOptionType';
+import { FinanceApi } from '../common/client/FinanceApi';
+import getLookupName from '../core/components/forms/lookups/getLookupName';
 
 export interface ExpenseFilter {
-  year: LookupEntity;
-  month: LookupEntity;
+  years: LookupEntity[];
+  months: LookupEntity[];
+  categories: TransactionCategory[];
 } 
 
 const ExpenseSchemaContext = React.createContext({} as EditSchemaContextProps<Expense | ExpenseFilter>);
@@ -17,6 +21,22 @@ const ExpenseSchemaContext = React.createContext({} as EditSchemaContextProps<Ex
 const propertyOf = (e: keyof Expense) => e;
 
 function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
+
+  const [categories, setCategories] = useState<FormOptionType[]>([]);
+
+  useEffect(
+    (() => {
+      const setOption = (obj:any, label:string, value: string | number | undefined) => ({...obj, label:label, value:value} as FormOptionType);
+      Promise.all([FinanceApi.getCategories()]).then(
+        ([categories]) => {
+          setCategories(categories.map(r => setOption(r, r.name as string, r.id))) 
+        }
+      ).catch(err => {
+        // TODO - error handling for user
+        console.log(err);
+      })
+    }), []
+  );
 
   const schema = {
     title: '',
@@ -26,7 +46,7 @@ function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
         type: "date",
         required: true
       } as DateFieldSchema,
-     [propertyOf('category')]: {
+     [propertyOf('categoryName')]: {
         title: "Category",
         type: "text",
         required: true,
@@ -56,21 +76,29 @@ function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
   const filterSchema = {
     title: 'Filter Transactions',
     properties: {
-      year: {
-        title: "Year",
-        type: "select",
+      years: {
+        title: "Years",
+        type: "multiselect",
         required: false,
         options: FormYearOptions,
-      } as SelectFieldSchema,
-      month: {
-        title: "Month",
-        type: "select",
+        getVal: getLookupName
+      } as MultiSelectFieldSchema,
+      months: {
+        title: "Months",
+        type: "multiselect",
         required: false,
         options: FormMonthOptions,
-      } as SelectFieldSchema
-
+        getVal: getLookupName
+      } as MultiSelectFieldSchema,
+      categories: {
+        title: "Categories",
+        type: "multiselect",
+        options: categories,
+        required: false,
+        getVal: getLookupName,
+      } as MultiSelectFieldSchema,
     },
-    object: {year:{id:"2019", name:"2019"}, month:{}} as ExpenseFilter,
+    object: {years:[{id:"2019", name:"2019"}], months:[], categories: []} as ExpenseFilter,
     save: (o: Expense) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<ExpenseFilter>;
 
