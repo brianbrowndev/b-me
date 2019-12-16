@@ -10,6 +10,7 @@ import {TransactionApi, BankApi, TransactionCategoryApi} from '../common/client/
 import {UserApi} from '../common/client/AdminApi';
 import FormYearOptions from '../core/components/forms/FormYearOptions';
 import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
+import FormMonthOptions from '../core/components/forms/FormMonthOptions.tsx';
 
 export interface TransactionFilter extends Omit<TransactionRecord, 'bank'|'category'|'user'|'date' | 'description'> {
   description: string;
@@ -17,6 +18,7 @@ export interface TransactionFilter extends Omit<TransactionRecord, 'bank'|'categ
   categories: TransactionCategory[];
   users: User[];
   years: LookupEntity[];
+  months: LookupEntity[];
 } 
 
 const TransactionSchemaContext = React.createContext({} as EditSchemaContextProps<TransactionRecord | TransactionFilter>);
@@ -123,10 +125,17 @@ function TransactionSchemaContextProvider ({children}: {children:JSX.Element}) {
         type: "multiselect",
         required: false,
         options: FormYearOptions,
+      } as MultiSelectFieldSchema,
+      months: {
+        title: "Months",
+        type: "multiselect",
+        required: false,
+        options: FormMonthOptions,
       } as MultiSelectFieldSchema
 
+
     },
-    object: {description:'', banks:[], categories:[], users:[], years:[]} as TransactionFilter,
+    object: {description:'', banks:[], categories:[], users:[], years:[], months:[]} as TransactionFilter,
     save: (book: TransactionRecord) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<TransactionFilter>;
 

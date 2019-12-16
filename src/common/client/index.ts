@@ -3538,6 +3538,50 @@ export class FinanceClient extends ApiClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
+    getCategories(year?: string | null | undefined): Promise<TransactionCategory[]> {
+        let url_ = this.baseUrl + "/v1/finance/categories?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetCategories(_response);
+        });
+    }
+
+    protected processGetCategories(response: Response): Promise<TransactionCategory[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <TransactionCategory[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
     getSummary(year: string | null): Promise<FinancialSummary> {
         let url_ = this.baseUrl + "/v1/finance/summary/{year}";
         if (year === undefined || year === null)
@@ -3627,12 +3671,14 @@ export class FinanceClient extends ApiClientBase {
         }
     }
 
-    getExpenses(year?: string | null | undefined, month?: string | null | undefined): Promise<Expense[]> {
+    getExpenses(years?: string[] | null | undefined, months?: string[] | null | undefined, categories?: number[] | null | undefined): Promise<ExpenseSummary[]> {
         let url_ = this.baseUrl + "/v1/finance/expenses?";
-        if (year !== undefined)
-            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
-        if (month !== undefined)
-            url_ += "month=" + encodeURIComponent("" + month) + "&"; 
+        if (years !== undefined)
+            years && years.forEach(item => { url_ += "years=" + encodeURIComponent("" + item) + "&"; });
+        if (months !== undefined)
+            months && months.forEach(item => { url_ += "months=" + encodeURIComponent("" + item) + "&"; });
+        if (categories !== undefined)
+            categories && categories.forEach(item => { url_ += "categories=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -3649,13 +3695,13 @@ export class FinanceClient extends ApiClientBase {
         });
     }
 
-    protected processGetExpenses(response: Response): Promise<Expense[]> {
+    protected processGetExpenses(response: Response): Promise<ExpenseSummary[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <Expense[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <ExpenseSummary[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status === 404) {
@@ -3673,12 +3719,14 @@ export class FinanceClient extends ApiClientBase {
         }
     }
 
-    getExpenseSummary(year?: string | null | undefined, month?: string | null | undefined): Promise<ExpenseSummary> {
+    getExpenseSummary(years?: string[] | null | undefined, months?: string[] | null | undefined, categories?: number[] | null | undefined): Promise<ExpenseSummary> {
         let url_ = this.baseUrl + "/v1/finance/expense-summary?";
-        if (year !== undefined)
-            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
-        if (month !== undefined)
-            url_ += "month=" + encodeURIComponent("" + month) + "&"; 
+        if (years !== undefined)
+            years && years.forEach(item => { url_ += "years=" + encodeURIComponent("" + item) + "&"; });
+        if (months !== undefined)
+            months && months.forEach(item => { url_ += "months=" + encodeURIComponent("" + item) + "&"; });
+        if (categories !== undefined)
+            categories && categories.forEach(item => { url_ += "categories=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -3731,7 +3779,7 @@ export class TransactionClient extends ApiClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    getTransactions(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined, count?: boolean | undefined, description?: string | null | undefined, banks?: number[] | null | undefined, users?: number[] | null | undefined, categories?: number[] | null | undefined, years?: string[] | null | undefined): Promise<PaginatedResultOfTransactionRecord> {
+    getTransactions(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined, count?: boolean | undefined, description?: string | null | undefined, banks?: number[] | null | undefined, users?: number[] | null | undefined, categories?: number[] | null | undefined, years?: string[] | null | undefined, months?: string[] | null | undefined): Promise<PaginatedResultOfTransactionRecord> {
         let url_ = this.baseUrl + "/v1/finance/transactions?";
         if (sortName !== undefined)
             url_ += "sortName=" + encodeURIComponent("" + sortName) + "&"; 
@@ -3757,6 +3805,8 @@ export class TransactionClient extends ApiClientBase {
             categories && categories.forEach(item => { url_ += "categories=" + encodeURIComponent("" + item) + "&"; });
         if (years !== undefined)
             years && years.forEach(item => { url_ += "years=" + encodeURIComponent("" + item) + "&"; });
+        if (months !== undefined)
+            months && months.forEach(item => { url_ += "months=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -5933,18 +5983,18 @@ export interface TransactionCategoryTotal {
     amount?: number;
 }
 
-export interface Expense {
-    date?: string | undefined;
-    category?: TransactionCategory | undefined;
-    plannedAmount?: number;
-    actualAmount?: number;
-    remainder?: number;
-}
-
 export interface ExpenseSummary {
     expenses?: Expense[] | undefined;
     plannedAmount?: number;
     totalActualAmount?: number;
+    remainder?: number;
+}
+
+export interface Expense {
+    date?: string | undefined;
+    categoryName?: string | undefined;
+    plannedAmount?: number;
+    actualAmount?: number;
     remainder?: number;
 }
 

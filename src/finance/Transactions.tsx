@@ -46,7 +46,8 @@ function Transactions() {
         filterObj.banks.map(b => b.id as number),
         filterObj.users.map(b => b.id as number),
         filterObj.categories.map(b => b.id as number),
-        filterObj.years.map(b => b.id as string)
+        filterObj.years.map(b => b.id as string),
+        filterObj.months.map(b => b.id as string)
       ).then(result => setPage(result as PaginatedFinanceResult))
     }), 
     [config, filterObj]
