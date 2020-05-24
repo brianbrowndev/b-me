@@ -17,7 +17,7 @@ interface FinancialSummaryLineItemProps {
 
 
 function FinancialSummaryLineItem ({title, amount, children}:FinancialSummaryLineItemProps) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const handleClick = () => setOpen(!open);

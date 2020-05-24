@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, forwardRef, useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal'; 
 import { Expense } from '../common/client';
