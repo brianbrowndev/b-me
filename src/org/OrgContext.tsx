@@ -46,6 +46,14 @@ function OrgProvider (props: any) {
                 },
                 {
                     type: 'item',
+                    title: 'Asheville',
+                    description: 'Visit to Asheville, North Carolina in Summer 2020',
+                    filePath: 'org/public/travel/ashville',
+                    path: '/org/travel/asheville',
+                    authenticate: false,
+                },
+                {
+                    type: 'item',
                     title: 'Raleigh',
                     description: 'Visit to Raleigh, North Carolina in Summer 2019',
                     filePath: 'org/public/travel/raleigh',
