@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useContext, useState } from 'react';
+import React, { Fragment, useEffect, useContext, useState, useRef } from 'react';
 import { makeStyles, createStyles } from '@material-ui/styles';
-import { Theme, Paper, Table, TableBody, TablePagination, TableRow, TableCell } from '@material-ui/core';
-import { TransactionApi, FinanceApi } from '../common/client/FinanceApi';
+import { Theme, Paper, Table, TableBody, TableRow, TableCell } from '@material-ui/core';
+import { FinanceApi } from '../common/client/FinanceApi';
 import { ExpenseSummary, Expense } from '../common/client';
 import { SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
 import { ExpenseSchemaContext, ExpenseFilter, ExpenseSchemaContextProvider } from './ExpensesSchemaContext';
@@ -12,6 +12,7 @@ import CoreTableHead, { HeadRow } from '../core/components/tables/CoreTableHead'
 import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 import withProvider from '../core/components/withProvider';
 import clsx from 'clsx';
+import {TransactionModalRef, TransactionModal} from './TransactionsModal';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -33,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     negative: {
       color: 'green'
+    },
+    row: {
+      cursor: 'pointer'
     }
 
   })
@@ -65,9 +69,12 @@ function FinanceExpenses () {
   const [filterSchema, setFilterSchema] = useState<FormSchema<ExpenseFilter>>(() => schemaContext.get({type:'FILTER'}));
   const [filterObj, setFilterObj] = useState<ExpenseFilter>(() => schemaContext.get<ExpenseFilter>({type:'FILTER'}).object);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
-
-
   const [expenseSummary, setExpenseSummary] = React.useState<ExpenseSummary>({expenses:[], plannedAmount: 0, totalActualAmount:0, remainder:0} as ExpenseSummary);
+  const [expense, setExpense] = React.useState<Expense | null>(null);
+  const [headRows, setHeadRows] = useState<HeadRow[]>(() => createHeadRows());
+
+  const modalRef = useRef<TransactionModalRef>(null);
+
 
   useEffect(
     (() => {
@@ -100,7 +107,13 @@ function FinanceExpenses () {
     setFilterSchema({...filterSchema, object:obj as ExpenseFilter});
   };
 
-  const [headRows, setHeadRows] = useState<HeadRow[]>(() => createHeadRows());
+  const handleOnView = (obj: Expense) => {
+    setExpense(obj)
+    // if (modalRef && modalRef.current) {
+      // modalRef.current.handleOpen();
+    // }
+  }
+
 
   function createHeadRows () {
     return Object.entries(schema.properties).map(([property, fieldSchema]) => (
@@ -129,7 +142,7 @@ function FinanceExpenses () {
           />
           <TableBody>
             {expenseSummary?.expenses?.map((row, idx) => (
-              <TableRow key={idx}>
+              <TableRow key={idx} onClick={() => handleOnView(row)} className={classes.row}>
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.categoryName}</TableCell>
                   <TableCell>{currencyFormatter.format(row.plannedAmount || 0)}</TableCell>
@@ -140,6 +153,7 @@ function FinanceExpenses () {
           </TableBody>
         </Table>
       </Paper>
+      <TransactionModal ref={modalRef} expense={expense}  onClose={() => setExpense(null)}/>
     </Fragment>
 
   )
