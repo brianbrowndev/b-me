@@ -1,13 +1,13 @@
 import React, { useState, Fragment } from 'react';
-import { Collapse, createStyles, makeStyles, Theme, Typography, Grid } from '@material-ui/core';
+import { Collapse, Typography, Grid } from '@material-ui/core';
 import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 import TextListItem from '../core/components/lists/TextListItem';
 
 
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-  })
-});
+// const useStyles = makeStyles((theme: Theme) => {
+//   return createStyles({
+//   })
+// });
 
 interface FinancialSummaryLineItemProps {
   title: string;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FormSchema,  TextFieldSchema, DateFieldSchema, CurrencyFieldSchema, SelectFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
+import { FormSchema,  TextFieldSchema, DateFieldSchema, CurrencyFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
 import { TransactionRecord, Expense, TransactionCategory } from '../common/client';
 import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.interface';
 import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';

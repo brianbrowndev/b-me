@@ -71,7 +71,7 @@ function FinanceExpenses () {
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
   const [expenseSummary, setExpenseSummary] = React.useState<ExpenseSummary>({expenses:[], plannedAmount: 0, totalActualAmount:0, remainder:0} as ExpenseSummary);
   const [expense, setExpense] = React.useState<Expense | null>(null);
-  const [headRows, setHeadRows] = useState<HeadRow[]>(() => createHeadRows());
+  const [headRows] = useState<HeadRow[]>(() => createHeadRows());
 
   const modalRef = useRef<TransactionModalRef>(null);
 
