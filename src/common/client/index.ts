@@ -3627,7 +3627,7 @@ export class FinanceClient extends ApiClientBase {
         }
     }
 
-    getTransactionCategoryTotals(year?: string | null | undefined): Promise<TransactionCategoryTotal[]> {
+    getTransactionCategoryTotals(year?: string | null | undefined): Promise<TransactionTotal[]> {
         let url_ = this.baseUrl + "/v1/finance/spending-categories?";
         if (year !== undefined)
             url_ += "year=" + encodeURIComponent("" + year) + "&"; 
@@ -3647,13 +3647,59 @@ export class FinanceClient extends ApiClientBase {
         });
     }
 
-    protected processGetTransactionCategoryTotals(response: Response): Promise<TransactionCategoryTotal[]> {
+    protected processGetTransactionCategoryTotals(response: Response): Promise<TransactionTotal[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <TransactionCategoryTotal[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <TransactionTotal[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    getTransactionCategoryTagTotals(year?: string | null | undefined, categoryName?: string | null | undefined): Promise<TransactionTotal[]> {
+        let url_ = this.baseUrl + "/v1/finance/spending-category-tags?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
+        if (categoryName !== undefined)
+            url_ += "categoryName=" + encodeURIComponent("" + categoryName) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetTransactionCategoryTagTotals(_response);
+        });
+    }
+
+    protected processGetTransactionCategoryTagTotals(response: Response): Promise<TransactionTotal[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <TransactionTotal[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status === 404) {
@@ -3779,7 +3825,7 @@ export class TransactionClient extends ApiClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    getTransactions(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined, count?: boolean | undefined, description?: string | null | undefined, banks?: number[] | null | undefined, users?: number[] | null | undefined, categories?: number[] | null | undefined, years?: string[] | null | undefined, months?: string[] | null | undefined): Promise<PaginatedResultOfTransactionRecord> {
+    getTransactions(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined, count?: boolean | undefined, description?: string | null | undefined, banks?: number[] | null | undefined, users?: number[] | null | undefined, categories?: number[] | null | undefined, tags?: number[] | null | undefined, years?: string[] | null | undefined, months?: string[] | null | undefined): Promise<PaginatedResultOfTransactionRecord> {
         let url_ = this.baseUrl + "/v1/finance/transactions?";
         if (sortName !== undefined)
             url_ += "sortName=" + encodeURIComponent("" + sortName) + "&"; 
@@ -3803,6 +3849,8 @@ export class TransactionClient extends ApiClientBase {
             users && users.forEach(item => { url_ += "users=" + encodeURIComponent("" + item) + "&"; });
         if (categories !== undefined)
             categories && categories.forEach(item => { url_ += "categories=" + encodeURIComponent("" + item) + "&"; });
+        if (tags !== undefined)
+            tags && tags.forEach(item => { url_ += "tags=" + encodeURIComponent("" + item) + "&"; });
         if (years !== undefined)
             years && years.forEach(item => { url_ += "years=" + encodeURIComponent("" + item) + "&"; });
         if (months !== undefined)
@@ -4310,6 +4358,305 @@ export class TransactionCategoryClient extends ApiClientBase {
     }
 
     protected processDeleteTransactionCategory(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+}
+
+export class TransactionTagClient extends ApiClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    getTransactionTags(): Promise<TransactionTag[]> {
+        let url_ = this.baseUrl + "/v1/finance/transaction-tags";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetTransactionTags(_response);
+        });
+    }
+
+    protected processGetTransactionTags(response: Response): Promise<TransactionTag[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <TransactionTag[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    createTransactionTag(item: TransactionTag): Promise<TransactionTag> {
+        let url_ = this.baseUrl + "/v1/finance/transaction-tags";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(item);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processCreateTransactionTag(_response);
+        });
+    }
+
+    protected processCreateTransactionTag(response: Response): Promise<TransactionTag> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            result201 = _responseText === "" ? null : <TransactionTag>JSON.parse(_responseText, this.jsonParseReviver);
+            return result201;
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    getTransactionTagsPage(sortName?: string | null | undefined, pageNumber?: number | undefined, pageSize?: number | undefined, name?: string | null | undefined): Promise<PaginatedResultOfTransactionTag> {
+        let url_ = this.baseUrl + "/v1/finance/transaction-tags/page?";
+        if (sortName !== undefined)
+            url_ += "sortName=" + encodeURIComponent("" + sortName) + "&"; 
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&"; 
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&"; 
+        if (name !== undefined)
+            url_ += "name=" + encodeURIComponent("" + name) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetTransactionTagsPage(_response);
+        });
+    }
+
+    protected processGetTransactionTagsPage(response: Response): Promise<PaginatedResultOfTransactionTag> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <PaginatedResultOfTransactionTag>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    getTransactionTag(id: number): Promise<TransactionTag> {
+        let url_ = this.baseUrl + "/v1/finance/transaction-tags/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetTransactionTag(_response);
+        });
+    }
+
+    protected processGetTransactionTag(response: Response): Promise<TransactionTag> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <TransactionTag>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    updateTransactionTag(id: number, item: TransactionTag): Promise<void> {
+        let url_ = this.baseUrl + "/v1/finance/transaction-tags/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(item);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processUpdateTransactionTag(_response);
+        });
+    }
+
+    protected processUpdateTransactionTag(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    deleteTransactionTag(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/v1/finance/transaction-tags/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processDeleteTransactionTag(_response);
+        });
+    }
+
+    protected processDeleteTransactionTag(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 404) {
@@ -5892,10 +6239,11 @@ export interface TransactionRecord {
     date?: string | undefined;
     description?: string | undefined;
     amount?: number;
-    wedding?: number | undefined;
+    note?: string | undefined;
     bank?: Bank | undefined;
     category?: TransactionCategory | undefined;
     user?: User | undefined;
+    transactionRecordTag?: TransactionRecordTag[] | undefined;
 }
 
 export interface TransactionCategory {
@@ -5920,18 +6268,21 @@ export interface User {
     lastName?: string | undefined;
     email?: string | undefined;
     phone?: string | undefined;
-    earning?: Earning[] | undefined;
     transactionRecord?: TransactionRecord[] | undefined;
 }
 
-export interface Earning {
+export interface TransactionRecordTag {
     id?: number;
-    year?: string | undefined;
-    userId?: number;
-    gross?: number;
-    taxable?: number;
-    taxed?: number;
-    user?: User | undefined;
+    transactionRecordId?: number;
+    tagId?: number;
+    tag?: TransactionTag | undefined;
+    transactionRecord?: TransactionRecord | undefined;
+}
+
+export interface TransactionTag {
+    id?: number;
+    name?: string | undefined;
+    transactionRecordTag?: TransactionRecordTag[] | undefined;
 }
 
 export interface PaginatedResultOfBank {
@@ -5978,7 +6329,16 @@ export interface Debt {
     auto?: number;
 }
 
-export interface TransactionCategoryTotal {
+export interface Earning {
+    id?: number;
+    year?: string | undefined;
+    gross?: number;
+    taxable?: number;
+    taxed?: number;
+}
+
+export interface TransactionTotal {
+    id?: number;
     name?: string | undefined;
     amount?: number;
 }
@@ -5992,10 +6352,11 @@ export interface ExpenseSummary {
 
 export interface Expense {
     date?: string | undefined;
-    categoryName?: string | undefined;
+    category?: TransactionCategory | undefined;
     plannedAmount?: number;
     actualAmount?: number;
     remainder?: number;
+    categoryName?: string | undefined;
 }
 
 export interface PaginatedResultOfTransactionRecord {
@@ -6005,6 +6366,11 @@ export interface PaginatedResultOfTransactionRecord {
 
 export interface PaginatedResultOfTransactionCategory {
     items?: TransactionCategory[] | undefined;
+    count?: number;
+}
+
+export interface PaginatedResultOfTransactionTag {
+    items?: TransactionTag[] | undefined;
     count?: number;
 }
 

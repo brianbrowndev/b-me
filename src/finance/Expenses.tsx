@@ -3,8 +3,8 @@ import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme, Paper, Table, TableBody, TableRow, TableCell } from '@material-ui/core';
 import { FinanceApi } from '../common/client/FinanceApi';
 import { ExpenseSummary, Expense } from '../common/client';
-import { SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
-import { ExpenseSchemaContext, ExpenseFilter, ExpenseSchemaContextProvider } from './ExpensesSchemaContext';
+import { schemaTableConfig } from '../core/components/tables/SchemaTable';
+import { ExpenseSchemaContext, ExpenseFilter, ExpenseSchemaContextProvider, ExpensesTableConfig } from './ExpensesSchemaContext';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 import CoreTableToolbar from '../core/components/tables/CoreTableToolbar';
@@ -42,24 +42,23 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-function desc<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getSorting(order:string, orderBy:string) {
-  return order === 'desc' ? (a:any, b:any) => desc(a, b, orderBy) : (a:any, b:any) => -desc(a, b, orderBy);
-}
-
 
 function FinanceExpenses () {
   const classes = useStyles();
 
+  function desc<T>(a: T, b: T, orderBy: keyof T) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getSorting(order:string, orderBy:string) {
+    return order === 'desc' ? (a:any, b:any) => desc(a, b, orderBy) : (a:any, b:any) => -desc(a, b, orderBy);
+  }
 
   const schemaContext = useContext(ExpenseSchemaContext);
 
@@ -67,8 +66,7 @@ function FinanceExpenses () {
 
   const [schema, setSchema] = useState<FormSchema<Expense>>(() => schemaContext.get({type:'ADD'}));
   const [filterSchema, setFilterSchema] = useState<FormSchema<ExpenseFilter>>(() => schemaContext.get({type:'FILTER'}));
-  const [filterObj, setFilterObj] = useState<ExpenseFilter>(() => schemaContext.get<ExpenseFilter>({type:'FILTER'}).object);
-  const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
+  const [config, setConfig] = React.useState<ExpensesTableConfig>({...schemaTableConfig, filter: schemaContext.get<ExpenseFilter>({type:'FILTER'}).object});
   const [expenseSummary, setExpenseSummary] = React.useState<ExpenseSummary>({expenses:[], plannedAmount: 0, totalActualAmount:0, remainder:0} as ExpenseSummary);
   const [expense, setExpense] = React.useState<Expense | null>(null);
   const [headRows] = useState<HeadRow[]>(() => createHeadRows());
@@ -79,12 +77,12 @@ function FinanceExpenses () {
   useEffect(
     (() => {
       FinanceApi.getExpenseSummary(
-        filterObj.years.map(o => o.id as string),
-        filterObj.months.map(o => o.id as string),
-        filterObj.categories.map(b => b.id as number)
+        config.filter.years?.map(o => o.id as string),
+        config.filter.months?.map(o => o.id as string),
+        config.filter.categories?.map(b => b.id as number)
       ).then(result => setExpenseSummary(result))
     }), 
-    [filterObj]
+    [config]
   );
 
   // the use effect will catch async lookups that need to be bound to the schema
@@ -103,7 +101,7 @@ function FinanceExpenses () {
 
 
   const handleOnFilter = (obj: ObjectEntity) => {
-    setFilterObj({...obj as ExpenseFilter});
+    setConfig({...config, filter:obj as ExpenseFilter});
     setFilterSchema({...filterSchema, object:obj as ExpenseFilter});
   };
 

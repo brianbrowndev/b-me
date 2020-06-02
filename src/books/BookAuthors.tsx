@@ -14,7 +14,6 @@ function BookAuthors() {
 
   const [schema] = useState<FormSchema<BookAuthor>>(() => schemaContext.get({type: 'ADD'}));
   const [filterSchema, setFilterSchema] = useState<FormSchema<LookupEntityFilter>>(() => schemaContext.get({type:'FILTER'}));
-  const [filterObj, setFilterObj] = useState<LookupEntityFilter>(() => schemaContext.get<LookupEntityFilter>({type:'FILTER'}).object);
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>({...schemaTableConfig, sort:'name_asc', orderBy:'name', order:'asc'});
 
@@ -24,17 +23,17 @@ function BookAuthors() {
         config.sort, 
         config.pageNumber + 1, 
         config.rowsPerPage,
-        filterObj.name
+        config.filter.name
       ).then(result => setPage(result as PaginatedResult))
     }), 
-    [config, filterObj] 
+    [config] 
   );
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({ type:'EDIT', obj:obj as BookAuthor}) as FormSchema<ObjectEntity>;
   const handleDeleteEntity = (obj: ObjectEntity) => BookAuthorApi.deleteAuthor(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
   const handleOnFilter = (obj: ObjectEntity) => {
-    setFilterObj({...obj as LookupEntityFilter});
+    setConfig({...config, filter:obj as LookupEntityFilter});
     setFilterSchema({...filterSchema, object:obj as LookupEntityFilter});
   };
 

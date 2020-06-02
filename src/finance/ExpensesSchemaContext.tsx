@@ -9,6 +9,7 @@ import FormMonthOptions from '../core/components/forms/FormMonthOptions.tsx';
 import FormOptionType from '../core/components/forms/FormOptionType';
 import { FinanceApi } from '../common/client/FinanceApi';
 import getLookupName from '../core/components/forms/lookups/getLookupName';
+import { SchemaTableConfig } from '../core/components/tables/SchemaTable';
 
 export interface ExpenseFilter {
   years: LookupEntity[];
@@ -16,9 +17,16 @@ export interface ExpenseFilter {
   categories: TransactionCategory[];
 } 
 
+export const ExpenseUtility = {
+  propertyOf: (e: keyof Expense) => e
+};
+
+export interface ExpensesTableConfig extends Omit<SchemaTableConfig, 'filter'>  {
+  filter:ExpenseFilter;
+};
+
 const ExpenseSchemaContext = React.createContext({} as EditSchemaContextProps<Expense | ExpenseFilter>);
 
-const propertyOf = (e: keyof Expense) => e;
 
 function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
 
@@ -32,7 +40,6 @@ function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
           setCategories(categories.map(r => setOption(r, r.name as string, r.id))) 
         }
       ).catch(err => {
-        // TODO - error handling for user
         console.log(err);
       })
     }), []
@@ -41,29 +48,29 @@ function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
   const schema = {
     title: '',
     properties: {
-      [propertyOf('date')]: {
+      [ExpenseUtility.propertyOf('date')]: {
         title: "Date",
         type: "date",
         required: true
       } as DateFieldSchema,
-     [propertyOf('categoryName')]: {
+     [ExpenseUtility.propertyOf('categoryName')]: {
         title: "Category",
         type: "text",
         required: true,
       } as TextFieldSchema,
-     [propertyOf('plannedAmount')]: {
+     [ExpenseUtility.propertyOf('plannedAmount')]: {
         title: "Planned Amount",
         type: "currency",
         required: true,
         getVal: (value => currencyFormatter.format(value)),
       } as CurrencyFieldSchema,
-      [propertyOf('actualAmount')]: {
+      [ExpenseUtility.propertyOf('actualAmount')]: {
         title: "Actual Amount",
         type: "currency",
         required: true,
         getVal: (value => currencyFormatter.format(value)),
       } as CurrencyFieldSchema,
-       [propertyOf('remainder')]: {
+       [ExpenseUtility.propertyOf('remainder')]: {
         title: "Difference",
         type: "currency",
         required: true,
