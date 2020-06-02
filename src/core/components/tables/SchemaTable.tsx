@@ -10,16 +10,19 @@ import AddModal from '../forms/AddModal';
 import { ObjectEntity } from '../forms/ObjectEntityType';
 import schemaTableReducer from './SchemaTableReducer';
 import CoreTableToolbar from './CoreTableToolbar';
+import { LookupEntityFilter } from '../forms/lookups/LookupEntity.interface';
 
 export type PaginatedResult = {count:number, items:ObjectEntity[]};
-export type SchemaTableConfig =  {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number};
+export type TableFilter = {[key:string]:any};
+export interface SchemaTableConfig {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number, filter:TableFilter};
 
 export const schemaTableConfig = {
   pageNumber:0,
   sort: 'id_desc',
   orderBy: 'id',
   order: 'desc',
-  rowsPerPage: 15
+  rowsPerPage: 15,
+  filter: {} as LookupEntityFilter 
 } as SchemaTableConfig
 
 const useStyles = makeStyles((theme: Theme) => {

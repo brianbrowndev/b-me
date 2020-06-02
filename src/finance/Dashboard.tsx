@@ -37,7 +37,7 @@ function FinanceDashboard () {
 
   const classes = useStyles();
 
-  const [form, setForm] = useState<{[key:string]:any}>({year: {id:"2019", name:"2019"}});
+  const [form, setForm] = useState<{[key:string]:any}>({year: {id:"2020", name:"2020"}});
 
   const onFormChange = (obj:{[key:string]:any}) => setForm({...obj});
 

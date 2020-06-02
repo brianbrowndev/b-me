@@ -45,13 +45,13 @@ export default function FormMultiSelect({label, id, options, items, valuePropert
 
   useEffect(() => {
     if (items !== undefined) {
-      setValues(items.map(item => ({value: item[valueProperty], label:item[labelProperty]})) as any);
+      setValues(items.map(item => ({...item, value: item[valueProperty], label:item[labelProperty]})) as any);
     }
   }, [items, valueProperty, labelProperty])
 
   function handleChange(selected: ValueType<FormOptionType>): void {
     selected = (selected as FormOptionType[]) || [];
-    const values = selected.map<{[key:string]:any}>(item => ({[labelProperty]:item.label, [valueProperty]:item.value}))
+    const values = selected.map<{[key:string]:any}>(item => ({...item, [labelProperty]:item.label, [valueProperty]:item.value}))
     onChange(values);
   }
 

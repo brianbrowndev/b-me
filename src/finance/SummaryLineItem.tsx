@@ -4,11 +4,6 @@ import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 import TextListItem from '../core/components/lists/TextListItem';
 
 
-// const useStyles = makeStyles((theme: Theme) => {
-//   return createStyles({
-//   })
-// });
-
 interface FinancialSummaryLineItemProps {
   title: string;
   amount: number;

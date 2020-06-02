@@ -8,6 +8,7 @@ import EditSchemaContextProps from '../core/components/forms/EditSchemaContextPr
 import { Omit } from '@material-ui/types';
 import getLookupName from '../core/components/forms/lookups/getLookupName';
 import FormYearOptions from '../core/components/forms/FormYearOptions';
+import { SchemaTableConfig } from '../core/components/tables/SchemaTable';
 
 export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCategory'|'readYear'> {
   bookAuthor: BookAuthor[];
@@ -15,6 +16,10 @@ export interface BookFilter extends Omit<Book, 'bookAuthor'|'bookStatus'|'bookCa
   bookCategory: BookCategory[];
   readYear: LookupEntity[];
 } 
+
+export interface BooksTableConfig extends Omit<SchemaTableConfig, 'filter'>  {
+  filter:BookFilter;
+};
 
 
 const BookSchemaContext = React.createContext({} as EditSchemaContextProps<Book | BookFilter>);

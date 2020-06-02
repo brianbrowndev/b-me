@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState, useEffect } from 'react';
-import { TransactionSchemaContext, TransactionFilter, TransactionSchemaContextProvider } from './TransactionSchemaContext';
+import { TransactionSchemaContext, TransactionFilter, TransactionSchemaContextProvider, TransactionTableConfig, transactionMapping } from './TransactionSchemaContext';
 import { TransactionRecord } from '../common/client';
 import withProvider from '../core/components/withProvider';
 import SchemaTable, { PaginatedResult, SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-
-
 export type PaginatedFinanceResult = PaginatedResult & {amountTotal:number};
 
 function Transactions() {
@@ -31,9 +29,8 @@ function Transactions() {
 
   const [schema, setSchema] = useState<FormSchema<TransactionRecord>>(() => schemaContext.get({type:'ADD'}));
   const [filterSchema, setFilterSchema] = useState<FormSchema<TransactionFilter>>(() => schemaContext.get({type:'FILTER'}));
-  const [filterObj, setFilterObj] = useState<TransactionFilter>(() => schemaContext.get<TransactionFilter>({type:'FILTER'}).object);
   const [page, setPage] = React.useState<PaginatedFinanceResult>({items:[], count:0, amountTotal: 0} as PaginatedFinanceResult);
-  const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
+  const [config, setConfig] = React.useState<TransactionTableConfig>({...schemaTableConfig, sort:'date_desc', orderBy:'date', filter: schemaContext.get<TransactionFilter>({type:'FILTER'}).object});
 
   useEffect(
     (() => {
@@ -42,15 +39,16 @@ function Transactions() {
         config.pageNumber + 1, 
         config.rowsPerPage,
         true,
-        filterObj.description,
-        filterObj.banks.map(b => b.id as number),
-        filterObj.users.map(b => b.id as number),
-        filterObj.categories.map(b => b.id as number),
-        filterObj.years.map(b => b.id as string),
-        filterObj.months.map(b => b.id as string)
-      ).then(result => setPage(result as PaginatedFinanceResult))
+        config.filter.description,
+        config.filter.banks.map(b => b.id as number),
+        config.filter.users.map(b => b.id as number),
+        config.filter.categories.map(b => b.id as number),
+        config.filter.tags.map(b => b.id as number),
+        config.filter.years.map(b => b.id as string),
+        config.filter.months.map(b => b.id as string)
+      ).then(result => setPage({...result, items:result?.items?.map(i => transactionMapping.mapToTransactionTableRecord(i))} as PaginatedFinanceResult))
     }), 
-    [config, filterObj]
+    [config]
   );
 
 
@@ -63,9 +61,9 @@ function Transactions() {
 
   const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({type:'EDIT', obj:obj as TransactionRecord}) as FormSchema<ObjectEntity>;
   const handleDeleteEntity = (obj: ObjectEntity) => TransactionApi.deleteTransaction(obj.id);
-  const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
+  const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig as TransactionTableConfig);
   const handleOnFilter = (obj: ObjectEntity) => {
-    setFilterObj({...obj as TransactionFilter});
+    setConfig({...config, pageNumber:0, filter:obj as TransactionFilter});
     setFilterSchema({...filterSchema, object:obj as TransactionFilter});
   };
 
