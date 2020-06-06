@@ -6,6 +6,7 @@ import FormYearOptions from '../core/components/forms/FormYearOptions';
 import { SelectFieldSchema } from '../core/components/forms/SchemaForm';
 import SchemaFormField from '../core/components/forms/fields/SchemaField';
 import FinanceSpendingCard from './SpendingCard';
+import FinanceMonthlySpendingSummaryCard from './MonthlySpendingSummaryCard';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -51,6 +52,9 @@ function FinanceDashboard () {
           </Grid>
           <Grid item>
             <FinanceSpendingCard year={form.year.id}/>
+          </Grid>
+          <Grid item>
+            <FinanceMonthlySpendingSummaryCard year={form.year.id}/>
           </Grid>
         </Grid>
       </Grid>

@@ -3627,6 +3627,50 @@ export class FinanceClient extends ApiClientBase {
         }
     }
 
+    getTransactionMonthlyTotals(year?: string | null | undefined): Promise<TransactionTotal[]> {
+        let url_ = this.baseUrl + "/v1/finance/monthly-totals?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetTransactionMonthlyTotals(_response);
+        });
+    }
+
+    protected processGetTransactionMonthlyTotals(response: Response): Promise<TransactionTotal[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <TransactionTotal[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
     getTransactionCategoryTotals(year?: string | null | undefined): Promise<TransactionTotal[]> {
         let url_ = this.baseUrl + "/v1/finance/spending-categories?";
         if (year !== undefined)
@@ -3648,6 +3692,52 @@ export class FinanceClient extends ApiClientBase {
     }
 
     protected processGetTransactionCategoryTotals(response: Response): Promise<TransactionTotal[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <TransactionTotal[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
+    getTransactionCategoryMonthlyTotals(year?: string | null | undefined, month?: string | null | undefined): Promise<TransactionTotal[]> {
+        let url_ = this.baseUrl + "/v1/finance/spending-categories-by-month?";
+        if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&"; 
+        if (month !== undefined)
+            url_ += "month=" + encodeURIComponent("" + month) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetTransactionCategoryMonthlyTotals(_response);
+        });
+    }
+
+    protected processGetTransactionCategoryMonthlyTotals(response: Response): Promise<TransactionTotal[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {

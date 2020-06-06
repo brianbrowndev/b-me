@@ -1,12 +1,11 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { makeStyles, Theme, createStyles, Card, CardContent, Typography, List } from '@material-ui/core';
 import { FinanceApi } from '../common/client/FinanceApi';
 import AppSpinner from '../core/components/AppSpinner';
-import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
-import SplitTextListItem from '../core/components/lists/SplitTextListItem';
 import { TransactionTotal } from '../common/client';
-import { SpendingModalRef, SpendingModal } from './SpendingModal';
-import ButtonSplitTextListItem from '../core/components/lists/ButtonSplitTextListItem';
+import MonthlySpendingLineItem from './MonthlySpendingLineItem';
+import SplitTextListItem from '../core/components/lists/SplitTextListItem';
+import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -25,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     lineItemTotal: {
       paddingTop: theme.spacing(2),
+      // paddingTop: '20pxk',
       borderTop: `1px solid ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)': 'rgba(255,255,255,0.12)'}`,
       fontWeight: 700
     },
@@ -34,31 +34,29 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-interface FinanceSpendingCardProps {
+interface FinanceMonthlySpendingSummaryCardProps {
   year: string;
 }
 
 
-function FinanceSpendingCard ({year}:FinanceSpendingCardProps) {
+function FinanceMonthlySpendingSummaryCard ({year}:FinanceMonthlySpendingSummaryCardProps) {
   const classes = useStyles();
 
+  const [average, setAverage] = useState<number>(0);
   const [items, setItems] = useState<TransactionTotal[] | null>(null);
-  const [total, setTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [selectedTransactionCategory, setSelectedTransactionCategory] = useState<TransactionTotal | null>(null);
 
 
-  const modalRef = useRef<SpendingModalRef>(null);
 
   useEffect(
       (() => {
 
         const getSummary = (year:string) => {
-            FinanceApi.getTransactionCategoryTotals(year).then(response => {
+            FinanceApi.getTransactionMonthlyTotals(year).then(response => {
               const total = response.reduce((accumulator, currentValue) => accumulator + (currentValue?.amount || 0), 0);
-              setTotal(total);
               setItems(response);
+              setAverage(total/response.length)
               setIsLoading(false);
           }).catch(err => {
               setError(`Error getting summary: ${err.message}`)
@@ -70,19 +68,13 @@ function FinanceSpendingCard ({year}:FinanceSpendingCardProps) {
       [year] 
   );
 
-  const handleModalOpen  = (transactionCategoryTotal: TransactionTotal):void => {
-    setSelectedTransactionCategory(transactionCategoryTotal);
-  };
-  const handleModalClose = (): void => {
-    setSelectedTransactionCategory(null);
-  };
 
   return (
     <Fragment>
       <Card className={classes.card}>
         <CardContent>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
-            Annual Summary
+            Monthly Summary
           </Typography>
           { error && 
             <Typography color="error" variant="overline">{error}</Typography>
@@ -92,17 +84,16 @@ function FinanceSpendingCard ({year}:FinanceSpendingCardProps) {
             <Fragment>
             <List className={classes.list}>
               {items?.map(item => 
-                <ButtonSplitTextListItem key={item.name} className={classes.lineItem} variant="subtitle2" left={item.name} right={currencyFormatter.format(item.amount || 0)} handleClick={() => handleModalOpen(item)} />
+                <MonthlySpendingLineItem key={item.name} total={item} year={year}/>
               )}
-                <SplitTextListItem className={classes.lineItemTotal} variant="subtitle2" left="Total" right={currencyFormatter.format(total)} />
+              <SplitTextListItem className={classes.lineItemTotal} variant="subtitle2" left="Average" right={currencyFormatter.format(average)} />
               </List>
             </Fragment>
           ) }
         </CardContent>
       </Card>
-      <SpendingModal ref={modalRef}  category={selectedTransactionCategory} year={year} onClose={handleModalClose}/>
     </Fragment>
   );
 }
 
-export default FinanceSpendingCard;
+export default FinanceMonthlySpendingSummaryCard;
