@@ -2,11 +2,9 @@ import React, { forwardRef, useEffect, useState, Fragment } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal'; 
 import { TransactionTotal } from '../common/client';
-import { AppBar, Toolbar, IconButton, Typography, Button, List } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, List } from '@material-ui/core';
 import { FinanceApi } from '../common/client/FinanceApi';
 import AppSpinner from '../core/components/AppSpinner';
-import SplitTextListItem from '../core/components/lists/SplitTextListItem';
-import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 import TextListItem from '../core/components/lists/TextListItem';
 
 import SpendingModalLineItem from './SpendingModalLineItem';
@@ -107,7 +105,6 @@ const SpendingModal = forwardRef(({category, year, onClose}:SpendingModalProps, 
               <List className={classes.list}>
                 {items?.map(item => 
                   <SpendingModalLineItem key={item.id} category={category} tag={item}  year={year} />
-                  // <SplitTextListItem key={item.name} className={classes.lineItem} variant="subtitle2" left={item.name} right={currencyFormatter.format(item.amount || 0)} />
                 )}
                 {(!items || items?.length === 0) && 
                   <TextListItem content={
