@@ -11,6 +11,7 @@ export interface SchemaFieldProps<T> {
   schema: T;
   obj: {[key:string]:any};
   error: string;
+  helperText?: string;
   onChange: (obj: {[key:string]:any}) => void;
 }
 

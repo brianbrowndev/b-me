@@ -3807,6 +3807,52 @@ export class FinanceClient extends ApiClientBase {
         }
     }
 
+    getFrequentCategoryTags(categoryId?: number | undefined): Promise<RecordCount[]> {
+        let url_ = this.baseUrl + "/v1/finance/frequent-category-tags?";
+        if (categoryId === null)
+            throw new Error("The parameter 'categoryId' cannot be null.");
+        else if (categoryId !== undefined)
+            url_ += "categoryId=" + encodeURIComponent("" + categoryId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processGetFrequentCategoryTags(_response);
+        });
+    }
+
+    protected processGetFrequentCategoryTags(response: Response): Promise<RecordCount[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <RecordCount[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else {
+            return response.text().then((_responseText) => {
+            let resultdefault: any = null;
+            resultdefault = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            });
+        }
+    }
+
     getExpenses(years?: string[] | null | undefined, months?: string[] | null | undefined, categories?: number[] | null | undefined): Promise<ExpenseSummary[]> {
         let url_ = this.baseUrl + "/v1/finance/expenses?";
         if (years !== undefined)
@@ -6431,6 +6477,11 @@ export interface TransactionTotal {
     id?: number;
     name?: string | undefined;
     amount?: number;
+}
+
+export interface RecordCount {
+    name?: string | undefined;
+    count?: number;
 }
 
 export interface ExpenseSummary {

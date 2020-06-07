@@ -106,6 +106,7 @@ function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
       } as MultiSelectFieldSchema,
     },
     object: {years:[{id:"2019", name:"2019"}], months:[], categories: []} as ExpenseFilter,
+    type: 'FILTER',
     save: (o: Expense) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<ExpenseFilter>;
 

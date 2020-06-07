@@ -8,11 +8,11 @@ export default function SchemaFormText({property, schema, obj, onChange, error}:
     return <TextField
       required={schema.required}
       error={!!error}
-      helperText={error}
       id={property}
       label={schema.title}
       value={obj[property] || ''}
       onChange={handleChange}
+      helperText={schema.helperText}
       variant="filled"
     />
 }

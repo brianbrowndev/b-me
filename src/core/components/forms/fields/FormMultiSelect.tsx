@@ -25,10 +25,11 @@ interface MultiSelectProps {
   labelProperty: string;
   required: boolean;
   error: string;
+  helperText?: string;
   onChange(obj:{[key:string]:any}): void;
 }
 
-export default function FormMultiSelect({label, id, options, items, valueProperty, labelProperty, required, onChange, error}: MultiSelectProps) {
+export default function FormMultiSelect({label, id, options, items, valueProperty, labelProperty, required, onChange, error, helperText}: MultiSelectProps) {
   const classes = useSelectStyles();
   const theme = useTheme();
 
@@ -64,7 +65,7 @@ export default function FormMultiSelect({label, id, options, items, valuePropert
         label: label,
         variant: 'filled',
         error: !!error,
-        helperText:error,
+        helperText:helperText,
         InputLabelProps: {
           htmlFor: id,
           shrink: true,

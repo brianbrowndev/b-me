@@ -124,6 +124,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
 
     },
     object: {name:'', readYear:[], bookAuthor:[], bookCategory:[], bookStatus:[]} as BookFilter,
+    type: 'FILTER',
     save: (book: Book) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<BookFilter>;
 
@@ -137,6 +138,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...schema, 
             object: {}, 
+            type: 'ADD',
             title: 'New Book',
             save: add
           } as FormSchema<Book>
@@ -144,6 +146,7 @@ function BookSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...schema, 
             object: action.obj as any, 
+            type: 'EDIT',
             title: 'Edit Book',
             save: save
           }as FormSchema<Book>
