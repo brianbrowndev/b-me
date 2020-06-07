@@ -24,11 +24,12 @@ interface SelectProps {
   labelProperty: string;
   required: boolean;
   error: string;
+  helperText?: string;
   onChange(obj:{[key:string]:any}): void;
 }
 
 
-export default function FormSelect({label, id, options, obj, valueProperty, labelProperty, required, onChange, error}: SelectProps) {
+export default function FormSelect({label, id, options, obj, valueProperty, labelProperty, required, onChange, error, helperText}: SelectProps) {
   const classes = useSelectStyles();
   const theme = useTheme();
 
@@ -66,7 +67,7 @@ export default function FormSelect({label, id, options, obj, valueProperty, labe
             label: label,
             variant: 'filled',
             error: !!error,
-            helperText:error,
+            helperText:helperText,
             InputLabelProps: {
               htmlFor: id,
               shrink: true,

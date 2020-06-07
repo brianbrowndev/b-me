@@ -12,6 +12,7 @@ export default function SchemaFormSelect({property, schema, obj, onChange, error
       required={schema.required}
       id={property}
       options={schema.options}
+      helperText={schema.helperText}
       obj={obj[property]}
       valueProperty='id'
       labelProperty='name'
