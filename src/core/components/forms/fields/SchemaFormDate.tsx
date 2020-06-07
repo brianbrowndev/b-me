@@ -9,7 +9,7 @@ export default function SchemaFormDate({property, schema, obj, onChange, error}:
     return <TextField
       required={schema.required}
       error={!!error}
-      helperText={error}
+      helperText={schema.helperText}
       id={property}
       label={schema.title}
       value={obj[property] || ''}
