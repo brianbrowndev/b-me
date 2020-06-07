@@ -11,7 +11,6 @@ function BookCategories() {
   const schemaContext = useContext(BookCategorySchemaContext);
 
 
-  const [schema] = useState<FormSchema<BookCategory>>(() => schemaContext.get({type:'ADD'}));
   const [page, setPage] = React.useState<PaginatedResult>({items:[], count:0} as PaginatedResult);
   const [config, setConfig] = React.useState<SchemaTableConfig>(schemaTableConfig);
 
@@ -22,14 +21,14 @@ function BookCategories() {
     [config] 
   );
 
-  const handleGetEntitySchema = (obj: ObjectEntity) => schemaContext.get({type:'EDIT', obj:obj as BookCategory}) as FormSchema<ObjectEntity>;
+  const handleGetEntitySchema = (obj?: ObjectEntity) => obj !== undefined ? schemaContext.get({type:'EDIT', obj:obj as BookCategory}) as FormSchema<ObjectEntity> : schemaContext.get({type:'ADD'}) as FormSchema<ObjectEntity>;
+
   const handleDeleteEntity = (obj: ObjectEntity) => BookCategoryApi.deleteCategory(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig);
 
   return (
     <Fragment>
       <SchemaTable 
-        schema={schema as FormSchema<ObjectEntity>} 
         getEntitySchema={handleGetEntitySchema} 
         deleteEntity={handleDeleteEntity} 
         page={page}

@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 export interface FormSchema<T> {
+  type: 'EDIT' | 'ADD' | 'FILTER';
   title: string;
   properties: {[key:string]:FieldSchema};
   object: T;
@@ -46,6 +47,7 @@ export interface FieldSchema {
   type: FieldType
   required: boolean;
   error?: string;
+  helperText?: string;
   // method to retrieve value
   getVal?(value:any): any;
   // modify values on load/save
@@ -83,10 +85,11 @@ interface SchemaFormProps<T> {
   schema: FormSchema<T>;
   onCancel(): void;
   onSaveSuccess(obj:{[key:string]:any}): void;
+  onChange?(obj:{[key:string]:any}, changeObj:{[key:string]:any}): void;
   saveText?: string;
 }
 
-export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, onSaveSuccess, saveText}: SchemaFormProps<T>) {
+export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, onSaveSuccess, onChange, saveText}: SchemaFormProps<T>) {
   const classes = useStyles();
   
   const [obj, setObject] = useState<T>({} as T);
@@ -109,7 +112,12 @@ export default function SchemaForm<T extends ObjectEntity>({ schema, onCancel, o
   }, [schema.object, schema.properties])
 
   const handleChange = (changeObj: {[key:string]:any}) => {
-    setObject({ ...obj, ...changeObj});
+    const updatedObj = { ...obj, ...changeObj};
+    setObject(updatedObj);
+    // propogate changes up, in the case we need to update schema on value change
+    if (onChange) {
+      onChange(updatedObj, changeObj);
+    }
   };
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     setIsSaving(true);

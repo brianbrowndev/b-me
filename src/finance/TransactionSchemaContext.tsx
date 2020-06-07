@@ -14,7 +14,7 @@ import FormMonthOptions from '../core/components/forms/FormMonthOptions.tsx';
 import { SchemaTableConfig } from '../core/components/tables/SchemaTable';
 
 
-export const transactionMapping = {
+export const transactionUtility = {
   propertyOfTransactionRecord: (e: keyof TransactionRecord) => e,
   propertyOf: (e: keyof TransactionTableRecord) => e,
 
@@ -25,14 +25,14 @@ export const transactionMapping = {
       const id = tag?.transactionRecordTag[0]?.id || 0;
       transactionRecordTags.push({id:id, transactionRecordId:record.id, tagId:tag.id, tag:tag} as TransactionRecordTag)
     });
-    delete item[transactionMapping.propertyOf('tags')];
+    delete item[transactionUtility.propertyOf('tags')];
     return {...item, transactionRecordTag: transactionRecordTags} as TransactionRecord;
   },
 
   mapToTransactionTableRecord: (record:TransactionRecord): TransactionTableRecord => {
     var item = {...record};
     var tags = record?.transactionRecordTag?.map(t => ({...t.tag, label:t.tag?.name, value: t.tag?.id, transactionRecordTag:[t]} as FormOptionType));
-    delete item[transactionMapping.propertyOfTransactionRecord('transactionRecordTag')];
+    delete item[transactionUtility.propertyOfTransactionRecord('transactionRecordTag')];
     return {...item, tags:tags} as TransactionTableRecord;
   }
 }
@@ -83,44 +83,44 @@ function TransactionSchemaContextProvider ({children}: {children:JSX.Element}) {
   const schema = {
     title: '',
     properties: {
-      [transactionMapping.propertyOf('date')]: {
+      [transactionUtility.propertyOf('date')]: {
         title: "Date",
         type: "date",
         required: true
       } as DateFieldSchema,
-     [transactionMapping.propertyOf('amount')]: {
+     [transactionUtility.propertyOf('amount')]: {
         title: "Amount",
         type: "currency",
         required: true,
         getVal: (value => currencyFormatter.format(value)),
       } as CurrencyFieldSchema,
-     [transactionMapping.propertyOf('description')]: {
+     [transactionUtility.propertyOf('description')]: {
         title: "Decription",
         type: "text",
         required: true
       } as TextFieldSchema,
-      [transactionMapping.propertyOf('category')]: {
+      [transactionUtility.propertyOf('category')]: {
         title: "Category",
         type: "select",
         options: categories,
         required: true,
         getVal: getLookupName
       } as SelectFieldSchema,
-       [transactionMapping.propertyOf('bank')]: {
+       [transactionUtility.propertyOf('bank')]: {
         title: "Bank",
         type: "select",
         options: banks,
         required: true,
         getVal: getLookupName
       } as SelectFieldSchema,
-      [transactionMapping.propertyOf('user')]: {
+      [transactionUtility.propertyOf('user')]: {
         title: "User",
         type: "select",
         options: users,
         required: true,
         getVal: getLookupName
       } as SelectFieldSchema,
-      [transactionMapping.propertyOf('tags')]: {
+      [transactionUtility.propertyOf('tags')]: {
         title: "Tag(s)",
         type: "multiselect",
         options: tags,
@@ -134,7 +134,7 @@ function TransactionSchemaContextProvider ({children}: {children:JSX.Element}) {
   const filterSchema = {
     title: 'Filter Transactions',
     properties: {
-      [transactionMapping.propertyOf('description')]: {
+      [transactionUtility.propertyOf('description')]: {
         title: "Name",
         type: "text",
       } as TextFieldSchema,
@@ -182,11 +182,12 @@ function TransactionSchemaContextProvider ({children}: {children:JSX.Element}) {
 
     },
     object: {description:'', banks:[], categories:[], tags:[], users:[], years:[], months:[]} as TransactionFilter,
-    save: (book: TransactionTableRecord) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
+    type: 'FILTER',
+    save: (_: TransactionTableRecord) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<TransactionFilter>;
 
-  const add = (obj: TransactionTableRecord) => TransactionApi.createTransaction(transactionMapping.mapToTransactionRecord(obj));
-  const save = (obj: TransactionTableRecord) => TransactionApi.updateTransaction(obj.id as number, transactionMapping.mapToTransactionRecord(obj));
+  const add = (obj: TransactionTableRecord) => TransactionApi.createTransaction(transactionUtility.mapToTransactionRecord(obj));
+  const save = (obj: TransactionTableRecord) => TransactionApi.updateTransaction(obj.id as number, transactionUtility.mapToTransactionRecord(obj));
 
   const schemaEditProps = {
     get: action => {
@@ -195,6 +196,7 @@ function TransactionSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...schema, 
             object: {}, 
+            type: 'ADD',
             title: 'New Transaction',
             save: add
           } as FormSchema<TransactionTableRecord>
@@ -202,6 +204,7 @@ function TransactionSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...schema, 
             object: action.obj as any, 
+            type: 'EDIT',
             title: 'Edit Transaction',
             save: save
           }as FormSchema<TransactionTableRecord>

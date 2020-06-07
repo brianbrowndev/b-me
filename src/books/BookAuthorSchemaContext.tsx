@@ -18,6 +18,7 @@ function BookAuthorSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...lookupSchema, 
             object: {}, 
+            type: 'ADD',
             title: 'New Book Author',
             save: add
           }
@@ -25,6 +26,7 @@ function BookAuthorSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...lookupSchema, 
             object: action.obj, 
+            type: 'EDIT',
             title: 'Edit Book Author',
             save: save
           }

@@ -39,36 +39,45 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 interface SchemaTableProps<T> {
-  schema: FormSchema<T>;
   filterSchema?: FormSchema<T>;
   page: PaginatedResult;
   title: string;
   onPage:(config: SchemaTableConfig) => void;
   onFilter?:(obj:T) => void;
   config:SchemaTableConfig;
-  getEntitySchema(obj:T): FormSchema<T>;
+  getEntitySchema(obj?:T): FormSchema<T>;
   deleteEntity(obj:T): Promise<void>;
+  onChange?:(schema:FormSchema<T>, obj:{[key:string]:any}, changeObj:{[key:string]:any}) => Promise<FormSchema<T> | undefined>;
 }
 
-function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, onPage, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
+function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, onChange, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
   const classes = useStyles();
 
   const reducer = schemaTableReducer<T>();
   const [state, dispatch] = useReducer(reducer, {rows:[], count:0});
 
   // table
-  const [headRows, setHeadRows] = useState<HeadRow[]>(() => createHeadRows());
+  const [headRows, setHeadRows] = useState<HeadRow[]>([]);
+  const [schema, setEditSchema] = React.useState<FormSchema<ObjectEntity>>(() => getEntitySchema());
 
-  function createHeadRows () {
-    return Object.entries(schema.properties).map(([property, fieldSchema]) => (
-      {id: property, numeric:false, disablePadding: false, label: fieldSchema.title} as HeadRow
-    ));
-  }
+
 
   useEffect(
     (() => dispatch({type:'LOAD', page:page})), 
     [page] 
   );
+
+  useEffect(
+    (() => {
+      const createHeadRows = () => 
+        Object.entries(schema.properties).map(([property, fieldSchema]) => (
+          {id: property, numeric:false, disablePadding: false, label: fieldSchema.title} as HeadRow
+      ));
+      setHeadRows(createHeadRows);
+    }), 
+    [schema] 
+  );
+
 
   function handleChangePage(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {
     onPage({...config, pageNumber:newPage});
@@ -85,7 +94,6 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, o
   const authContext = useContext(AuthContext);
   const modalRef = useRef<EditModalRef>(null);
   const [appMessage, setAppMessage] = React.useState('');
-  const [editSchema, setEditSchema] = React.useState();
 
   useEffect(() => {
     if (authContext.authenticated)
@@ -98,8 +106,14 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, o
     }
   }, [authContext.authenticated])
 
-  function handleEdit(row: T) {
-    setEditSchema(getEntitySchema(row));
+  function handleEdit(row?: T) {
+    if (row && onChange) {
+      const asyncNewSchema = onChange(schema as FormSchema<T>, row, row);
+      asyncNewSchema.then(newSchema => newSchema ? setEditSchema(newSchema) : getEntitySchema(row));
+    }
+    else {
+      setEditSchema(getEntitySchema(row));
+    }
     if (modalRef && modalRef.current) {
       modalRef.current.handleOpen();
     }
@@ -116,13 +130,29 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, o
   }
 
   function handleOnEditSaveSuccess(row: T) {
-    setAppMessage('Entity saved.')
-    dispatch({type:'EDIT', row:row});
+    if (schema.type === 'ADD') {
+      setAppMessage('Entity added.')
+      dispatch({type:'ADD', row:row});
+
+    }
+    else if (schema.type === 'EDIT') {
+      setAppMessage('Entity saved.')
+      dispatch({type:'EDIT', row:row});
+    }
+    getEntitySchema();
   }
 
-  function handleOnAddSuccess(row: T) {
-    setAppMessage('Entity added.')
-    dispatch({type:'ADD', row:row});
+  /**
+   * Purpose of this is allow an asyncronous call to be made to then update the schema
+   * such as in updating the help text
+   * @param obj 
+   * @param changeObj 
+   */
+  function handleOnFormChange(obj:{[key:string]:any}, changeObj:{[key:string]:any}):void {
+    if (onChange) {
+      const asyncNewSchema = onChange(schema as FormSchema<T>, obj, changeObj);
+      asyncNewSchema.then(newSchema => newSchema ? setEditSchema(newSchema) : undefined);
+    }
   }
 
   return (
@@ -170,8 +200,8 @@ function SchemaTable <T extends ObjectEntity>({schema, filterSchema, onFilter, o
           message={appMessage}
           onClose={() => setAppMessage('')}
       />
-      <EditModal ref={modalRef} schema={editSchema} onSaveSuccess={handleOnEditSaveSuccess} />
-      <AddModal schema={schema} onSaveSuccess={handleOnAddSuccess} />
+      <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnEditSaveSuccess} onChange={handleOnFormChange} />
+      <AddModal onAdd={() => handleEdit()} />
     </Fragment>
   );
 }

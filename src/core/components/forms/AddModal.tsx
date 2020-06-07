@@ -1,10 +1,8 @@
-import React, { Fragment, useContext, useRef } from 'react';
-import  {EditModal, EditModalProps, EditModalRef } from './EditModal';
+import React, { Fragment, useContext } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import { Fab } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AuthContext } from '../../Auth';
-import { ObjectEntity } from './ObjectEntityType';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,23 +14,23 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function AddModal<T extends ObjectEntity>(props:EditModalProps<T>) {
+interface AddModalProps {
+  onAdd:() => void;
+};
+
+
+export default function AddModal({onAdd}:AddModalProps) {
+  
   const classes = useStyles();
   const authContext = useContext(AuthContext);
-  const modalRef = useRef<EditModalRef>(null);
-
-  const handleOpen = () => {
-    if (modalRef && modalRef.current) modalRef.current.handleOpen();
-  }
 
   return (
     <Fragment>
       { authContext.authenticated &&
-        <Fab color="secondary" aria-label="add" className={classes.fab} onClick={handleOpen}>
+        <Fab color="secondary" aria-label="add" className={classes.fab} onClick={onAdd}>
           <AddIcon />
         </Fab>
       }
-      <EditModal ref={modalRef} {...props} />
     </Fragment>
 
  );

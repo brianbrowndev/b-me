@@ -18,6 +18,7 @@ function BookCategorySchemaContextProvider({children}: {children:JSX.Element}) {
           return {
             ...lookupSchema, 
             object: {}, 
+            type: 'ADD',
             title: 'New Book Category',
             save: add
           }
@@ -25,6 +26,7 @@ function BookCategorySchemaContextProvider({children}: {children:JSX.Element}) {
           return {
             ...lookupSchema, 
             object: action.obj, 
+            type: 'EDIT',
             title: 'Edit Book Category',
             save: save
           }

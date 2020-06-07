@@ -18,6 +18,7 @@ function BookStatusSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...lookupKeywordSchema, 
             object: {}, 
+            type: 'ADD',
             title: 'New Book Status',
             save: add
           }
@@ -25,6 +26,7 @@ function BookStatusSchemaContextProvider ({children}: {children:JSX.Element}) {
           return {
             ...lookupKeywordSchema, 
             object: action.obj, 
+            type: 'EDIT',
             title: 'Edit Book Status',
             save: save
           }

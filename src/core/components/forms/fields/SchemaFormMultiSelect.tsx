@@ -11,6 +11,7 @@ export default function SchemaFormMultiSelect({property, schema, obj, onChange, 
       error={error}
       required={schema.required}
       id={property}
+      helperText={schema.helperText}
       options={schema.options}
       items={obj[property]}
       valueProperty='id'
