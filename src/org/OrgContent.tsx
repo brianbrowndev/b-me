@@ -5,48 +5,47 @@ import { Typography, Container, createStyles, makeStyles, Theme } from '@materia
 import { SwaggerException } from '../common/client';
 const DOMPurify = require('dompurify')
 
-const useStyles = makeStyles((theme: Theme) =>
-  {
+const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
         container: {
         },
         title: {
-            fontWeight:theme.typography.fontWeightLight,
+            fontWeight: theme.typography.fontWeightLight,
             "&h3": {
-                borderBottom:"none"
+                borderBottom: "none"
             }
         },
         subtitle: {
             fontSize: "18px",
-            borderBottom: `4px double ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)': 'rgba(255,255,255,0.12)'}`,
+            borderBottom: `4px double ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.12)'}`,
             marginBottom: theme.spacing(2),
             paddingBottom: theme.spacing(1),
             fontWeight: theme.typography.fontWeightRegular,
         },
         content: {
-            fontFamily:theme.typography.fontFamily,
+            fontFamily: theme.typography.fontFamily,
             paddingBottom: theme.spacing(4),
             paddingTop: theme.spacing(1),
             fontSize: "16px",
 
-           "& h2,h3,h4,h5,h6": {
+            "& h2,h3,h4,h5,h6": {
                 fontWeight: theme.typography.fontWeightMedium
             },
-        //    "& h2,h3": {
-        //    },
-           "& h2": {
+            //    "& h2,h3": {
+            //    },
+            "& h2": {
                 borderBottom: '1px solid #eaecef',
-               fontSize:"1.5rem"
-           },
-           "& h3": {
-               fontSize:"1.3rem"
-           },
+                fontSize: "1.5rem"
+            },
+            "& h3": {
+                fontSize: "1.3rem"
+            },
 
 
             "& table": {
-                display:'block',
-                overflow:'auto',
-                width:'100%',
+                display: 'block',
+                overflow: 'auto',
+                width: '100%',
                 "& tr": {
                     backgroundColor: theme.palette.primary.main,
                     borderTop: '1px solid #c6cbd1'
@@ -84,27 +83,27 @@ const useStyles = makeStyles((theme: Theme) =>
             },
 
             "& li.on": {
-                opacity:0.5
+                opacity: 0.5
             },
 
 
             "& .timestamp-kwd": {
-                display:'none',
+                display: 'none',
             },
             "& .timestamp": {
             }
-            
+
         },
- 
+
     });
 });
- 
+
 
 interface OrgContentProps {
-    url:string; 
+    url: string;
 }
 
-function OrgContent(props:OrgContentProps) {
+function OrgContent(props: OrgContentProps) {
 
     const classes = useStyles();
 
@@ -112,14 +111,14 @@ function OrgContent(props:OrgContentProps) {
 
     const [item, setItem] = useState<OrgItem>();
     const [text, setText] = useState('');
-    const [error, setError] = useState();
+    const [error, setError] = useState<string>();
 
     useEffect(
-        (() => { 
+        (() => {
 
             const item = orgContext.findOrgItemByPath(props.url);
             if (item !== null) {
-                setError(null);
+                setError(undefined);
                 setItem(item);
                 OrgApi.get(item.filePath).then(t => setText(t)).catch((e: SwaggerException) => {
                     setError(e.message)
@@ -133,16 +132,16 @@ function OrgContent(props:OrgContentProps) {
     return useMemo(() => (
         <Container className={classes.container}>
             <Typography variant="h3" className={classes.title}>
-            {item && item.title}
+                {item && item.title}
             </Typography>
-            <Typography  color="textSecondary" variant="subtitle1" className={classes.subtitle}>
-            {item && item.description}
+            <Typography color="textSecondary" variant="subtitle1" className={classes.subtitle}>
+                {item && item.description}
             </Typography>
-            { error ? (
+            {error ? (
                 <Typography color="error" variant="overline">Something went wrong, failed to load page.</Typography>
             ) : (
-                <div className={classes.content} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(text)}} />
-            )}
+                    <div className={classes.content} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }} />
+                )}
         </Container>
     ), [text, item, error, classes]);
 }

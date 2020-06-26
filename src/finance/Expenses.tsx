@@ -12,7 +12,7 @@ import CoreTableHead, { HeadRow } from '../core/components/tables/CoreTableHead'
 import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
 import withProvider from '../core/components/withProvider';
 import clsx from 'clsx';
-import {TransactionModalRef, TransactionModal} from './TransactionsModal';
+import { TransactionModalRef, TransactionModal } from './TransactionsModal';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 
-function FinanceExpenses () {
+function FinanceExpenses() {
   const classes = useStyles();
 
   function desc<T>(a: T, b: T, orderBy: keyof T) {
@@ -56,18 +56,18 @@ function FinanceExpenses () {
     return 0;
   }
 
-  function getSorting(order:string, orderBy:string) {
-    return order === 'desc' ? (a:any, b:any) => desc(a, b, orderBy) : (a:any, b:any) => -desc(a, b, orderBy);
+  function getSorting(order: string, orderBy: string) {
+    return order === 'desc' ? (a: any, b: any) => desc(a, b, orderBy) : (a: any, b: any) => -desc(a, b, orderBy);
   }
 
   const schemaContext = useContext(ExpenseSchemaContext);
 
 
 
-  const [schema, setSchema] = useState<FormSchema<Expense>>(() => schemaContext.get({type:'ADD'}));
-  const [filterSchema, setFilterSchema] = useState<FormSchema<ExpenseFilter>>(() => schemaContext.get({type:'FILTER'}));
-  const [config, setConfig] = React.useState<ExpensesTableConfig>({...schemaTableConfig, filter: schemaContext.get<ExpenseFilter>({type:'FILTER'}).object});
-  const [expenseSummary, setExpenseSummary] = React.useState<ExpenseSummary>({expenses:[], plannedAmount: 0, totalActualAmount:0, remainder:0} as ExpenseSummary);
+  const [schema, setSchema] = useState<FormSchema<Expense>>(() => schemaContext.get({ type: 'ADD' }));
+  const [filterSchema, setFilterSchema] = useState<FormSchema<ExpenseFilter>>(() => schemaContext.get({ type: 'FILTER' }));
+  const [config, setConfig] = React.useState<ExpensesTableConfig>({ ...schemaTableConfig, filter: schemaContext.get<ExpenseFilter>({ type: 'FILTER' }).object });
+  const [expenseSummary, setExpenseSummary] = React.useState<ExpenseSummary>({ expenses: [], plannedAmount: 0, totalActualAmount: 0, remainder: 0 } as ExpenseSummary);
   const [expense, setExpense] = React.useState<Expense | null>(null);
   const [headRows] = useState<HeadRow[]>(() => createHeadRows());
 
@@ -81,41 +81,41 @@ function FinanceExpenses () {
         config.filter.months?.map(o => o.id as string),
         config.filter.categories?.map(b => b.id as number)
       ).then(result => setExpenseSummary(result))
-    }), 
+    }),
     [config]
   );
 
   // the use effect will catch async lookups that need to be bound to the schema
   useEffect(() => {
-    setSchema(schemaContext.get({type:'ADD'}));
-    setFilterSchema(schemaContext.get({type:'FILTER'}));
+    setSchema(schemaContext.get({ type: 'ADD' }));
+    setFilterSchema(schemaContext.get({ type: 'FILTER' }));
   }, [schemaContext]);
 
-  function handleRequestSort(event: React.MouseEvent<unknown>, property:string) {
+  function handleRequestSort(event: React.MouseEvent<unknown>, property: string) {
     const isDesc = config.orderBy === property && config.order === 'desc';
     const newOrder = isDesc ? 'asc' : 'desc';
     var expenses = [...expenseSummary.expenses || []].sort(getSorting(newOrder, property))
-    setExpenseSummary({...expenseSummary, expenses:expenses});
-    setConfig({...config, order:newOrder, orderBy:property, sort:`${property}_${newOrder}`, pageNumber:0})
+    setExpenseSummary({ ...expenseSummary, expenses: expenses });
+    setConfig({ ...config, order: newOrder, orderBy: property, sort: `${property}_${newOrder}`, pageNumber: 0 })
   }
 
 
   const handleOnFilter = (obj: ObjectEntity) => {
-    setConfig({...config, filter:obj as ExpenseFilter});
-    setFilterSchema({...filterSchema, object:obj as ExpenseFilter});
+    setConfig({ ...config, filter: obj as any });
+    setFilterSchema({ ...filterSchema, object: obj as any });
   };
 
   const handleOnView = (obj: Expense) => {
     setExpense(obj)
     // if (modalRef && modalRef.current) {
-      // modalRef.current.handleOpen();
+    // modalRef.current.handleOpen();
     // }
   }
 
 
-  function createHeadRows () {
+  function createHeadRows() {
     return Object.entries(schema.properties).map(([property, fieldSchema]) => (
-      {id: property, numeric:false, disablePadding: false, label: fieldSchema.title} as HeadRow
+      { id: property, numeric: false, disablePadding: false, label: fieldSchema.title } as HeadRow
     ));
   }
 
@@ -130,7 +130,7 @@ function FinanceExpenses () {
         <span ><strong>Difference:</strong>&nbsp;<span className={clsx((expenseSummary.remainder || 0) < 0 ? classes.positive : classes.negative)}>{currencyFormatter.format(expenseSummary.remainder || 0)}</span></span>
       </div>
       <Paper className={classes.root}>
-        <CoreTableToolbar title="Expenses" filterSchema={filterSchema as FormSchema<ObjectEntity>} onFilter={handleOnFilter} />
+        <CoreTableToolbar title="Expenses" filterSchema={filterSchema as any} onFilter={handleOnFilter} />
         <Table className={classes.table}>
           <CoreTableHead
             headRows={headRows}
@@ -141,17 +141,17 @@ function FinanceExpenses () {
           <TableBody>
             {expenseSummary?.expenses?.map((row, idx) => (
               <TableRow key={idx} onClick={() => handleOnView(row)} className={classes.row}>
-                  <TableCell>{row.date}</TableCell>
-                  <TableCell>{row.categoryName}</TableCell>
-                  <TableCell>{currencyFormatter.format(row.plannedAmount || 0)}</TableCell>
-                  <TableCell>{currencyFormatter.format(row.actualAmount || 0)}</TableCell>
-                  <TableCell className={clsx((row.remainder || 0) < 0 ? classes.positive : classes.negative)}>{currencyFormatter.format(row.remainder || 0)}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.categoryName}</TableCell>
+                <TableCell>{currencyFormatter.format(row.plannedAmount || 0)}</TableCell>
+                <TableCell>{currencyFormatter.format(row.actualAmount || 0)}</TableCell>
+                <TableCell className={clsx((row.remainder || 0) < 0 ? classes.positive : classes.negative)}>{currencyFormatter.format(row.remainder || 0)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Paper>
-      <TransactionModal ref={modalRef} expense={expense}  onClose={() => setExpense(null)}/>
+      <TransactionModal ref={modalRef} expense={expense} onClose={() => setExpense(null)} />
     </Fragment>
 
   )
