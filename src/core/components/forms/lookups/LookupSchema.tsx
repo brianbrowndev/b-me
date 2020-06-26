@@ -8,9 +8,9 @@ export const lookupSchema = {
   title: '',
   properties: {
     [propertyOf('name')]: {
-        title: "Name",
-        type: "text",
-        required: true
+      title: "Name",
+      type: "text",
+      required: true
     } as TextFieldSchema,
   },
   object: {}
@@ -20,10 +20,10 @@ export const lookupFilterSchema = {
   title: '',
   properties: {
     [propertyOf('name')]: {
-        title: "Name",
-        type: "text",
+      title: "Name",
+      type: "text",
     } as TextFieldSchema,
   },
-  object: { name: ''},
-  save: (book: ObjectEntity) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
-} as FormSchema<ObjectEntity>;
+  object: { name: '' },
+  save: (o: ObjectEntity) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
+} as FormSchema<LookupEntity>;

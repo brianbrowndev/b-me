@@ -3,7 +3,7 @@ import { TransactionSchemaContext, TransactionFilter, TransactionSchemaContextPr
 import { TransactionRecord } from '../common/client';
 import withProvider from '../core/components/withProvider';
 import SchemaTable, { PaginatedResult, SchemaTableConfig, schemaTableConfig } from '../core/components/tables/SchemaTable';
-import {TransactionApi, FinanceApi} from '../common/client/FinanceApi';
+import { TransactionApi, FinanceApi } from '../common/client/FinanceApi';
 import { FormSchema } from '../core/components/forms/SchemaForm';
 import { ObjectEntity } from '../core/components/forms/ObjectEntityType';
 import { makeStyles, createStyles } from '@material-ui/styles';
@@ -20,22 +20,22 @@ const useStyles = makeStyles((theme: Theme) => {
   })
 });
 
-export type PaginatedFinanceResult = PaginatedResult & {amountTotal:number};
+export type PaginatedFinanceResult = PaginatedResult & { amountTotal: number };
 
 function Transactions() {
   const classes = useStyles();
 
   const schemaContext = useContext(TransactionSchemaContext);
 
-  const [filterSchema, setFilterSchema] = useState<FormSchema<TransactionFilter>>(() => schemaContext.get({type:'FILTER'}));
-  const [page, setPage] = React.useState<PaginatedFinanceResult>({items:[], count:0, amountTotal: 0} as PaginatedFinanceResult);
-  const [config, setConfig] = React.useState<TransactionTableConfig>({...schemaTableConfig, sort:'date_desc', orderBy:'date', filter: schemaContext.get<TransactionFilter>({type:'FILTER'}).object});
+  const [filterSchema, setFilterSchema] = useState<FormSchema<TransactionFilter>>(() => schemaContext.get({ type: 'FILTER' }));
+  const [page, setPage] = React.useState<PaginatedFinanceResult>({ items: [], count: 0, amountTotal: 0 } as PaginatedFinanceResult);
+  const [config, setConfig] = React.useState<TransactionTableConfig>({ ...schemaTableConfig, sort: 'date_desc', orderBy: 'date', filter: schemaContext.get<TransactionFilter>({ type: 'FILTER' }).object });
 
   useEffect(
     (() => {
       TransactionApi.getTransactions(
-        config.sort, 
-        config.pageNumber + 1, 
+        config.sort,
+        config.pageNumber + 1,
         config.rowsPerPage,
         true,
         config.filter.description,
@@ -45,45 +45,46 @@ function Transactions() {
         config.filter.tags.map(b => b.id as number),
         config.filter.years.map(b => b.id as string),
         config.filter.months.map(b => b.id as string)
-      ).then(result => setPage({...result, items:result?.items?.map(i => transactionUtility.mapToTransactionTableRecord(i))} as PaginatedFinanceResult))
-    }), 
+      ).then(result => setPage({ ...result, items: result?.items?.map(i => transactionUtility.mapToTransactionTableRecord(i)), amountTotal: 0 } as PaginatedFinanceResult))
+    }),
     [config]
   );
 
 
   // the use effect will catch async lookups that need to be bound to the schema
   useEffect(() => {
-    setFilterSchema(schemaContext.get({type:'FILTER'}));
+    setFilterSchema(schemaContext.get({ type: 'FILTER' }));
   }, [schemaContext]);
 
-  const handleGetEntitySchema = (obj?: ObjectEntity) => obj !== undefined ? schemaContext.get({type:'EDIT', obj:obj as TransactionRecord}) as FormSchema<ObjectEntity> : schemaContext.get({type:'ADD'}) as FormSchema<ObjectEntity>;
+  const handleGetEntitySchema = (obj?: ObjectEntity) => obj !== undefined ? schemaContext.get({ type: 'EDIT', obj: obj as TransactionRecord }) as FormSchema<ObjectEntity> : schemaContext.get({ type: 'ADD' }) as FormSchema<ObjectEntity>;
 
   const handleDeleteEntity = (obj: ObjectEntity) => TransactionApi.deleteTransaction(obj.id);
   const handleOnPage = (pageConfig: SchemaTableConfig) => setConfig(pageConfig as TransactionTableConfig);
   const handleOnFilter = (obj: ObjectEntity) => {
-    setConfig({...config, pageNumber:0, filter:obj as TransactionFilter});
-    setFilterSchema({...filterSchema, object:obj as TransactionFilter});
+    setConfig({ ...config, pageNumber: 0, filter: obj as TransactionFilter });
+    setFilterSchema({ ...filterSchema, object: obj as TransactionFilter });
   };
 
-  const addSuggestedTagsToSchema = (schema: FormSchema<ObjectEntity>, categoryId: number, obj:{[key:string]:any}): Promise<FormSchema<ObjectEntity>> => {
+  const addSuggestedTagsToSchema = (schema: FormSchema<ObjectEntity>, categoryId: number, obj: { [key: string]: any }): Promise<FormSchema<ObjectEntity>> => {
     return FinanceApi.getFrequentCategoryTags(categoryId).then(tagCounts => new Promise((resolve) => {
-      const tagNames = tagCounts.sort((a,b) => (a?.count || 0) > (b?.count || 0) ? 1 : -1).map(o => o.name);
+      const tagNames = tagCounts.sort((a, b) => (a?.count || 0) > (b?.count || 0) ? 1 : -1).map(o => o.name);
       let newSchema = {
-        ...schema, 
+        ...schema,
         object: obj,
         properties: {
-          ...schema.properties, 
-          [transactionUtility.propertyOf('tags')]: {...schema.properties[transactionUtility.propertyOf('tags')], helperText: `Suggested tags: ${tagNames.join(', ')}`}
-        }} as FormSchema<ObjectEntity>; 
+          ...schema.properties,
+          [transactionUtility.propertyOf('tags')]: { ...schema.properties[transactionUtility.propertyOf('tags')], helperText: `Suggested tags: ${tagNames.join(', ')}` }
+        }
+      } as FormSchema<ObjectEntity>;
       resolve(newSchema);
     }));
   }
 
-  const handleOnChange = (schema: FormSchema<ObjectEntity>, obj:{[key:string]:any}, changeObj: {[key:string]:any}): Promise<FormSchema<ObjectEntity> | undefined> => {
+  const handleOnChange = (schema: FormSchema<ObjectEntity>, obj: { [key: string]: any }, changeObj: { [key: string]: any }): Promise<FormSchema<ObjectEntity> | undefined> => {
     if (changeObj[transactionUtility.propertyOf('category')]) {
       return addSuggestedTagsToSchema(schema, changeObj[transactionUtility.propertyOf('category')].id, obj).then(newSchema => new Promise(resolve => {
         resolve(newSchema);
-      })); 
+      }));
     }
     return new Promise(resolve => resolve());
   }
@@ -94,10 +95,10 @@ function Transactions() {
       <div className={classes.total}>
         <strong>Total:</strong>&nbsp;{currencyFormatter.format(page.amountTotal)}
       </div>
-      <SchemaTable 
-        filterSchema={filterSchema as FormSchema<ObjectEntity>} 
-        getEntitySchema={handleGetEntitySchema} 
-        deleteEntity={handleDeleteEntity} 
+      <SchemaTable
+        filterSchema={filterSchema as FormSchema<ObjectEntity>}
+        getEntitySchema={handleGetEntitySchema}
+        deleteEntity={handleDeleteEntity}
         onFilter={handleOnFilter}
         page={page}
         onPage={handleOnPage}
