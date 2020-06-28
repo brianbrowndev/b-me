@@ -45,7 +45,7 @@ function Transactions() {
         config.filter.tags.map(b => b.id as number),
         config.filter.years.map(b => b.id as string),
         config.filter.months.map(b => b.id as string)
-      ).then(result => setPage({ ...result, items: result?.items?.map(i => transactionUtility.mapToTransactionTableRecord(i)), amountTotal: 0 } as PaginatedFinanceResult))
+      ).then(result => setPage({ ...result, items: result?.items?.map(i => transactionUtility.mapToTransactionTableRecord(i)) } as PaginatedFinanceResult))
     }),
     [config]
   );
