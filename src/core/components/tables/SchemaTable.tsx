@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, Fragment, useRef, useReducer}  from 'react';
+import React, { useState, useEffect, useContext, Fragment, useRef, useReducer } from 'react';
 import { Theme, makeStyles, createStyles, Paper, Table, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
 import { FormSchema } from '../forms/SchemaForm';
 import CoreTableHead, { HeadRow, TableHeaderOrder } from './CoreTableHead';
@@ -12,17 +12,17 @@ import schemaTableReducer from './SchemaTableReducer';
 import CoreTableToolbar from './CoreTableToolbar';
 import { LookupEntityFilter } from '../forms/lookups/LookupEntity.interface';
 
-export type PaginatedResult = {count:number, items:ObjectEntity[]};
-export type TableFilter = {[key:string]:any};
-export interface SchemaTableConfig {pageNumber: number, order:TableHeaderOrder, orderBy:string, sort:string, rowsPerPage:number, filter:TableFilter};
+export type PaginatedResult = { count: number, items: ObjectEntity[] };
+export type TableFilter = { [key: string]: any };
+export interface SchemaTableConfig { pageNumber: number, order: TableHeaderOrder, orderBy: string, sort: string, rowsPerPage: number, filter: TableFilter };
 
 export const schemaTableConfig = {
-  pageNumber:0,
+  pageNumber: 0,
   sort: 'id_desc',
   orderBy: 'id',
   order: 'desc',
   rowsPerPage: 15,
-  filter: {} as LookupEntityFilter 
+  filter: {} as LookupEntityFilter
 } as SchemaTableConfig
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -42,19 +42,19 @@ interface SchemaTableProps<T> {
   filterSchema?: FormSchema<T>;
   page: PaginatedResult;
   title: string;
-  onPage:(config: SchemaTableConfig) => void;
-  onFilter?:(obj:T) => void;
-  config:SchemaTableConfig;
-  getEntitySchema(obj?:T): FormSchema<T>;
-  deleteEntity(obj:T): Promise<void>;
-  onChange?:(schema:FormSchema<T>, obj:{[key:string]:any}, changeObj:{[key:string]:any}) => Promise<FormSchema<T> | undefined>;
+  onPage: (config: SchemaTableConfig) => void;
+  onFilter?: (obj: T) => void;
+  config: SchemaTableConfig;
+  getEntitySchema(obj?: T): FormSchema<T>;
+  deleteEntity(obj: T): Promise<void>;
+  onChange?: (schema: FormSchema<T>, obj: { [key: string]: any }, changeObj: { [key: string]: any }) => Promise<FormSchema<T> | undefined>;
 }
 
-function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, onChange, title, getEntitySchema, deleteEntity, page, config} : SchemaTableProps<T>) {
+function SchemaTable<T extends ObjectEntity>({ filterSchema, onFilter, onPage, onChange, title, getEntitySchema, deleteEntity, page, config }: SchemaTableProps<T>) {
   const classes = useStyles();
 
   const reducer = schemaTableReducer<T>();
-  const [state, dispatch] = useReducer(reducer, {rows:[], count:0});
+  const [state, dispatch] = useReducer(reducer, { rows: [], count: 0 });
 
   // table
   const [headRows, setHeadRows] = useState<HeadRow[]>([]);
@@ -63,30 +63,30 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
 
 
   useEffect(
-    (() => dispatch({type:'LOAD', page:page})), 
-    [page] 
+    (() => dispatch({ type: 'LOAD', page: page })),
+    [page]
   );
 
   useEffect(
     (() => {
-      const createHeadRows = () => 
+      const createHeadRows = () =>
         Object.entries(schema.properties).map(([property, fieldSchema]) => (
-          {id: property, numeric:false, disablePadding: false, label: fieldSchema.title} as HeadRow
-      ));
+          { id: property, numeric: false, disablePadding: false, label: fieldSchema.title } as HeadRow
+        ));
       setHeadRows(createHeadRows);
-    }), 
-    [schema] 
+    }),
+    [schema]
   );
 
 
   function handleChangePage(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {
-    onPage({...config, pageNumber:newPage});
+    onPage({ ...config, pageNumber: newPage });
   }
 
-  function handleRequestSort(event: React.MouseEvent<unknown>, property:string) {
+  function handleRequestSort(event: React.MouseEvent<unknown>, property: string) {
     const isDesc = config.orderBy === property && config.order === 'desc';
     const newOrder = isDesc ? 'asc' : 'desc';
-    onPage({...config, order:newOrder, orderBy:property, sort:`${property}_${newOrder}`, pageNumber:0})
+    onPage({ ...config, order: newOrder, orderBy: property, sort: `${property}_${newOrder}`, pageNumber: 0 })
   }
 
 
@@ -108,7 +108,7 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
 
   function handleEdit(row?: T) {
     if (row && onChange) {
-      const asyncNewSchema = onChange(schema as FormSchema<T>, row, row);
+      const asyncNewSchema = onChange(getEntitySchema(row), row, row);
       asyncNewSchema.then(newSchema => newSchema ? setEditSchema(newSchema) : getEntitySchema(row));
     }
     else {
@@ -122,7 +122,7 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
   function handleDelete(row: T) {
     deleteEntity(row).then(() => {
       setAppMessage('Entity deleted.')
-      dispatch({type:'DELETE', row:row});
+      dispatch({ type: 'DELETE', row: row });
     }).catch(err => {
       console.error(err);
       setAppMessage('Delete failed, unexpected error.')
@@ -132,12 +132,12 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
   function handleOnEditSaveSuccess(row: T) {
     if (schema.type === 'ADD') {
       setAppMessage('Entity added.')
-      dispatch({type:'ADD', row:row});
+      dispatch({ type: 'ADD', row: row });
 
     }
     else if (schema.type === 'EDIT') {
       setAppMessage('Entity saved.')
-      dispatch({type:'EDIT', row:row});
+      dispatch({ type: 'EDIT', row: row });
     }
     getEntitySchema();
   }
@@ -148,7 +148,7 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
    * @param obj 
    * @param changeObj 
    */
-  function handleOnFormChange(obj:{[key:string]:any}, changeObj:{[key:string]:any}):void {
+  function handleOnFormChange(obj: { [key: string]: any }, changeObj: { [key: string]: any }): void {
     if (onChange) {
       const asyncNewSchema = onChange(schema as FormSchema<T>, obj, changeObj);
       asyncNewSchema.then(newSchema => newSchema ? setEditSchema(newSchema) : undefined);
@@ -169,12 +169,12 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
           <TableBody>
             {state.rows.map(row => (
               <TableRow key={row.id}>
-                {Object.entries(schema.properties).map(([property, fieldSchema]) => 
+                {Object.entries(schema.properties).map(([property, fieldSchema]) =>
                   <TableCell key={property}>{fieldSchema.getVal ? fieldSchema.getVal(row[property]) : row[property]}</TableCell>
                 )}
-                { authContext.authenticated && 
+                {authContext.authenticated &&
                   <TableCell>
-                    <EditMenu onEdit={() => handleEdit(row)} onDelete={() => handleDelete(row)}/>
+                    <EditMenu onEdit={() => handleEdit(row)} onDelete={() => handleDelete(row)} />
                   </TableCell>
                 }
               </TableRow>
@@ -196,9 +196,9 @@ function SchemaTable <T extends ObjectEntity>({filterSchema, onFilter, onPage, o
           onChangePage={handleChangePage}
         />
       </Paper>
-      <AppSnackbar 
-          message={appMessage}
-          onClose={() => setAppMessage('')}
+      <AppSnackbar
+        message={appMessage}
+        onClose={() => setAppMessage('')}
       />
       <EditModal ref={modalRef} schema={schema} onSaveSuccess={handleOnEditSaveSuccess} onChange={handleOnFormChange} />
       <AddModal onAdd={() => handleEdit()} />
