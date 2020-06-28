@@ -11,13 +11,13 @@ import SplitTextListItem from '../core/components/lists/SplitTextListItem';
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     card: {
-        width:'300px',
+      width: '300px',
     },
     title: {
       fontSize: 14,
     },
     section: {
-      margin: theme.spacing(2,0)
+      margin: theme.spacing(2, 0)
     },
     lineItem: {
       fontWeight: 400
@@ -30,28 +30,28 @@ interface FinanceSummaryCardProps {
 }
 
 
-function FinanceSummaryCard ({year}:FinanceSummaryCardProps) {
+function FinanceSummaryCard({ year }: FinanceSummaryCardProps) {
   const classes = useStyles();
 
-  const [summary, setSummary] = useState<FinancialSummary| null>(null);
+  const [summary, setSummary] = useState<FinancialSummary | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
   useEffect(
-      (() => {
+    (() => {
 
-        const getSummary = (year:string) => {
-            FinanceApi.getSummary(year).then(summary => {
-              setSummary(summary);
-              setIsLoading(false);
-          }).catch(err => {
-              setError(`Error getting summary: ${err.message}`)
-              setIsLoading(false);
-          });
-        }
-        getSummary(year);
-      }), 
-      [year] 
+      const getSummary = (year: string) => {
+        FinanceApi.getSummary(year).then(summary => {
+          setSummary(summary);
+          setIsLoading(false);
+        }).catch(err => {
+          setError(`Error getting summary: ${err.message}`)
+          setIsLoading(false);
+        });
+      }
+      getSummary(year);
+    }),
+    [year]
   );
 
   return (
@@ -60,39 +60,45 @@ function FinanceSummaryCard ({year}:FinanceSummaryCardProps) {
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           Net Worth
         </Typography>
-        { error && 
+        {error &&
           <Typography color="error" variant="overline">{error}</Typography>
         }
-        { isLoading ?  (<AppSpinner /> ) 
-        : (
-          <Fragment>
-            <div className={classes.section}>
-              <Typography variant="h4" component="h5" gutterBottom>
-                {summary?.netWorth && currencyFormatter.format(summary.netWorth)}
-              </Typography>
+        {isLoading ? (<AppSpinner />)
+          : (
+            <Fragment>
+              <div className={classes.section}>
+                <Typography variant="h4" component="h5" gutterBottom>
+                  {summary?.netWorth && currencyFormatter.format(summary.netWorth)}
+                </Typography>
 
-            </div>
-            <Divider/>
-            <List>
-              {summary &&
-                <FinancialSummaryLineItem title="Assets" amount={summary.assetTotal || 0}>
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Savings"} right={currencyFormatter.format(summary?.asset?.saving || 0)} />
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Retirement"} right={currencyFormatter.format(summary?.asset?.retirement || 0)} />
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"HSA"} right={currencyFormatter.format(summary?.asset?.hsa || 0)} />
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Home"} right={currencyFormatter.format(summary?.asset?.home || 0)} />
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Auto"} right={currencyFormatter.format(summary?.asset?.auto || 0)} />
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Stock"} right={currencyFormatter.format(summary?.asset?.stock || 0)} />
-                </FinancialSummaryLineItem>
-              }
-              {summary &&
-                <FinancialSummaryLineItem title="Debts" amount={summary.debtTotal || 0}>
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Home"} right={currencyFormatter.format(summary?.debt?.home || 0)} />
-                  <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Auto"} right={currencyFormatter.format(summary?.debt?.auto || 0)} />
-                </FinancialSummaryLineItem>
-              }
-            </List>
-          </Fragment>
-        ) }
+              </div>
+              <Divider />
+              <List>
+                {summary &&
+                  <FinancialSummaryLineItem title="Assets" amount={summary.assetTotal || 0}>
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Savings"} right={currencyFormatter.format(summary?.asset?.saving || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Retirement"} right={currencyFormatter.format(summary?.asset?.retirement || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"HSA"} right={currencyFormatter.format(summary?.asset?.hsa || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Home"} right={currencyFormatter.format(summary?.asset?.home || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Auto"} right={currencyFormatter.format(summary?.asset?.auto || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Stock"} right={currencyFormatter.format(summary?.asset?.stock || 0)} />
+                  </FinancialSummaryLineItem>
+                }
+                {summary &&
+                  <FinancialSummaryLineItem title="Debts" amount={summary.debtTotal || 0}>
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Home"} right={currencyFormatter.format(summary?.debt?.home || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Auto"} right={currencyFormatter.format(summary?.debt?.auto || 0)} />
+                  </FinancialSummaryLineItem>
+                }
+                {summary &&
+                  <FinancialSummaryLineItem title="Income" amount={summary?.earnings?.gross || 0}>
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Taxable"} right={currencyFormatter.format(summary?.earnings?.taxable || 0)} />
+                    <SplitTextListItem className={classes.lineItem} variant="subtitle2" left={"Taxed"} right={currencyFormatter.format(summary?.earnings?.taxed || 0)} />
+                  </FinancialSummaryLineItem>
+                }
+              </List>
+            </Fragment>
+          )}
       </CardContent>
     </Card>
   );
