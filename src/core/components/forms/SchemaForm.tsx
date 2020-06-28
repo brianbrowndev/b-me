@@ -10,6 +10,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      overflow: 'auto',
+      height: '100%'
     },
     form: {
 
