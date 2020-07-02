@@ -1,27 +1,27 @@
 import React from 'react';
 
 import { BrowserRouter as Router } from "react-router-dom";
-import {AuthProvider} from './core/Auth';
+import { AuthProvider } from './core/Auth';
 
 
-import { OrgProvider } from './org/OrgContext';
-import {  CssBaseline } from '@material-ui/core';
+import { BlogProvider } from './blog/BlogContext';
+import { CssBaseline } from '@material-ui/core';
 import Main from './Main';
 import { AppThemeContextProvider } from './theme/AppThemeContext';
 
 
-function App () {
+function App() {
   return (
-  <AppThemeContextProvider>
-    <Router>
-      <CssBaseline />
-      <AuthProvider>
-      <OrgProvider>
-        <Main></Main>
-      </OrgProvider>
-      </AuthProvider>
-    </Router>
-  </AppThemeContextProvider>
+    <AppThemeContextProvider>
+      <Router>
+        <CssBaseline />
+        <AuthProvider>
+          <BlogProvider>
+            <Main></Main>
+          </BlogProvider>
+        </AuthProvider>
+      </Router>
+    </AppThemeContextProvider>
   );
 }
 

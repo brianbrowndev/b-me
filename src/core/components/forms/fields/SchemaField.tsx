@@ -1,11 +1,12 @@
 import React from 'react';
-import { TextFieldSchema, SelectFieldSchema, FieldSchema, MultiSelectFieldSchema, DateFieldSchema, CurrencyFieldSchema, SelectMenuFieldSchema } from '../SchemaForm';
+import { TextFieldSchema, SelectFieldSchema, FieldSchema, MultiSelectFieldSchema, DateFieldSchema, CurrencyFieldSchema, SelectMenuFieldSchema, SwitchFieldSchema } from '../SchemaForm';
 import SchemaFormSelect from './SchemaFormSelect';
 import SchemaFormText from './SchemaFormText';
 import SchemaFormMultiSelect from './SchemaFormMultiSelect';
 import SchemaFormDate from './SchemaFormDate';
 import SchemaFormCurrency from './SchemaFormCurrency';
 import SchemaFormSelectMenu from './SchemaFormSelectMenu';
+import SchemaFormSwitch from './SchemaFormSwitch';
 
 export interface SchemaFieldProps<T> {
   property: string;
@@ -16,10 +17,12 @@ export interface SchemaFieldProps<T> {
   onChange: (obj: { [key: string]: any }) => void;
 }
 
-export default function SchemaFormField(props: SchemaFieldProps<TextFieldSchema | MultiSelectFieldSchema | SelectFieldSchema | DateFieldSchema | FieldSchema | CurrencyFieldSchema>) {
+export default function SchemaFormField(props: SchemaFieldProps<TextFieldSchema | MultiSelectFieldSchema | SelectFieldSchema | DateFieldSchema | FieldSchema | CurrencyFieldSchema | SwitchFieldSchema>) {
   switch (props.schema.type) {
     case 'text':
       return <SchemaFormText  {...(props as SchemaFieldProps<TextFieldSchema>)} />
+    case 'switch':
+      return <SchemaFormSwitch {...(props as SchemaFieldProps<SwitchFieldSchema>)} />
     case 'currency':
       return <SchemaFormCurrency {...(props as SchemaFieldProps<CurrencyFieldSchema>)} />
     case 'date':

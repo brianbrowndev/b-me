@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo, useContext } from 'react';
-import OrgApi from '../common/client/OrgApi'
-import { OrgContext, OrgItem } from './OrgContext';
+import BlogApi from '../common/client/BlogApi'
+import { BlogContext } from './BlogContext';
 import { Typography, Container, createStyles, makeStyles, Theme } from '@material-ui/core';
-import { SwaggerException } from '../common/client';
+import { SwaggerException, Post } from '../common/client';
 const DOMPurify = require('dompurify')
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -99,33 +99,33 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 
-interface OrgContentProps {
+interface BlogContentProps {
     url: string;
 }
 
-function OrgContent(props: OrgContentProps) {
+function BlogContent(props: BlogContentProps) {
 
     const classes = useStyles();
 
-    const orgContext = useContext(OrgContext);
+    const blogContext = useContext(BlogContext);
 
-    const [item, setItem] = useState<OrgItem>();
+    const [item, setItem] = useState<Post>();
     const [text, setText] = useState('');
     const [error, setError] = useState<string>();
 
     useEffect(
         (() => {
-
-            const item = orgContext.findOrgItemByPath(props.url);
-            if (item !== null) {
+            const item = blogContext.findPostByPath(blogContext.formatPostFilePath(props.url));
+            if (item !== undefined) {
                 setError(undefined);
                 setItem(item);
-                OrgApi.get(item.filePath).then(t => setText(t)).catch((e: SwaggerException) => {
+                console.log(item)
+                BlogApi.get(item.path!.slice(1, item.path!.length)).then(t => setText(t)).catch((e: SwaggerException) => {
                     setError(e.message)
                 })
             }
         }),
-        [props.url, orgContext]
+        [props.url, blogContext]
     );
 
 
@@ -138,7 +138,7 @@ function OrgContent(props: OrgContentProps) {
                 {item && item.description}
             </Typography>
             {error ? (
-                <Typography color="error" variant="overline">Something went wrong, failed to load page.</Typography>
+                <Typography color="error" variant="overline">Failed to load page.</Typography>
             ) : (
                     <div className={classes.content} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }} />
                 )}
@@ -146,4 +146,4 @@ function OrgContent(props: OrgContentProps) {
     ), [text, item, error, classes]);
 }
 
-export default OrgContent;
+export default BlogContent;
