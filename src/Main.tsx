@@ -4,7 +4,7 @@ import { Theme, Toolbar, Container, Box } from "@material-ui/core";
 import Header from "./core/Header";
 import { Route } from "react-router";
 import Home from "./core/Home";
-import OrgContentRoute from "./org/OrgContentRoute";
+import BlogContentRoute from "./blog/BlogContentRoute";
 import Login from "./core/Login";
 import ScrollToTop from './core/components/ScrollToTop';
 import Books from './books/Books';
@@ -15,27 +15,27 @@ import { PrivateRoute } from './core/Auth';
 import Transactions from './finance/Transactions';
 import FinanceDashboard from './finance/Dashboard';
 import FinanceExpenses from './finance/Expenses';
+import BlogPosts from './blog/BlogPosts';
 
-const useStyles = makeStyles((theme: Theme) =>
-  {
-    return createStyles({
-      app: {
-        display:'flex',
-        minHeight:'100vh',
-        width:'100%',
-        margin: '0 auto',
-        background: theme.palette.primary.main
-      },
-      main: {
-        flexGrow:1,
-        overflow:'hidden',
-        paddingBottom:theme.spacing(2),
-        marginBottom:theme.spacing(4)
-      },
-      container: {
-      }
-    });
-  },
+const useStyles = makeStyles((theme: Theme) => {
+  return createStyles({
+    app: {
+      display: 'flex',
+      minHeight: '100vh',
+      width: '100%',
+      margin: '0 auto',
+      background: theme.palette.primary.main
+    },
+    main: {
+      flexGrow: 1,
+      overflow: 'hidden',
+      paddingBottom: theme.spacing(2),
+      marginBottom: theme.spacing(4)
+    },
+    container: {
+    }
+  });
+},
 );
 
 
@@ -51,7 +51,9 @@ function Main() {
           <Box my={4}>
             <ScrollToTop >
               <Route exact path="/" component={Home} />
-              <Route exact path="/org/*" component={OrgContentRoute} />
+              <Route exact path="/content/*" component={BlogContentRoute} />
+
+              <PrivateRoute exact path="/admin/content" component={BlogPosts} />
 
               <PrivateRoute exact path="/finance/dashboard" component={FinanceDashboard} />
               <PrivateRoute exact path="/finance/transactions" component={Transactions} />

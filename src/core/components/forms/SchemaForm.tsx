@@ -42,7 +42,7 @@ export interface FormSchema<T> {
   save(obj: { [key: string]: any }): Promise<any>;
 }
 
-type FieldType = 'text' | 'select' | 'multiselect' | 'date' | 'currency' | 'select-menu';
+type FieldType = 'text' | 'select' | 'multiselect' | 'date' | 'currency' | 'select-menu' | 'switch';
 
 export interface FieldSchema {
   title: string;
@@ -59,6 +59,10 @@ export interface FieldSchema {
 
 export interface TextFieldSchema extends FieldSchema {
   type: 'text';
+}
+
+export interface SwitchFieldSchema extends FieldSchema {
+  type: 'switch';
 }
 
 export interface CurrencyFieldSchema extends FieldSchema {

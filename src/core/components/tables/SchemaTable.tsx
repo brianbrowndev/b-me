@@ -11,6 +11,7 @@ import { ObjectEntity } from '../forms/ObjectEntityType';
 import schemaTableReducer from './SchemaTableReducer';
 import CoreTableToolbar from './CoreTableToolbar';
 import { LookupEntityFilter } from '../forms/lookups/LookupEntity.interface';
+import CheckIcon from '@material-ui/icons/Check';
 
 export type PaginatedResult = { count: number, items: ObjectEntity[] };
 export type TableFilter = { [key: string]: any };
@@ -170,7 +171,14 @@ function SchemaTable<T extends ObjectEntity>({ filterSchema, onFilter, onPage, o
             {state.rows.map(row => (
               <TableRow key={row.id}>
                 {Object.entries(schema.properties).map(([property, fieldSchema]) =>
-                  <TableCell key={property}>{fieldSchema.getVal ? fieldSchema.getVal(row[property]) : row[property]}</TableCell>
+                  <TableCell key={property}>
+                    {fieldSchema.type === 'switch' &&
+                      row[property] === 1 ? <CheckIcon /> : <span></span>
+                    }
+                    {fieldSchema.type !== 'switch' &&
+                      (fieldSchema.getVal ? fieldSchema.getVal(row[property]) : row[property])
+                    }
+                  </TableCell>
                 )}
                 {authContext.authenticated &&
                   <TableCell>

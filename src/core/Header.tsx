@@ -1,5 +1,5 @@
 import React, { useContext, useState, Fragment } from 'react';
-import {AuthContext } from './Auth'
+import { AuthContext } from './Auth'
 
 import {
   withRouter,
@@ -11,66 +11,65 @@ import { Typography, createStyles, makeStyles, IconButton, Theme, Drawer, ListIt
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { OrgContext  } from '../org/OrgContext';
+import { BlogContext } from '../blog/BlogContext';
 import AppLink from './components/AppLink';
-import GroupRouteList from './components/GroupRouteLists';
+import GroupRouteList, { RouteItem } from './components/GroupRouteLists';
 import ThemeToggleButton from './components/ThemeToggleButton';
 
 
 const drawerWidth = 240;
-const useStyles = makeStyles((theme: Theme) =>
-  {
-    return createStyles({
-      title: {
-        flexGrow: 1,
+const useStyles = makeStyles((theme: Theme) => {
+  return createStyles({
+    title: {
+      flexGrow: 1,
+    },
+    logo: {
+      color: theme.palette.text.primary,
+      fontWeight: 300,
+      fontFamily: 'Montserrat',
+    },
+    appBar: {
+      marginLeft: drawerWidth,
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(100% - ${drawerWidth}px)`,
       },
-      logo: {
-        color:theme.palette.text.primary,
-        fontWeight:300,
-        fontFamily: 'Montserrat',
-      },
-      appBar: {
-        marginLeft: drawerWidth,
-        [theme.breakpoints.up('sm')]: {
-          width: `calc(100% - ${drawerWidth}px)`,
-        },
-        borderBottom: `1px solid ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)': 'rgba(255,255,255,0.12)'}`
-      },
-      drawer: {
-        [theme.breakpoints.up('sm')]: {
-          width: drawerWidth,
-          flexShrink: 0,
-        },
-        backgroundColor: theme.palette.primary.light
-      },
-      toolbar: theme.mixins.toolbar,
-      drawerPaper: {
+      borderBottom: `1px solid ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.12)'}`
+    },
+    drawer: {
+      [theme.breakpoints.up('sm')]: {
         width: drawerWidth,
-        backgroundColor: theme.palette.primary.light,
+        flexShrink: 0,
       },
-      menuButton: {
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
-          display: 'none',
-        },
+      backgroundColor: theme.palette.primary.light
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+      width: drawerWidth,
+      backgroundColor: theme.palette.primary.light,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
       },
+    },
 
-      login: {
-        position:'relative',
-        bottom:0,
-      },
-      contentList: {
-        flex:1,
-      },
-      listTitle: {
-        fontWeight:theme.typography.fontWeightBold,
-      },
-      listIcon: {
-        color:'inherit'
-      }
+    login: {
+      position: 'relative',
+      bottom: 0,
+    },
+    contentList: {
+      flex: 1,
+    },
+    listTitle: {
+      fontWeight: theme.typography.fontWeightBold,
+    },
+    listIcon: {
+      color: 'inherit'
+    }
 
-    })
-  },
+  })
+},
 );
 
 function ElevationScroll(props: any) {
@@ -92,7 +91,7 @@ function ElevationScroll(props: any) {
 function Header({ history }: RouteComponentProps) {
 
   const authContext = useContext(AuthContext);
-  const orgContext = useContext(OrgContext);
+  const blogContext = useContext(BlogContext);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -113,35 +112,43 @@ function Header({ history }: RouteComponentProps) {
         className={classes.contentList}>
         <AppLink to="/" exact={true} onClick={handleDrawerClose}>
           <ListItem button>
-              <ListItemText primary="Home" classes={{primary: classes.listTitle}}/>
+            <ListItemText primary="Home" classes={{ primary: classes.listTitle }} />
           </ListItem>
         </AppLink>
-        {orgContext.routes().map(groupItem => 
-          <GroupRouteList title={groupItem.title} items={groupItem.items} onClick={handleDrawerClose} key={groupItem.title} history={history} nested={true}/>
+        {blogContext.groups().map(group =>
+          <GroupRouteList title={group.name!} items={blogContext.findRoutesByGroup(group).map(r => r as RouteItem).sort((a, b) => a.title! > b.title! ? 1 : a.title! < b.title! ? -1 : 0)} onClick={handleDrawerClose} key={group.id} history={history} nested={true} />
         )}
-        { authContext.authenticated && 
-          <GroupRouteList 
-            title="Finance" 
-            onClick={handleDrawerClose} 
-            history={history} 
-            items={[{path:"/finance/dashboard", title: "Dashboard"},{path:"/finance/transactions", title:"Transactions"}, {path:"/finance/expenses", title:"Expenses"}]} 
+        {authContext.authenticated &&
+          <GroupRouteList
+            title="Admin"
+            onClick={handleDrawerClose}
+            history={history}
+            items={[{ path: "/admin/content", title: "Content" }]}
             nested={true}
           />
-
         }
-        { !authContext.authenticated && 
+        {authContext.authenticated &&
+          <GroupRouteList
+            title="Finance"
+            onClick={handleDrawerClose}
+            history={history}
+            items={[{ path: "/finance/dashboard", title: "Dashboard" }, { path: "/finance/transactions", title: "Transactions" }, { path: "/finance/expenses", title: "Expenses" }]}
+            nested={true}
+          />
+        }
+        {!authContext.authenticated &&
           <AppLink to="/reading/books" exact={true} onClick={handleDrawerClose}>
             <ListItem button>
-                <ListItemText primary="Reading List" classes={{primary: classes.listTitle}}/>
+              <ListItemText primary="Reading List" classes={{ primary: classes.listTitle }} />
             </ListItem>
           </AppLink>
         }
-        { authContext.authenticated && 
-          <GroupRouteList 
-            title="Reading" 
-            onClick={handleDrawerClose} 
-            history={history} 
-            items={[{path:"/reading/books", title:"Books"}, {path:"/reading/authors", title: "Authors"}, {path:"/reading/categories", title: "Categories"}, {path:"/reading/statuses", title: "Statuses"}]} 
+        {authContext.authenticated &&
+          <GroupRouteList
+            title="Reading"
+            onClick={handleDrawerClose}
+            history={history}
+            items={[{ path: "/reading/books", title: "Books" }, { path: "/reading/authors", title: "Authors" }, { path: "/reading/categories", title: "Categories" }, { path: "/reading/statuses", title: "Statuses" }]}
             nested={true}
           />
         }
@@ -169,56 +176,56 @@ function Header({ history }: RouteComponentProps) {
               </AppLink>
             </Typography>
             <ThemeToggleButton />
-            { authContext.authenticated ?
-            (
+            {authContext.authenticated ?
+              (
                 <IconButton
                   onClick={logout}
                   color="inherit"
                   aria-label="logout">
                   <ExitToAppIcon />
-                </IconButton> 
-            ) : (
-              <AppLink to="/login">
-                <IconButton
-                  color="inherit"
-                  aria-label="login"
-                >
-                  <AccountCircleIcon />
                 </IconButton>
-              </AppLink>
-            )}
-         </Toolbar>
+              ) : (
+                <AppLink to="/login">
+                  <IconButton
+                    color="inherit"
+                    aria-label="login"
+                  >
+                    <AccountCircleIcon />
+                  </IconButton>
+                </AppLink>
+              )}
+          </Toolbar>
 
         </AppBar>
       </ElevationScroll>
       <nav className={classes.drawer}>
-          <Hidden smUp>
-            <Drawer
-              variant="temporary"
-              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-              open={open}
-              onClose={handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          <Hidden xsDown>
-            <Drawer
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              variant="permanent"
-              open
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
+        <Hidden smUp>
+          <Drawer
+            variant="temporary"
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            open={open}
+            onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden xsDown>
+          <Drawer
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant="permanent"
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
 
 
       </nav>
