@@ -119,7 +119,6 @@ function BlogContent(props: BlogContentProps) {
             if (item !== undefined) {
                 setError(undefined);
                 setItem(item);
-                console.log(item)
                 BlogApi.get(item.path!.slice(1, item.path!.length)).then(t => setText(t)).catch((e: SwaggerException) => {
                     setError(e.message)
                 })

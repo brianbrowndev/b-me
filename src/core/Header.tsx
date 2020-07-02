@@ -1,4 +1,4 @@
-import React, { useContext, useState, Fragment } from 'react';
+import React, { useContext, useState, Fragment, useEffect } from 'react';
 import { AuthContext } from './Auth'
 
 import {
@@ -15,6 +15,7 @@ import { BlogContext } from '../blog/BlogContext';
 import AppLink from './components/AppLink';
 import GroupRouteList, { RouteItem } from './components/GroupRouteLists';
 import ThemeToggleButton from './components/ThemeToggleButton';
+import { PostGroup } from '../common/client';
 
 
 const drawerWidth = 240;
@@ -102,7 +103,11 @@ function Header({ history }: RouteComponentProps) {
   const handleDrawerToggle = () => setOpen(!open);
   const handleDrawerClose = () => setOpen(false);
 
+  const [groups, setGroups] = useState<PostGroup[]>([])
 
+  useEffect(() => {
+    setGroups(blogContext.groups());
+  }, [blogContext]);
 
   const drawer = (
     <Fragment>
@@ -115,7 +120,7 @@ function Header({ history }: RouteComponentProps) {
             <ListItemText primary="Home" classes={{ primary: classes.listTitle }} />
           </ListItem>
         </AppLink>
-        {blogContext.groups().map(group =>
+        {groups.map(group =>
           <GroupRouteList title={group.name!} items={blogContext.findRoutesByGroup(group).map(r => r as RouteItem).sort((a, b) => a.title! > b.title! ? 1 : a.title! < b.title! ? -1 : 0)} onClick={handleDrawerClose} key={group.id} history={history} nested={true} />
         )}
         {authContext.authenticated &&
