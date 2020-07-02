@@ -39,9 +39,9 @@ function BlogProvider(props: any) {
     }
 
     function findGroups(): PostGroup[] {
-        var items = authContext.authenticated ? routes : routes.filter(t => !t.authenticate);
-        var groups: { [key: number]: PostGroup } = {};
-        items.forEach(i => i.postGroup?.id && groups[i.postGroup?.id] !== undefined ? groups[i.postGroup?.id] = i.postGroup : null);
+        let items = authContext.authenticated ? routes : routes.filter(t => !t.authenticate);
+        let groups: { [key: number]: PostGroup } = {};
+        items.forEach(i => i.postGroup?.id && groups[i.postGroup?.id] === undefined ? groups[i.postGroup?.id] = i.postGroup : null);
         return Object.values(groups);
 
     }

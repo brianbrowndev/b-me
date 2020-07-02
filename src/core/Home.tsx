@@ -1,10 +1,11 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext, Fragment, useState, useEffect } from 'react';
 import { Grid, Typography, createStyles, makeStyles, Theme, Paper, } from '@material-ui/core';
 import { BlogContext } from '../blog/BlogContext';
 import RecentBooksCard from '../books/RecentBooksCard';
 import WeatherCard from '../weather/WeatherCard';
 import AppLink from './components/AppLink';
 import moment from 'moment';
+import { Post, PostGroup } from '../common/client';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => {
     post: {
       display: 'flex',
       alignItems: 'center'
+    },
+    groupPosts: {
+      marginTop: theme.spacing(2)
     }
   })
 });
@@ -40,6 +44,14 @@ const useStyles = makeStyles((theme: Theme) => {
 function Home() {
   const blogContext = useContext(BlogContext);
   const classes = useStyles();
+
+  const [recentRoutes, setRecentRoutes] = useState<Post[]>([])
+  const [groups, setGroups] = useState<PostGroup[]>([])
+
+  useEffect(() => {
+    setRecentRoutes(blogContext.routes().sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).slice(0, 5));
+    setGroups(blogContext.groups());
+  }, [blogContext]);
 
   return (
     <Fragment>
@@ -57,11 +69,11 @@ function Home() {
       <Typography color="textSecondary" variant="h5" gutterBottom className={classes.title}>
         Content
       </Typography>
-      <Paper elevation={2} className={classes.posts}>
-        <Grid container spacing={3}>
-          <Grid item sm={12} md={6} lg={4}>
+      <Grid container spacing={3} className={classes.container} justify="center">
+        <Grid item xs={12} md={8} lg={8}>
+          <Paper elevation={2} className={classes.posts}>
             <Typography variant="h6" className={classes.postsHeader}>Most recent 5 posts</Typography>
-            {blogContext.routes().sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).slice(0, 5).map(item =>
+            {recentRoutes.map(item =>
               <AppLink to={blogContext.formatPostUrl(item.path!)} key={item.id}>
                 <div className={classes.post}>
                   <Typography variant="body2" className={classes.postDate} >{moment(item.date).format("MMM Do YYYY")}</Typography>
@@ -69,10 +81,27 @@ function Home() {
                 </div>
               </AppLink>
             )}
-          </Grid>
-          {blogContext.groups().map(group =>
-            <Grid item key={group.id} sm={12} md={6} lg={4}>
-              <Typography variant="h6" className={classes.postsHeader}>{group}</Typography>
+            {groups.map(group =>
+              <div key={group.id} className={classes.groupPosts}>
+                <Typography variant="h6" className={classes.postsHeader}>{group.name}</Typography>
+                {blogContext.findRoutesByGroup(group).sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).map(item =>
+                  <AppLink to={blogContext.formatPostUrl(item.path!)} key={item.id}>
+                    <div className={classes.post}>
+                      <Typography variant="body2" className={classes.postDate}>
+                        {moment(item.date).format("MMM YYYY")}
+                      </Typography>
+                      <Typography variant="body1">{item.title}</Typography>
+                    </div>
+                  </AppLink>
+                )}
+              </div>
+            )}
+          </Paper>
+        </Grid>
+        {/* {groups.map(group =>
+          <Grid item key={group.id}>
+            <Paper elevation={2} className={classes.posts}>
+              <Typography variant="h6" className={classes.postsHeader}>{group.name}</Typography>
               {blogContext.findRoutesByGroup(group).sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).map(item =>
                 <AppLink to={blogContext.formatPostUrl(item.path!)} key={item.id}>
                   <div className={classes.post}>
@@ -83,10 +112,10 @@ function Home() {
                   </div>
                 </AppLink>
               )}
-            </Grid>
-          )}
-        </Grid>
-      </Paper>
+            </Paper>
+          </Grid>
+        )} */}
+      </Grid>
     </Fragment>
   );
 }

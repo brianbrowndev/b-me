@@ -10,7 +10,7 @@ export default function SchemaFormSwitch({ property, schema, obj, onChange, erro
   };
   return <FormControlLabel control={
     <Switch
-      value={obj[property] || false}
+      checked={obj[property] === 1 ? true : false}
       color="secondary"
       required={schema.required}
       id={property}
