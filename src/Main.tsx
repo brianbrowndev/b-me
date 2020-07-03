@@ -16,7 +16,6 @@ import Transactions from './finance/Transactions';
 import FinanceDashboard from './finance/Dashboard';
 import FinanceExpenses from './finance/Expenses';
 import BlogPosts from './blog/BlogPosts';
-import { BrowserRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -51,7 +50,6 @@ function Main() {
         <Container className={classes.container}>
           <Box my={4}>
             <ScrollToTop >
-              <BrowserRouter basename="/me" />
               <Route exact path="/" component={Home} />
               <Route exact path="/content/*" component={BlogContentRoute} />
 
