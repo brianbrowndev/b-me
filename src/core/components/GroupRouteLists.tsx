@@ -43,7 +43,7 @@ function GroupRouteList({ title, items, onClick, history, nested }: GroupRouteLi
   /* Expand/collapse based on route changes */
   useEffect(() => {
     const hasPathName = (pathName: string | undefined): boolean => {
-      return items.find(item => `/${blogContext.formatPostUrl(item.path)}` === pathName) ? true : false;
+      return items.find(item => item.path === pathName) ? true : false;
     }
     if (hasPathName(history.location.pathname)) {
       setOpen(true);
@@ -62,7 +62,7 @@ function GroupRouteList({ title, items, onClick, history, nested }: GroupRouteLi
       <Collapse in={open} timeout="auto" unmountOnExit>
         {items.map(item =>
           <Fragment key={item.path}>
-            <ListItemLink path={`/${blogContext.formatPostUrl(item.path)}`} name={item.title} onClick={onClick} nested={nested} />
+            <ListItemLink path={item.path} name={item.title} onClick={onClick} nested={nested} />
           </Fragment>
         )}
       </Collapse>
