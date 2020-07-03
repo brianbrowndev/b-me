@@ -106,7 +106,7 @@ function Header({ history }: RouteComponentProps) {
   const [groups, setGroups] = useState<PostGroup[]>([])
 
   useEffect(() => {
-    setGroups(blogContext.groups());
+    setGroups(blogContext.groups);
   }, [blogContext]);
 
   const drawer = (

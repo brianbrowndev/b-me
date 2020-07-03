@@ -49,8 +49,8 @@ function Home() {
   const [groups, setGroups] = useState<PostGroup[]>([])
 
   useEffect(() => {
-    setRecentRoutes(blogContext.routes().sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).slice(0, 5));
-    setGroups(blogContext.groups());
+    setRecentRoutes(blogContext.routes.slice(0, 5));
+    setGroups(blogContext.groups);
   }, [blogContext]);
 
   return (
@@ -74,7 +74,7 @@ function Home() {
           <Paper elevation={2} className={classes.posts}>
             <Typography variant="h6" className={classes.postsHeader}>Most recent 5 posts</Typography>
             {recentRoutes.map(item =>
-              <AppLink to={blogContext.formatPostUrl(item.path!)} key={item.id}>
+              <AppLink exact to={item.path!} key={item.id}>
                 <div className={classes.post}>
                   <Typography variant="body2" className={classes.postDate} >{moment(item.date).format("MMM Do YYYY")}</Typography>
                   <Typography variant="body1">{item.title}</Typography>
@@ -85,7 +85,7 @@ function Home() {
               <div key={group.id} className={classes.groupPosts}>
                 <Typography variant="h6" className={classes.postsHeader}>{group.name}</Typography>
                 {blogContext.findRoutesByGroup(group).sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).map(item =>
-                  <AppLink to={blogContext.formatPostUrl(item.path!)} key={item.id}>
+                  <AppLink exact to={item.path!} key={item.id}>
                     <div className={classes.post}>
                       <Typography variant="body2" className={classes.postDate}>
                         {moment(item.date).format("MMM YYYY")}
@@ -98,23 +98,6 @@ function Home() {
             )}
           </Paper>
         </Grid>
-        {/* {groups.map(group =>
-          <Grid item key={group.id}>
-            <Paper elevation={2} className={classes.posts}>
-              <Typography variant="h6" className={classes.postsHeader}>{group.name}</Typography>
-              {blogContext.findRoutesByGroup(group).sort((a, b) => a.date! < b.date! ? 1 : a.date! > b.date! ? -1 : 0).map(item =>
-                <AppLink to={blogContext.formatPostUrl(item.path!)} key={item.id}>
-                  <div className={classes.post}>
-                    <Typography variant="body2" className={classes.postDate}>
-                      {moment(item.date).format("MMM YYYY")}
-                    </Typography>
-                    <Typography variant="body1">{item.title}</Typography>
-                  </div>
-                </AppLink>
-              )}
-            </Paper>
-          </Grid>
-        )} */}
       </Grid>
     </Fragment>
   );

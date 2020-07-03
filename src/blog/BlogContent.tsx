@@ -115,11 +115,11 @@ function BlogContent(props: BlogContentProps) {
 
     useEffect(
         (() => {
-            const item = blogContext.findPostByPath(blogContext.formatPostFilePath(props.url));
+            const item = blogContext.findPostByPath(props.url);
             if (item !== undefined) {
                 setError(undefined);
                 setItem(item);
-                BlogApi.get(item.path!.slice(1, item.path!.length)).then(t => setText(t)).catch((e: SwaggerException) => {
+                BlogApi.get(blogContext.formatPostFilePath(item.path!)).then(t => setText(t)).catch((e: SwaggerException) => {
                     setError(e.message)
                 })
             }

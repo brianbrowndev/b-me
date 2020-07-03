@@ -4,8 +4,8 @@ import { Post, PostGroup } from '../common/client';
 import { BlogPostApi } from '../common/client/BlogPostApi';
 
 export interface OrgProps {
-    groups(): PostGroup[];
-    routes(): Post[];
+    groups: PostGroup[];
+    routes: Post[];
     findPostByPath(path: string): Post | undefined;
     findRoutesByGroup(group: PostGroup): Post[];
     formatPostUrl(path: string): string;
@@ -20,59 +20,47 @@ function BlogProvider(props: any) {
     const authContext = useContext(AuthContext);
 
     const [routes, setRoutes] = useState<Post[]>([]);
+    const [groups, setGroups] = useState<PostGroup[]>([]);
 
     useEffect(
         (() => {
-            Promise.all([BlogPostApi.getBlogPosts(100)]).then(
-                ([posts]) => {
-                    setRoutes(posts);
+            Promise.all([BlogPostApi.getBlogPosts(100), BlogPostApi.getBlogPostGroups()]).then(
+                ([posts, groups]) => {
+                    setRoutes(posts.map(p => ({ ...p, path: formatPostUrl(p.path!) })));
+                    setGroups(groups);
                 }
             ).catch(err => {
                 // TODO - error handling for user
                 console.log(err);
             })
-        }), []
+        }), [authContext.authenticated]
     );
 
-    function findRoutes(): Post[] {
-        return authContext.authenticated ? routes : routes.filter(t => !t.authenticate);
-    }
-
-    function findGroups(): PostGroup[] {
-        let items = authContext.authenticated ? routes : routes.filter(t => !t.authenticate);
-        let groups: { [key: number]: PostGroup } = {};
-        items.forEach(i => i.postGroup?.id && groups[i.postGroup?.id] === undefined ? groups[i.postGroup?.id] = i.postGroup : null);
-        return Object.values(groups);
-
-    }
-
     function findRoutesByGroup(group: PostGroup) {
-        return findRoutes().filter(r => r?.postGroup?.id === group.id);
+        return routes.filter(r => r?.postGroup?.id === group.id);
     }
 
     /**
      * Find an item given the path. Used for routing.
      * @param path 
      */
-    function findOrgItemByPath(path: string): Post | undefined {
+    function findPostItemByPath(path: string): Post | undefined {
         return routes.find(r => r.path === path);
     }
     function formatPostUrl(path: string): string {
-        return `content${path}`;
-
+        return `/content${path}`;
     }
+
     function formatPostFilePath(path: string): string {
-        return path.replace('/content', '');
+        return path.replace('/content/', '');
     }
-
 
 
     const orgProps = {
-        findPostByPath: findOrgItemByPath,
-        routes: findRoutes,
-        groups: findGroups,
+        findPostByPath: findPostItemByPath,
+        routes: routes,
+        groups: groups,
         findRoutesByGroup: findRoutesByGroup,
-        formatPostUrl: formatPostUrl,
         formatPostFilePath: formatPostFilePath
     } as OrgProps;
 
