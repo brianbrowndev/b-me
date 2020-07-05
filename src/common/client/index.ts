@@ -2751,7 +2751,7 @@ export class FinancePublicClient extends ApiClientBase {
     }
 
     getTransactionsPerDay(): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/finance/transactions-per-day";
+        let url_ = this.baseUrl + "/public/finance/transactions-per-day";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -2797,7 +2797,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getLatestMealPlan(): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/meal-plan/latest";
+        let url_ = this.baseUrl + "/public/food/meal-plan/latest";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -2831,7 +2831,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getMealPlanRecipes(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/meal-plan/recipes/{id}";
+        let url_ = this.baseUrl + "/public/food/meal-plan/recipes/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -2868,7 +2868,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getRecipe(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/recipes/{id}";
+        let url_ = this.baseUrl + "/public/food/recipes/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -2905,7 +2905,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getMealPlanGroceries(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/meal-plan/groceries/{id}";
+        let url_ = this.baseUrl + "/public/food/meal-plan/groceries/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -2942,7 +2942,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getMealPlan(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/meal-plan/{id}";
+        let url_ = this.baseUrl + "/public/food/meal-plan/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -2979,7 +2979,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getMealPlans(): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/meal-plan";
+        let url_ = this.baseUrl + "/public/food/meal-plan";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -3013,7 +3013,7 @@ export class FoodPublicClient extends ApiClientBase {
     }
 
     getRecipeIngredients(id: number): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/public/food/recipes/{id}/ingredients";
+        let url_ = this.baseUrl + "/public/food/recipes/{id}/ingredients";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -3061,17 +3061,15 @@ export class BlogContentClient extends ApiClientBase {
         this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
-    getSecondary(primary: string | null, secondary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/v1/blog/content/public/{primary}/{secondary}/{name}";
-        if (primary === undefined || primary === null)
-            throw new Error("The parameter 'primary' must be defined.");
-        url_ = url_.replace("{primary}", encodeURIComponent("" + primary));
-        if (secondary === undefined || secondary === null)
-            throw new Error("The parameter 'secondary' must be defined.");
-        url_ = url_.replace("{secondary}", encodeURIComponent("" + secondary));
-        if (name === undefined || name === null)
-            throw new Error("The parameter 'name' must be defined.");
-        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+    getPostContent(content: string, primary?: string | null | undefined, name?: string | null | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/v1/blog/{content}?";
+        if (content === undefined || content === null)
+            throw new Error("The parameter 'content' must be defined.");
+        url_ = url_.replace("{content}", encodeURIComponent("" + content));
+        if (primary !== undefined && primary !== null)
+            url_ += "primary=" + encodeURIComponent("" + primary) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -3084,134 +3082,11 @@ export class BlogContentClient extends ApiClientBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetSecondary(_response);
+            return this.processGetPostContent(_response);
         });
     }
 
-    protected processGetSecondary(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(<any>null);
-    }
-
-    getPrimary(primary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/v1/blog/content/public/{primary}/{name}";
-        if (primary === undefined || primary === null)
-            throw new Error("The parameter 'primary' must be defined.");
-        url_ = url_.replace("{primary}", encodeURIComponent("" + primary));
-        if (name === undefined || name === null)
-            throw new Error("The parameter 'name' must be defined.");
-        url_ = url_.replace("{name}", encodeURIComponent("" + name));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGetPrimary(_response);
-        });
-    }
-
-    protected processGetPrimary(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(<any>null);
-    }
-
-    getPrivateSecondary(primary: string | null, secondary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/v1/blog/content/private/{primary}/{secondary}/{name}";
-        if (primary === undefined || primary === null)
-            throw new Error("The parameter 'primary' must be defined.");
-        url_ = url_.replace("{primary}", encodeURIComponent("" + primary));
-        if (secondary === undefined || secondary === null)
-            throw new Error("The parameter 'secondary' must be defined.");
-        url_ = url_.replace("{secondary}", encodeURIComponent("" + secondary));
-        if (name === undefined || name === null)
-            throw new Error("The parameter 'name' must be defined.");
-        url_ = url_.replace("{name}", encodeURIComponent("" + name));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGetPrivateSecondary(_response);
-        });
-    }
-
-    protected processGetPrivateSecondary(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(<any>null);
-    }
-
-    getPrivatePrimary(primary: string | null, name: string | null): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/v1/blog/content/private/{primary}/{name}";
-        if (primary === undefined || primary === null)
-            throw new Error("The parameter 'primary' must be defined.");
-        url_ = url_.replace("{primary}", encodeURIComponent("" + primary));
-        if (name === undefined || name === null)
-            throw new Error("The parameter 'name' must be defined.");
-        url_ = url_.replace("{name}", encodeURIComponent("" + name));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGetPrivatePrimary(_response);
-        });
-    }
-
-    protected processGetPrivatePrimary(response: Response): Promise<FileResponse> {
+    protected processGetPostContent(response: Response): Promise<FileResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200 || status === 206) {

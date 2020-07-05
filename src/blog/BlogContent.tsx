@@ -111,20 +111,24 @@ function BlogContent(props: BlogContentProps) {
 
     const [item, setItem] = useState<Post>();
     const [text, setText] = useState('');
+    const [url, setUrl] = useState('');
     const [error, setError] = useState<string>();
 
     useEffect(
         (() => {
-            const item = blogContext.findPostByPath(props.url);
-            if (item !== undefined) {
-                setError(undefined);
-                setItem(item);
-                BlogApi.get(blogContext.formatPostFilePath(item.path!)).then(t => setText(t)).catch((e: SwaggerException) => {
-                    setError(e.message)
-                })
+            if (blogContext.routes.length > 0) {
+                const result = blogContext.findPostByPath(props.url);
+                if (result !== undefined && url !== props.url) {
+                    setError(undefined);
+                    setItem(result);
+                    setUrl(props.url);
+                    BlogApi.get(blogContext.formatPostFilePath(result?.path!)).then(t => setText(t)).catch((e: SwaggerException) => {
+                        setError(e.message)
+                    })
+                }
             }
         }),
-        [props.url, blogContext]
+        [url, props.url, blogContext]
     );
 
 

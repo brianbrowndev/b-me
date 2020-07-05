@@ -48,7 +48,7 @@ function BlogProvider(props: any) {
         return routes.find(r => r.path === path);
     }
     function formatPostUrl(path: string): string {
-        return `/content${path}`;
+        return `/content/${path}`;
     }
 
     function formatPostFilePath(path: string): string {
