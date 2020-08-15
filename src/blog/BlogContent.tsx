@@ -3,24 +3,26 @@ import BlogApi from '../common/client/BlogApi'
 import { BlogContext } from './BlogContext';
 import { Typography, Container, createStyles, makeStyles, Theme } from '@material-ui/core';
 import { SwaggerException, Post } from '../common/client';
+import moment from 'moment';
 const DOMPurify = require('dompurify')
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
         container: {
         },
+        titleContainer: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            borderBottom: `4px double ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.12)'}`,
+            marginBottom: theme.spacing(2),
+            paddingBottom: theme.spacing(1),
+        },
         title: {
             fontWeight: theme.typography.fontWeightLight,
             "&h3": {
                 borderBottom: "none"
-            }
-        },
-        subtitle: {
-            fontSize: "18px",
-            borderBottom: `4px double ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.12)'}`,
-            marginBottom: theme.spacing(2),
-            paddingBottom: theme.spacing(1),
-            fontWeight: theme.typography.fontWeightRegular,
+            },
         },
         content: {
             fontFamily: theme.typography.fontFamily,
@@ -38,9 +40,11 @@ const useStyles = makeStyles((theme: Theme) => {
                 fontSize: "1.5rem"
             },
             "& h3": {
+                fontSize: "1.4rem"
+            },
+            "& h4": {
                 fontSize: "1.3rem"
             },
-
 
             "& table": {
                 display: 'block',
@@ -133,13 +137,15 @@ function BlogContent(props: BlogContentProps) {
 
 
     return useMemo(() => (
-        <Container className={classes.container}>
-            <Typography variant="h3" className={classes.title}>
-                {item && item.title}
-            </Typography>
-            <Typography color="textSecondary" variant="subtitle1" className={classes.subtitle}>
-                {item && item.description}
-            </Typography>
+        <Container className={classes.container} maxWidth="md">
+            <div className={classes.titleContainer}>
+                <Typography variant="h3" className={classes.title}>
+                    {item && item.title}
+                </Typography>
+                <Typography variant="subtitle2">
+                    {item && moment(item.date).format("DD MMM  YYYY")}
+                </Typography>
+            </div>
             {error ? (
                 <Typography color="error" variant="overline">Failed to load page.</Typography>
             ) : (

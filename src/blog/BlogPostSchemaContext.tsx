@@ -54,15 +54,10 @@ function BlogPostSchemaContextProvider({ children }: { children: JSX.Element }) 
         type: "text",
         required: true
       } as TextFieldSchema,
-      [propertyOf('description')]: {
-        title: "Description",
-        type: "text",
-        required: false,
-      } as TextFieldSchema,
       [propertyOf('path')]: {
         title: "Path",
         type: "text",
-        helperText: "e.g. /private/life/homes",
+        helperText: "e.g. notes/links",
         required: true,
       } as TextFieldSchema,
       [propertyOf('date')]: {
@@ -87,10 +82,6 @@ function BlogPostSchemaContextProvider({ children }: { children: JSX.Element }) 
     properties: {
       [propertyOf('title')]: {
         title: "Title",
-        type: "text",
-      } as TextFieldSchema,
-      [propertyOf('description')]: {
-        title: "Description",
         type: "text",
       } as TextFieldSchema,
       [propertyOf('postGroup')]: {
