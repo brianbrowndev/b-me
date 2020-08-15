@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Typography, makeStyles, Theme, createStyles, Grid, ListItem, ListItemText, ListItemAvatar, Collapse, List } from '@material-ui/core';
-import {  DataPoint } from '../common/client';
+import { DataPoint } from '../common/client';
 import WeatherIcon from './WeatherIcon';
 import moment, { CalendarSpec } from 'moment';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -9,14 +9,14 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     label: {
-      display:'inline-block',
+      display: 'inline-block',
       fontWeight: theme.typography.fontWeightMedium
     },
     description: {
-      display:'inline-block'
+      display: 'inline-block'
     },
     weatherIcon: {
-      flex:'1'
+      flex: '1'
     }
   })
 });
@@ -27,15 +27,15 @@ interface WeatherListDayProps {
 }
 
 const dayFormat = {
-    sameDay: '[Today]',
-    nextDay: 'dddd',
-    nextWeek: 'dddd',
-    lastDay: 'dddd',
-    lastWeek: 'dddd',
-    sameElse: 'dddd'
+  sameDay: '[Today]',
+  nextDay: 'dddd',
+  nextWeek: 'dddd',
+  lastDay: 'dddd',
+  lastWeek: 'dddd',
+  sameElse: 'dddd'
 } as CalendarSpec;
 
-function WeatherListDay({day}: WeatherListDayProps) {
+function WeatherListDay({ day }: WeatherListDayProps) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -48,7 +48,7 @@ function WeatherListDay({day}: WeatherListDayProps) {
     <Fragment>
       <ListItem button onClick={handleClick}>
         <ListItemAvatar>
-          <WeatherIcon type={day.icon!} size="small"/>
+          <WeatherIcon type={day.icon!} size="small" />
         </ListItemAvatar>
         <ListItemText primary={
           <React.Fragment>
@@ -63,7 +63,7 @@ function WeatherListDay({day}: WeatherListDayProps) {
               </Grid>
             </Typography>
             <Typography variant="subtitle2" color="textSecondary">
-             {day.summary}
+              {day.summary}
             </Typography>
           </React.Fragment>
         }>
@@ -104,7 +104,7 @@ function WeatherListDay({day}: WeatherListDayProps) {
         </List>
       </Collapse>
     </Fragment>
- );
+  );
 }
 
 export default WeatherListDay;
