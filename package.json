@@ -20,6 +20,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "docker-build": "docker-compose -f docker-compose.dev.yml build",
+    "docker-start": "docker-compose -f docker-compose.dev.yml up",
+    "docker-test-build": "docker build -t b-me .",
+    "docker-test-start": "docker run --name b-me -d -p 3001:80 b-me",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "models": "nswag run nswag.json"

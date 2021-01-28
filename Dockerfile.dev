@@ -1,0 +1,6 @@
+FROM node:12.18.1 AS build-stage
+WORKDIR /opt/app
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install
+COPY . .
+CMD ["npx", "react-scripts", "start"]
