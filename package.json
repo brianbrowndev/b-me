@@ -38,6 +38,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "env-cmd": "^10.1.0",
     "node-sass": "^4.14.1",
     "nswag": "^13.6.1",
     "typescript": "3.9.5",
