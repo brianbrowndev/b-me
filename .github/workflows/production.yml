@@ -32,9 +32,6 @@ jobs:
         with:
           context: .
           tags: | 
-            ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ env.RELEASE_VERSION }}
           load: true
-
       - run: docker push ghcr.io/${{ github.repository }}:${{ env.RELEASE_VERSION }}
-      - run: docker push ghcr.io/${{ github.repository }}:latest
