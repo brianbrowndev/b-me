@@ -9,7 +9,7 @@
     "@material-ui/styles": "^4.10.0",
     "auth0-js": "^9.13.2",
     "clsx": "^1.1.1",
-    "dompurify": "^2.0.15",
+    "dompurify": "^2.0.17",
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
