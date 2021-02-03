@@ -8,7 +8,7 @@ Check it [out over here](https://brianbrown.dev/me).
 
 ![home page](docs/home.png)
 
-# Features
+## Features
 
 - Progressive Web App
 - Reading List
@@ -18,7 +18,7 @@ Check it [out over here](https://brianbrown.dev/me).
 - Weather from DarkSky
 - Finances (line by line transactions, annual spending summary)
 
-# Stack
+## Stack
 
 - React 17
 - React Material UI
