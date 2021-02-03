@@ -86,7 +86,8 @@ function Transactions() {
         resolve(newSchema);
       }));
     }
-    return new Promise(resolve => resolve());
+    // todo any
+    return new Promise(resolve => resolve(undefined));
   }
 
 

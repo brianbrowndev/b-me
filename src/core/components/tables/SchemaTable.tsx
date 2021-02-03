@@ -152,7 +152,7 @@ function SchemaTable<T extends ObjectEntity>({ filterSchema, onFilter, onPage, o
   function handleOnFormChange(obj: { [key: string]: any }, changeObj: { [key: string]: any }): void {
     if (onChange) {
       const asyncNewSchema = onChange(schema as FormSchema<T>, obj, changeObj);
-      asyncNewSchema.then(newSchema => newSchema ? setEditSchema(newSchema) : undefined);
+      asyncNewSchema.then(newSchema => newSchema !== undefined ? setEditSchema(newSchema) : undefined);
     }
   }
 
