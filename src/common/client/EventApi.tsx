@@ -1,4 +1,4 @@
-import { EventClient }from './index';
+import { EventClient } from "./index";
 
 const EventApi = new EventClient();
 

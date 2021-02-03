@@ -1,4 +1,4 @@
-import { BlogPostClient } from './index';
+import { BlogPostClient } from "./index";
 
 const BlogPostApi = new BlogPostClient();
 

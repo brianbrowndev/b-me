@@ -1,22 +1,31 @@
-import React, { useContext, useState, Fragment, useEffect } from 'react';
-import { AuthContext } from './Auth'
+import React, { useContext, useState, Fragment, useEffect } from "react";
+import { AuthContext } from "./Auth";
 
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 import {
-  withRouter,
-  RouteComponentProps
-} from "react-router-dom";
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Typography, createStyles, makeStyles, IconButton, Theme, Drawer, ListItem, List, ListItemText, useScrollTrigger, Hidden, useTheme } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { BlogContext } from '../blog/BlogContext';
-import AppLink from './components/AppLink';
-import GroupRouteList, { RouteItem } from './components/GroupRouteLists';
-import ThemeToggleButton from './components/ThemeToggleButton';
-import { PostGroup } from '../common/client';
-
+  Typography,
+  createStyles,
+  makeStyles,
+  IconButton,
+  Theme,
+  Drawer,
+  ListItem,
+  List,
+  ListItemText,
+  useScrollTrigger,
+  Hidden,
+  useTheme,
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { BlogContext } from "../blog/BlogContext";
+import AppLink from "./components/AppLink";
+import GroupRouteList, { RouteItem } from "./components/GroupRouteLists";
+import ThemeToggleButton from "./components/ThemeToggleButton";
+import { PostGroup } from "../common/client";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) => {
@@ -27,21 +36,25 @@ const useStyles = makeStyles((theme: Theme) => {
     logo: {
       color: theme.palette.text.primary,
       fontWeight: 300,
-      fontFamily: 'Montserrat',
+      fontFamily: "Montserrat",
     },
     appBar: {
       marginLeft: drawerWidth,
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up("sm")]: {
         width: `calc(100% - ${drawerWidth}px)`,
       },
-      borderBottom: `1px solid ${theme.palette.type === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.12)'}`
+      borderBottom: `1px solid ${
+        theme.palette.type === "light"
+          ? "rgba(0,0,0,0.12)"
+          : "rgba(255,255,255,0.12)"
+      }`,
     },
     drawer: {
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up("sm")]: {
         width: drawerWidth,
         flexShrink: 0,
       },
-      backgroundColor: theme.palette.primary.light
+      backgroundColor: theme.palette.primary.light,
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
@@ -50,13 +63,13 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     menuButton: {
       marginRight: theme.spacing(2),
-      [theme.breakpoints.up('sm')]: {
-        display: 'none',
+      [theme.breakpoints.up("sm")]: {
+        display: "none",
       },
     },
 
     login: {
-      position: 'relative',
+      position: "relative",
       bottom: 0,
     },
     contentList: {
@@ -66,12 +79,10 @@ const useStyles = makeStyles((theme: Theme) => {
       fontWeight: theme.typography.fontWeightBold,
     },
     listIcon: {
-      color: 'inherit'
-    }
-
-  })
-},
-);
+      color: "inherit",
+    },
+  });
+});
 
 function ElevationScroll(props: any) {
   const { children, window } = props;
@@ -90,7 +101,6 @@ function ElevationScroll(props: any) {
 }
 
 function Header({ history }: RouteComponentProps) {
-
   const authContext = useContext(AuthContext);
   const blogContext = useContext(BlogContext);
 
@@ -103,7 +113,7 @@ function Header({ history }: RouteComponentProps) {
   const handleDrawerToggle = () => setOpen(!open);
   const handleDrawerClose = () => setOpen(false);
 
-  const [groups, setGroups] = useState<PostGroup[]>([])
+  const [groups, setGroups] = useState<PostGroup[]>([]);
 
   useEffect(() => {
     setGroups(blogContext.groups);
@@ -112,18 +122,31 @@ function Header({ history }: RouteComponentProps) {
   const drawer = (
     <Fragment>
       <Toolbar />
-      <List
-        component="div"
-        className={classes.contentList}>
+      <List component="div" className={classes.contentList}>
         <AppLink to="/" exact={true} onClick={handleDrawerClose}>
           <ListItem button>
-            <ListItemText primary="Home" classes={{ primary: classes.listTitle }} />
+            <ListItemText
+              primary="Home"
+              classes={{ primary: classes.listTitle }}
+            />
           </ListItem>
         </AppLink>
-        {groups.map(group =>
-          <GroupRouteList title={group.name!} items={blogContext.findRoutesByGroup(group).map(r => r as RouteItem).sort((a, b) => a.title! > b.title! ? 1 : a.title! < b.title! ? -1 : 0)} onClick={handleDrawerClose} key={group.id} history={history} nested={true} />
-        )}
-        {authContext.authenticated &&
+        {groups.map((group) => (
+          <GroupRouteList
+            title={group.name!}
+            items={blogContext
+              .findRoutesByGroup(group)
+              .map((r) => r as RouteItem)
+              .sort((a, b) =>
+                a.title! > b.title! ? 1 : a.title! < b.title! ? -1 : 0
+              )}
+            onClick={handleDrawerClose}
+            key={group.id}
+            history={history}
+            nested={true}
+          />
+        ))}
+        {authContext.authenticated && (
           <GroupRouteList
             title="Admin"
             onClick={handleDrawerClose}
@@ -131,32 +154,44 @@ function Header({ history }: RouteComponentProps) {
             items={[{ path: "/admin/content", title: "Content" }]}
             nested={true}
           />
-        }
-        {authContext.authenticated &&
+        )}
+        {authContext.authenticated && (
           <GroupRouteList
             title="Finance"
             onClick={handleDrawerClose}
             history={history}
-            items={[{ path: "/finance/dashboard", title: "Dashboard" }, { path: "/finance/transactions", title: "Transactions" }, { path: "/finance/expenses", title: "Expenses" }]}
+            items={[
+              { path: "/finance/dashboard", title: "Dashboard" },
+              { path: "/finance/transactions", title: "Transactions" },
+              { path: "/finance/expenses", title: "Expenses" },
+            ]}
             nested={true}
           />
-        }
-        {!authContext.authenticated &&
+        )}
+        {!authContext.authenticated && (
           <AppLink to="/reading/books" exact={true} onClick={handleDrawerClose}>
             <ListItem button>
-              <ListItemText primary="Reading List" classes={{ primary: classes.listTitle }} />
+              <ListItemText
+                primary="Reading List"
+                classes={{ primary: classes.listTitle }}
+              />
             </ListItem>
           </AppLink>
-        }
-        {authContext.authenticated &&
+        )}
+        {authContext.authenticated && (
           <GroupRouteList
             title="Reading"
             onClick={handleDrawerClose}
             history={history}
-            items={[{ path: "/reading/books", title: "Books" }, { path: "/reading/authors", title: "Authors" }, { path: "/reading/categories", title: "Categories" }, { path: "/reading/statuses", title: "Statuses" }]}
+            items={[
+              { path: "/reading/books", title: "Books" },
+              { path: "/reading/authors", title: "Authors" },
+              { path: "/reading/categories", title: "Categories" },
+              { path: "/reading/statuses", title: "Statuses" },
+            ]}
             nested={true}
           />
-        }
+        )}
       </List>
     </Fragment>
   );
@@ -175,39 +210,31 @@ function Header({ history }: RouteComponentProps) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title} >
+            <Typography variant="h6" className={classes.title}>
               <AppLink to="/">
                 <span className={classes.logo}>ME</span>
               </AppLink>
             </Typography>
             <ThemeToggleButton />
-            {authContext.authenticated ?
-              (
-                <IconButton
-                  onClick={logout}
-                  color="inherit"
-                  aria-label="logout">
-                  <ExitToAppIcon />
+            {authContext.authenticated ? (
+              <IconButton onClick={logout} color="inherit" aria-label="logout">
+                <ExitToAppIcon />
+              </IconButton>
+            ) : (
+              <AppLink to="/login">
+                <IconButton color="inherit" aria-label="login">
+                  <AccountCircleIcon />
                 </IconButton>
-              ) : (
-                <AppLink to="/login">
-                  <IconButton
-                    color="inherit"
-                    aria-label="login"
-                  >
-                    <AccountCircleIcon />
-                  </IconButton>
-                </AppLink>
-              )}
+              </AppLink>
+            )}
           </Toolbar>
-
         </AppBar>
       </ElevationScroll>
       <nav className={classes.drawer}>
         <Hidden smUp>
           <Drawer
             variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            anchor={theme.direction === "rtl" ? "right" : "left"}
             open={open}
             onClose={handleDrawerToggle}
             classes={{
@@ -231,12 +258,9 @@ function Header({ history }: RouteComponentProps) {
             {drawer}
           </Drawer>
         </Hidden>
-
-
       </nav>
     </Fragment>
   );
 }
-
 
 export default withRouter(Header);

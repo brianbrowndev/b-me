@@ -1,38 +1,48 @@
-import React, { Fragment, useState } from 'react';
-import { Typography, makeStyles, Theme, createStyles, Grid, ListItem, ListItemText, ListItemAvatar, Collapse, List } from '@material-ui/core';
-import { DataPoint } from '../common/client';
-import WeatherIcon from './WeatherIcon';
-import moment, { CalendarSpec } from 'moment';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import React, { Fragment, useState } from "react";
+import {
+  Typography,
+  makeStyles,
+  Theme,
+  createStyles,
+  Grid,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Collapse,
+  List,
+} from "@material-ui/core";
+import { DataPoint } from "../common/client";
+import WeatherIcon from "./WeatherIcon";
+import moment, { CalendarSpec } from "moment";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     label: {
-      display: 'inline-block',
-      fontWeight: theme.typography.fontWeightMedium
+      display: "inline-block",
+      fontWeight: theme.typography.fontWeightMedium,
     },
     description: {
-      display: 'inline-block'
+      display: "inline-block",
     },
     weatherIcon: {
-      flex: '1'
-    }
-  })
+      flex: "1",
+    },
+  });
 });
 
 interface WeatherListDayProps {
   day: DataPoint;
-
 }
 
 const dayFormat = {
-  sameDay: '[Today]',
-  nextDay: 'dddd',
-  nextWeek: 'dddd',
-  lastDay: 'dddd',
-  lastWeek: 'dddd',
-  sameElse: 'dddd'
+  sameDay: "[Today]",
+  nextDay: "dddd",
+  nextWeek: "dddd",
+  lastDay: "dddd",
+  lastWeek: "dddd",
+  sameElse: "dddd",
 } as CalendarSpec;
 
 function WeatherListDay({ day }: WeatherListDayProps) {
@@ -43,31 +53,41 @@ function WeatherListDay({ day }: WeatherListDayProps) {
     setOpen(!open);
   };
 
-
   return (
     <Fragment>
       <ListItem button onClick={handleClick}>
         <ListItemAvatar>
           <WeatherIcon type={day.icon!} size="small" />
         </ListItemAvatar>
-        <ListItemText primary={
-          <React.Fragment>
-            <Typography variant="subtitle2" color="textPrimary">
-              <Grid container direction="row" justify="space-between" spacing={0}>
-                <Grid item>
-                  {moment(day.dateTime!).calendar(undefined, dayFormat)}
+        <ListItemText
+          primary={
+            <React.Fragment>
+              <Typography variant="subtitle2" color="textPrimary">
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  spacing={0}
+                >
+                  <Grid item>
+                    {moment(day.dateTime!).calendar(undefined, dayFormat)}
+                  </Grid>
+                  <Grid item>
+                    {day.apparentTemperatureHigh &&
+                      day.apparentTemperatureHigh.toFixed(0)}
+                    &#176; |{" "}
+                    {day.apparentTemperatureLow &&
+                      day.apparentTemperatureLow.toFixed(0)}
+                    &#176;
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  {day.apparentTemperatureHigh && day.apparentTemperatureHigh.toFixed(0)}&#176; | {day.apparentTemperatureLow && day.apparentTemperatureLow.toFixed(0)}&#176;
-                </Grid>
-              </Grid>
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-              {day.summary}
-            </Typography>
-          </React.Fragment>
-        }>
-        </ListItemText>
+              </Typography>
+              <Typography variant="subtitle2" color="textSecondary">
+                {day.summary}
+              </Typography>
+            </React.Fragment>
+          }
+        ></ListItemText>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -96,7 +116,9 @@ function WeatherListDay({ day }: WeatherListDayProps) {
                   Rain:&nbsp;
                 </Typography>
                 <Typography className={classes.description} variant="body2">
-                  {day.precipProbability && (day.precipProbability * 100).toFixed(0)}%
+                  {day.precipProbability &&
+                    (day.precipProbability * 100).toFixed(0)}
+                  %
                 </Typography>
               </Grid>
             </Grid>

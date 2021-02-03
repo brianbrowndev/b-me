@@ -8,7 +8,7 @@ const ScrollToTop = (props: RouteComponentProps) => {
   }, [props.location.pathname]);
 
   // cannot find a type with not null location and children prop...
-  return (props as any)['children'] || null;
+  return (props as any)["children"] || null;
 };
 
 export default withRouter(ScrollToTop);

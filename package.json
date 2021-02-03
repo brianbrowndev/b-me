@@ -24,6 +24,7 @@
     "docker-start": "docker-compose -f docker-compose.dev.yml up",
     "docker-test-build": "docker build -t b-me .",
     "docker-test-start": "docker run --name b-me -d -p 3001:80 b-me",
+    "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "models": "nswag run nswag.json"
@@ -37,7 +38,20 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1",
     "env-cmd": "^10.1.0",
     "node-sass": "^5.0.0",
     "nswag": "^13.10.1",

@@ -1,101 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import { FormSchema,  TextFieldSchema, DateFieldSchema, CurrencyFieldSchema, MultiSelectFieldSchema } from '../core/components/forms/SchemaForm';
-import { TransactionRecord, Expense, TransactionCategory } from '../common/client';
-import { LookupEntity } from '../core/components/forms/lookups/LookupEntity.interface';
-import EditSchemaContextProps from '../core/components/forms/EditSchemaContextProps.interface';
-import FormYearOptions from '../core/components/forms/FormYearOptions';
-import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
-import FormMonthOptions from '../core/components/forms/FormMonthOptions.tsx';
-import FormOptionType from '../core/components/forms/FormOptionType';
-import { FinanceApi } from '../common/client/FinanceApi';
-import getLookupName from '../core/components/forms/lookups/getLookupName';
-import { SchemaTableConfig } from '../core/components/tables/SchemaTable';
+import React, { useState, useEffect } from "react";
+import {
+  FormSchema,
+  TextFieldSchema,
+  DateFieldSchema,
+  CurrencyFieldSchema,
+  MultiSelectFieldSchema,
+} from "../core/components/forms/SchemaForm";
+import {
+  TransactionRecord,
+  Expense,
+  TransactionCategory,
+} from "../common/client";
+import { LookupEntity } from "../core/components/forms/lookups/LookupEntity.interface";
+import EditSchemaContextProps from "../core/components/forms/EditSchemaContextProps.interface";
+import FormYearOptions from "../core/components/forms/FormYearOptions";
+import currencyFormatter from "../core/components/formatters/CurrencyFormatter";
+import FormMonthOptions from "../core/components/forms/FormMonthOptions.tsx";
+import FormOptionType from "../core/components/forms/FormOptionType";
+import { FinanceApi } from "../common/client/FinanceApi";
+import getLookupName from "../core/components/forms/lookups/getLookupName";
+import { SchemaTableConfig } from "../core/components/tables/SchemaTable";
 
 export interface ExpenseFilter {
   years: LookupEntity[];
   months: LookupEntity[];
   categories: TransactionCategory[];
-} 
+}
 
 export const ExpenseUtility = {
-  propertyOf: (e: keyof Expense) => e
+  propertyOf: (e: keyof Expense) => e,
 };
 
-export interface ExpensesTableConfig extends Omit<SchemaTableConfig, 'filter'>  {
-  filter:ExpenseFilter;
-};
+export interface ExpensesTableConfig extends Omit<SchemaTableConfig, "filter"> {
+  filter: ExpenseFilter;
+}
 
-const ExpenseSchemaContext = React.createContext({} as EditSchemaContextProps<Expense | ExpenseFilter>);
+const ExpenseSchemaContext = React.createContext(
+  {} as EditSchemaContextProps<Expense | ExpenseFilter>
+);
 
-
-function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
-
+function ExpenseSchemaContextProvider({ children }: { children: JSX.Element }) {
   const [categories, setCategories] = useState<FormOptionType[]>([]);
 
-  useEffect(
-    (() => {
-      const setOption = (obj:any, label:string, value: string | number | undefined) => ({...obj, label:label, value:value} as FormOptionType);
-      Promise.all([FinanceApi.getCategories()]).then(
-        ([categories]) => {
-          setCategories(categories.map(r => setOption(r, r.name as string, r.id))) 
-        }
-      ).catch(err => {
-        console.log(err);
+  useEffect(() => {
+    const setOption = (
+      obj: any,
+      label: string,
+      value: string | number | undefined
+    ) => ({ ...obj, label: label, value: value } as FormOptionType);
+    Promise.all([FinanceApi.getCategories()])
+      .then(([categories]) => {
+        setCategories(
+          categories.map((r) => setOption(r, r.name as string, r.id))
+        );
       })
-    }), []
-  );
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const schema = {
-    title: '',
+    title: "",
     properties: {
-      [ExpenseUtility.propertyOf('date')]: {
+      [ExpenseUtility.propertyOf("date")]: {
         title: "Date",
         type: "date",
-        required: true
+        required: true,
       } as DateFieldSchema,
-     [ExpenseUtility.propertyOf('categoryName')]: {
+      [ExpenseUtility.propertyOf("categoryName")]: {
         title: "Category",
         type: "text",
         required: true,
       } as TextFieldSchema,
-     [ExpenseUtility.propertyOf('plannedAmount')]: {
+      [ExpenseUtility.propertyOf("plannedAmount")]: {
         title: "Planned Amount",
         type: "currency",
         required: true,
-        getVal: (value => currencyFormatter.format(value)),
+        getVal: (value) => currencyFormatter.format(value),
       } as CurrencyFieldSchema,
-      [ExpenseUtility.propertyOf('actualAmount')]: {
+      [ExpenseUtility.propertyOf("actualAmount")]: {
         title: "Actual Amount",
         type: "currency",
         required: true,
-        getVal: (value => currencyFormatter.format(value)),
+        getVal: (value) => currencyFormatter.format(value),
       } as CurrencyFieldSchema,
-       [ExpenseUtility.propertyOf('remainder')]: {
+      [ExpenseUtility.propertyOf("remainder")]: {
         title: "Difference",
         type: "currency",
         required: true,
-        getVal: (value => currencyFormatter.format(value)),
+        getVal: (value) => currencyFormatter.format(value),
       } as CurrencyFieldSchema,
     },
-    object: {} as TransactionRecord
+    object: {} as TransactionRecord,
   } as FormSchema<TransactionRecord>;
 
   const filterSchema = {
-    title: 'Filter Transactions',
+    title: "Filter Transactions",
     properties: {
       years: {
         title: "Years",
         type: "multiselect",
         required: false,
         options: FormYearOptions,
-        getVal: getLookupName
+        getVal: getLookupName,
       } as MultiSelectFieldSchema,
       months: {
         title: "Months",
         type: "multiselect",
         required: false,
         options: FormMonthOptions,
-        getVal: getLookupName
+        getVal: getLookupName,
       } as MultiSelectFieldSchema,
       categories: {
         title: "Categories",
@@ -105,35 +119,39 @@ function ExpenseSchemaContextProvider ({children}: {children:JSX.Element}) {
         getVal: getLookupName,
       } as MultiSelectFieldSchema,
     },
-    object: {years:[{id:"2019", name:"2019"}], months:[], categories: []} as ExpenseFilter,
-    type: 'FILTER',
-    save: (o: Expense) => Promise.resolve(null) // Bypass saving, and apply the filter higher up in a get request
+    object: {
+      years: [{ id: "2019", name: "2019" }],
+      months: [],
+      categories: [],
+    } as ExpenseFilter,
+    type: "FILTER",
+    save: (o: Expense) => Promise.resolve(null), // Bypass saving, and apply the filter higher up in a get request
   } as FormSchema<ExpenseFilter>;
 
   const schemaEditProps = {
-    get: action => {
+    get: (action) => {
       switch (action.type) {
-        case 'ADD':
+        case "ADD":
           return {
-            ...schema, 
-            object: {}, 
-            title: 'New Transaction',
-            save: () => Promise.resolve(null)
-          } as FormSchema<Expense>
-        case 'FILTER':
+            ...schema,
+            object: {},
+            title: "New Transaction",
+            save: () => Promise.resolve(null),
+          } as FormSchema<Expense>;
+        case "FILTER":
           return {
-            ...filterSchema, 
-            title: 'Filter Transactions',
-          } as FormSchema<ExpenseFilter>
+            ...filterSchema,
+            title: "Filter Transactions",
+          } as FormSchema<ExpenseFilter>;
       }
     },
   } as EditSchemaContextProps<Expense | ExpenseFilter>;
 
   return (
-    <ExpenseSchemaContext.Provider value={{...schemaEditProps}}>
+    <ExpenseSchemaContext.Provider value={{ ...schemaEditProps }}>
       {children}
     </ExpenseSchemaContext.Provider>
-  )
+  );
 }
 
-export { ExpenseSchemaContext, ExpenseSchemaContextProvider};
+export { ExpenseSchemaContext, ExpenseSchemaContextProvider };

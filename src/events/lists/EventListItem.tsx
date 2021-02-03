@@ -1,11 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import './EventListItem.scss';
+import "./EventListItem.scss";
 
-
-function EventListItem (props:any) {
-    return  <li className='Event-list-item'>{props.children}</li>;
-
+function EventListItem(props: any) {
+  return <li className="Event-list-item">{props.children}</li>;
 }
 
 export default EventListItem;

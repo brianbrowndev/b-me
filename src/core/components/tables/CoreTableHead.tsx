@@ -1,5 +1,10 @@
-import React from 'react';
-import { TableHead, TableRow, TableCell, TableSortLabel } from '@material-ui/core';
+import React from "react";
+import {
+  TableHead,
+  TableRow,
+  TableCell,
+  TableSortLabel,
+} from "@material-ui/core";
 
 export interface HeadRow {
   disablePadding: boolean;
@@ -8,8 +13,7 @@ export interface HeadRow {
   numeric: boolean;
 }
 
-export type TableHeaderOrder  = 'asc' | 'desc';
-
+export type TableHeaderOrder = "asc" | "desc";
 
 interface CoreTableProps {
   onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
@@ -20,18 +24,20 @@ interface CoreTableProps {
 
 function CoreTableHead(props: CoreTableProps) {
   const { headRows, order, orderBy, onRequestSort } = props;
-  const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: string) => (
+    event: React.MouseEvent<unknown>
+  ) => {
     onRequestSort(event, property);
   };
 
   return (
     <TableHead>
       <TableRow>
-       {headRows.map(row => (
+        {headRows.map((row) => (
           <TableCell
             key={row.id}
-            align={row.numeric ? 'right' : 'left'}
-            padding={row.disablePadding ? 'none' : 'default'}
+            align={row.numeric ? "right" : "left"}
+            padding={row.disablePadding ? "none" : "default"}
             sortDirection={orderBy === row.id ? order : false}
           >
             <TableSortLabel

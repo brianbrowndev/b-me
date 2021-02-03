@@ -1,4 +1,4 @@
-import { WeatherClient }from './index';
+import { WeatherClient } from "./index";
 
 const WeatherApi = new WeatherClient();
 

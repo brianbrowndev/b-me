@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
 
 export default function withProvider(WrappedComponent: any, Provider: any) {
-  return (props: any) =>  
-      <Provider>
-        <WrappedComponent {...props} />
-      </Provider>
+  return (props: any) => (
+    <Provider>
+      <WrappedComponent {...props} />
+    </Provider>
+  );
 }

@@ -1,5 +1,5 @@
-import { UserClient  }from './index';
+import { UserClient } from "./index";
 
 const UserApi = new UserClient();
 
-export {UserApi};
+export { UserApi };

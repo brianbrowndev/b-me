@@ -1,8 +1,7 @@
-import React, { useState, Fragment } from 'react';
-import { Collapse, Typography, Grid } from '@material-ui/core';
-import currencyFormatter from '../core/components/formatters/CurrencyFormatter';
-import TextListItem from '../core/components/lists/TextListItem';
-
+import React, { useState, Fragment } from "react";
+import { Collapse, Typography, Grid } from "@material-ui/core";
+import currencyFormatter from "../core/components/formatters/CurrencyFormatter";
+import TextListItem from "../core/components/lists/TextListItem";
 
 interface FinancialSummaryLineItemProps {
   title: string;
@@ -10,8 +9,11 @@ interface FinancialSummaryLineItemProps {
   children: JSX.Element[] | JSX.Element;
 }
 
-
-function FinancialSummaryLineItem ({title, amount, children}:FinancialSummaryLineItemProps) {
+function FinancialSummaryLineItem({
+  title,
+  amount,
+  children,
+}: FinancialSummaryLineItemProps) {
   // const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -19,27 +21,23 @@ function FinancialSummaryLineItem ({title, amount, children}:FinancialSummaryLin
 
   return (
     <Fragment>
-      <TextListItem onClick={handleClick}
+      <TextListItem
+        onClick={handleClick}
         button
         content={
-        <Typography variant="subtitle2" color="textPrimary">
-          <Grid container direction="row" justify="space-between" spacing={0}>
-            <Grid item>
-              {title}
+          <Typography variant="subtitle2" color="textPrimary">
+            <Grid container direction="row" justify="space-between" spacing={0}>
+              <Grid item>{title}</Grid>
+              <Grid item>{currencyFormatter.format(amount)}</Grid>
             </Grid>
-            <Grid item>
-              {currencyFormatter.format(amount)}
-            </Grid>
-          </Grid>
-        </Typography>
+          </Typography>
         }
       />
       <Collapse in={open} timeout="auto" unmountOnExit>
         {children}
       </Collapse>
     </Fragment>
-  )
-
+  );
 }
 
 export default FinancialSummaryLineItem;

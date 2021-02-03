@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import React, { Fragment } from "react";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 
 interface EditMenuProps {
-  onDelete():void;
-  onEdit():void;
+  onDelete(): void;
+  onEdit(): void;
 }
 
-export default function EditMenu({ onDelete, onEdit}: EditMenuProps)  {
+export default function EditMenu({ onDelete, onEdit }: EditMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -28,7 +28,7 @@ export default function EditMenu({ onDelete, onEdit}: EditMenuProps)  {
     handleClose();
   }
 
-  return(
+  return (
     <Fragment>
       <IconButton
         color="inherit"
@@ -52,5 +52,4 @@ export default function EditMenu({ onDelete, onEdit}: EditMenuProps)  {
       </Menu>
     </Fragment>
   );
-
 }

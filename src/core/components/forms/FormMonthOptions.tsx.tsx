@@ -12,7 +12,5 @@ export default [
   ["September", "09"],
   ["October", "10"],
   ["November", "11"],
-  ["December", "12"]
-].map(([label, value]) => ({value: value, label:label} as FormOptionType));
-
-
+  ["December", "12"],
+].map(([label, value]) => ({ value: value, label: label } as FormOptionType));

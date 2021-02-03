@@ -1,7 +1,13 @@
-import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
-import {  AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
+import React from "react";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import CloseIcon from "@material-ui/icons/Close";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -10,32 +16,44 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
-    }
-  }),
+    },
+  })
 );
-
 
 interface FormAppBarProps {
   title: string;
-  onCancel():void;
+  onCancel(): void;
   isSaving: boolean;
   saveText?: string;
 }
 
-
-export default function FormAppBar({ title, onCancel, isSaving, saveText }: FormAppBarProps) {
+export default function FormAppBar({
+  title,
+  onCancel,
+  isSaving,
+  saveText,
+}: FormAppBarProps) {
   const classes = useStyles();
-  
+
   return (
-    <AppBar position="static"  color="secondary">
+    <AppBar position="static" color="secondary">
       <Toolbar>
-        <IconButton type="button" edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={onCancel}>
+        <IconButton
+          type="button"
+          edge="start"
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+          onClick={onCancel}
+        >
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
           {title}
         </Typography>
-        <Button type="submit" color="inherit" disabled={isSaving}>{saveText || 'Save'}</Button>
+        <Button type="submit" color="inherit" disabled={isSaving}>
+          {saveText || "Save"}
+        </Button>
       </Toolbar>
     </AppBar>
   );

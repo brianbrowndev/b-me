@@ -1,4 +1,4 @@
-import { GeocodeClient }from './index';
+import { GeocodeClient } from "./index";
 
 const GeocodeApi = new GeocodeClient();
 
