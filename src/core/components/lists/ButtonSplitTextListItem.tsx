@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Grid, TypographyProps } from '@material-ui/core';
 import TextListItem from './TextListItem';
 
-export default function ({left, right, handleClick, ...typographyProps}:{left:any, right: any, handleClick:Function} & TypographyProps) {
+export default function ButtonSplitTextListItem ({left, right, handleClick, ...typographyProps}:{left:any, right: any, handleClick:Function} & TypographyProps) {
   return (
       <TextListItem onClick={handleClick}
         button

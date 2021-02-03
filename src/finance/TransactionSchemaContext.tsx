@@ -19,8 +19,8 @@ export const transactionUtility = {
   propertyOf: (e: keyof TransactionTableRecord) => e,
 
   mapToTransactionRecord: (record:TransactionTableRecord): TransactionRecord => {
-    var item = {...record};
-    var transactionRecordTags: TransactionRecord[] = [];
+    const item = {...record};
+    const transactionRecordTags: TransactionRecord[] = [];
     record?.tags?.forEach(tag => {
       const id = tag?.transactionRecordTag[0]?.id || 0;
       transactionRecordTags.push({id:id, transactionRecordId:record.id, tagId:tag.id, tag:tag} as TransactionRecordTag)
@@ -30,8 +30,8 @@ export const transactionUtility = {
   },
 
   mapToTransactionTableRecord: (record:TransactionRecord): TransactionTableRecord => {
-    var item = {...record};
-    var tags = record?.transactionRecordTag?.map(t => ({...t.tag, label:t.tag?.name, value: t.tag?.id, transactionRecordTag:[t]} as FormOptionType));
+    const item = {...record};
+    const tags = record?.transactionRecordTag?.map(t => ({...t.tag, label:t.tag?.name, value: t.tag?.id, transactionRecordTag:[t]} as FormOptionType));
     delete item[transactionUtility.propertyOfTransactionRecord('transactionRecordTag')];
     return {...item, tags:tags} as TransactionTableRecord;
   }
