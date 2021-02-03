@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Event, SwaggerException } from "../../common/client/index";
 
-import "./EventListItemView.scss";
 import EventApi from "../../common/client/EventApi";
 
 interface EventListItemViewProps {
