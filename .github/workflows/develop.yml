@@ -30,5 +30,9 @@ jobs:
           file: ./Dockerfile.test
           tags: ghcr.io/${{ github.repository }}:latest
           load: true
-
       - run: docker push ghcr.io/${{ github.repository }}:latest
+      - name: Trigger webhook
+      run: |
+        payload='{ "application_name": "test-me", "image_digest": "${{ steps.docker_build.outputs.digest }}", "image_tag": "latest" }'
+        token='X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}'
+        curl -i -X POST -H 'Content-Type: application/json' -H "${token}"  -d "${payload}" https://hooks.brianbrown.dev/hooks/develop
