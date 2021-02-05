@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - v*
-    
 
 jobs:
   deploy:
@@ -31,12 +30,12 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          tags: | 
+          tags: |
             ghcr.io/${{ github.repository }}:${{ env.RELEASE_VERSION }}
           load: true
       - run: docker push ghcr.io/${{ github.repository }}:${{ env.RELEASE_VERSION }}
       - name: Trigger webhook
-      run: |
-        payload='{ "application_name": "prod-me", "image_digest": "${{ steps.docker_build.outputs.digest }}", "image_tag": "${{ env.RELEASE_VERSION }}", "repo_name": "${{ github.repository }}"}'
-        token='X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}'
-        curl -i -X POST -H 'Content-Type: application/json' -H "${token}"  -d "${payload}" https://hooks.brianbrown.dev/hooks/production
+        run: |
+          payload='{ "application_name": "prod-me", "image_digest": "${{ steps.docker_build.outputs.digest }}", "image_tag": "${{ env.RELEASE_VERSION }}", "repo_name": "${{ github.repository }}"}'
+          token='X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}'
+          curl -i -X POST -H 'Content-Type: application/json' -H "${token}"  -d "${payload}" https://hooks.brianbrown.dev/hooks/production
