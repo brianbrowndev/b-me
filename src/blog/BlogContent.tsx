@@ -102,6 +102,13 @@ const useStyles = makeStyles((theme: Theme) => {
         display: "none",
       },
       "& .timestamp": {},
+      "& .org-src-container": {
+        background: "#f6f6f6",
+        overflowX: "scroll",
+        padding: theme.spacing(0, 2),
+        borderRadius: "0.25rem",
+        margin: theme.spacing(1, 0),
+      },
     },
   });
 });
