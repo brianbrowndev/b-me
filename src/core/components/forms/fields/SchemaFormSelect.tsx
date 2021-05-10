@@ -15,7 +15,7 @@ export default function SchemaFormSelect({
     <FormSelect
       label={schema.title}
       error={error}
-      required={schema.required}
+      required={schema.required || false}
       id={property}
       options={schema.options}
       helperText={schema.helperText}

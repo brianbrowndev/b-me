@@ -226,8 +226,8 @@ function SchemaTable<T extends ObjectEntity>({
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {state.rows.map((row) => (
-              <TableRow key={row.id}>
+            {state.rows.map((row, idx) => (
+              <TableRow key={idx}>
                 {Object.entries(schema.properties).map(
                   ([property, fieldSchema]) => (
                     <TableCell key={property}>

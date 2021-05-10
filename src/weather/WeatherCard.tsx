@@ -71,7 +71,7 @@ function WeatherCard() {
               type: 0,
               confidence: 1,
               formattedAddress: "E Grace St, Richmond, VA 23223",
-              coordinates: { lat: 37.5251146, lng: -77.4128081 },
+              coordinates: { latitude: 37.5251146, longitude: -77.4128081 },
               provider: "Bing",
             },
           ])

@@ -8,6 +8,7 @@ import {
   CurrencyFieldSchema,
   SelectMenuFieldSchema,
   SwitchFieldSchema,
+  NumberFieldSchema,
 } from "../SchemaForm";
 import SchemaFormSelect from "./SchemaFormSelect";
 import SchemaFormText from "./SchemaFormText";
@@ -16,6 +17,7 @@ import SchemaFormDate from "./SchemaFormDate";
 import SchemaFormCurrency from "./SchemaFormCurrency";
 import SchemaFormSelectMenu from "./SchemaFormSelectMenu";
 import SchemaFormSwitch from "./SchemaFormSwitch";
+import SchemaFormNumber from "./SchemaFormNumber";
 
 export interface SchemaFieldProps<T> {
   property: string;
@@ -32,6 +34,7 @@ export default function SchemaFormField(
     | MultiSelectFieldSchema
     | SelectFieldSchema
     | DateFieldSchema
+    | NumberFieldSchema
     | FieldSchema
     | CurrencyFieldSchema
     | SwitchFieldSchema
@@ -51,6 +54,10 @@ export default function SchemaFormField(
         <SchemaFormCurrency
           {...(props as SchemaFieldProps<CurrencyFieldSchema>)}
         />
+      );
+    case "number":
+      return (
+        <SchemaFormNumber {...(props as SchemaFieldProps<NumberFieldSchema>)} />
       );
     case "date":
       return (

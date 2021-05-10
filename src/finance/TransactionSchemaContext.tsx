@@ -42,7 +42,7 @@ export const transactionUtility = {
     const item = { ...record };
     const transactionRecordTags: TransactionRecord[] = [];
     record?.tags?.forEach((tag) => {
-      const id = tag?.transactionRecordTag[0]?.id || 0;
+      const id = tag?.transactionRecordTags[0]?.id || 0;
       transactionRecordTags.push({
         id: id,
         transactionRecordId: record.id,
@@ -53,7 +53,7 @@ export const transactionUtility = {
     delete item[transactionUtility.propertyOf("tags")];
     return {
       ...item,
-      transactionRecordTag: transactionRecordTags,
+      transactionRecordTags: transactionRecordTags,
     } as TransactionRecord;
   },
 
@@ -61,7 +61,7 @@ export const transactionUtility = {
     record: TransactionRecord
   ): TransactionTableRecord => {
     const item = { ...record };
-    const tags = record?.transactionRecordTag?.map(
+    const tags = record?.transactionRecordTags?.map(
       (t) =>
         ({
           ...t.tag,
@@ -71,14 +71,14 @@ export const transactionUtility = {
         } as FormOptionType)
     );
     delete item[
-      transactionUtility.propertyOfTransactionRecord("transactionRecordTag")
+      transactionUtility.propertyOfTransactionRecord("transactionRecordTags")
     ];
     return { ...item, tags: tags } as TransactionTableRecord;
   },
 };
 
 export interface TransactionTableRecord
-  extends Omit<TransactionRecord, "transactionRecordTag"> {
+  extends Omit<TransactionRecord, "transactionRecordTags"> {
   tags: FormOptionType[];
 }
 

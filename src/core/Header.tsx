@@ -164,6 +164,7 @@ function Header({ history }: RouteComponentProps) {
               { path: "/finance/dashboard", title: "Dashboard" },
               { path: "/finance/transactions", title: "Transactions" },
               { path: "/finance/expenses", title: "Expenses" },
+              { path: "/finance/crypto", title: "Crypto" },
             ]}
             nested={true}
           />

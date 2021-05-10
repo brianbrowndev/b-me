@@ -15,6 +15,7 @@ import { PrivateRoute } from "./core/Auth";
 import Transactions from "./finance/Transactions";
 import FinanceDashboard from "./finance/Dashboard";
 import FinanceExpenses from "./finance/Expenses";
+import CryptoInvestment from "./finance/Crypto";
 import BlogPosts from "./blog/BlogPosts";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -66,6 +67,11 @@ function Main() {
                 path="/finance/expenses"
                 component={FinanceExpenses}
               />
+              <PrivateRoute
+                exact
+                path="/finance/crypto"
+                component={CryptoInvestment}
+              />
 
               <Route exact path="/reading/books" component={Books} />
               <PrivateRoute
@@ -75,7 +81,7 @@ function Main() {
               />
               <PrivateRoute
                 exact
-                path="/readin/categories"
+                path="/reading/categories"
                 component={BookCategories}
               />
               <PrivateRoute

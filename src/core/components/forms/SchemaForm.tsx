@@ -5,6 +5,9 @@ import FormOptionType from "./FormOptionType";
 import SchemaFormField from "./fields/SchemaField";
 import AppSnackbar from "../AppSnackbar";
 import { ObjectEntity } from "./ObjectEntityType";
+import currencyFormatter from "../formatters/CurrencyFormatter";
+import numberFormatter from "../formatters/NumberFormatter";
+import getLookupName from "./lookups/getLookupName";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +44,7 @@ export interface FormSchema<T> {
 
 type FieldType =
   | "text"
+  | "number"
   | "select"
   | "multiselect"
   | "date"
@@ -48,10 +52,57 @@ type FieldType =
   | "select-menu"
   | "switch";
 
+export const FieldConstructor = {
+  option: (obj: any, label: string, value: string | number | undefined) =>
+    ({ ...obj, label: label, value: value } as FormOptionType),
+  currency: (props: FieldConstructorOptions) =>
+    ({
+      required: false,
+      ...props,
+      type: "currency",
+      getVal: (value) => currencyFormatter.format(value),
+    } as CurrencyFieldSchema),
+  date: (props: FieldConstructorOptions) =>
+    ({
+      required: false,
+      ...props,
+      type: "date",
+    } as DateFieldSchema),
+  multiselect: (props: SelectFieldConstructorOptions) =>
+    ({
+      required: false,
+      ...props,
+      type: "multiselect",
+      getVal: getLookupName,
+    } as MultiSelectFieldSchema),
+  number: (props: FieldConstructorOptions) =>
+    ({
+      required: false,
+      ...props,
+      type: "number",
+      getVal: (value) => numberFormatter.format(value),
+    } as NumberFieldSchema),
+  select: (props: SelectFieldConstructorOptions) =>
+    ({
+      required: false,
+      ...props,
+      type: "select",
+    } as SelectFieldSchema),
+  text: (props: FieldConstructorOptions) =>
+    ({
+      required: false,
+      ...props,
+      type: "text",
+    } as TextFieldSchema),
+};
+
+export type FieldConstructorOptions = Omit<FieldSchema, "type">;
+export type SelectFieldConstructorOptions = Omit<SelectFieldSchema, "type">;
+
 export interface FieldSchema {
   title: string;
   type: FieldType;
-  required: boolean;
+  required?: boolean;
   error?: string;
   helperText?: string;
   // method to retrieve value
@@ -73,6 +124,10 @@ export interface SwitchFieldSchema extends FieldSchema {
 
 export interface CurrencyFieldSchema extends FieldSchema {
   type: "currency";
+}
+
+export interface NumberFieldSchema extends FieldSchema {
+  type: "number";
 }
 
 export interface DateFieldSchema extends FieldSchema {
